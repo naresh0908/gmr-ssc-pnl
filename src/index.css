@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #F6F4EE;
+  --card: #FFFFFF;
+  --ink: #0E1116;
+  --ink-soft: #3B4252;
+  --muted: #7A8290;
+  --line: #E6E2D6;
+}
+.dark {
+  --bg: #0E1116;
+  --card: #161B23;
+  --ink: #F6F4EE;
+  --ink-soft: #C7CEDB;
+  --muted: #8590A2;
+  --line: #252B36;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 90% -10%, rgba(31,111,235,.06), transparent 60%),
+    radial-gradient(900px 500px at -10% 100%, rgba(31,138,76,.05), transparent 60%),
+    var(--bg);
+  min-height: 100vh;
+}
+.dark body {
+  background:
+    radial-gradient(1200px 600px at 90% -10%, rgba(31,111,235,.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 100%, rgba(31,138,76,.06), transparent 60%),
+    var(--bg);
+}
+
+.font-display { font-family: 'Fraunces', serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Recharts overrides */
+.recharts-cartesian-axis-tick-value { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.recharts-tooltip-wrapper { outline: none !important; }
