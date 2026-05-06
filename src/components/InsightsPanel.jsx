@@ -15,7 +15,7 @@ export default function InsightsPanel() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="08" title="AI Insights · Why the numbers moved">
+      <SectionHead num="09" title="AI Insights · Why the numbers moved">
         Variance rules combined with comments produce action-grade signals. This module is swappable with an LLM endpoint.
       </SectionHead>
 

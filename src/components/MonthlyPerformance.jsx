@@ -1,10 +1,14 @@
+import { useMemo } from 'react'
 import { useDashStore } from '../store/useDashStore'
 import SectionHead from './SectionHead'
+import SectionInsightBar from './SectionInsightBar'
 import { motion } from 'framer-motion'
+import { getSectionInsights } from '../utils/sectionInsights'
 
 export default function MonthlyPerformance() {
   const { derived, year } = useDashStore()
   const Y = derived.byYear[year]
+  const insights = useMemo(() => getSectionInsights('monthly', { derived, year }), [derived, year])
   if (!Y) return null
 
   // Scale revenue axis to the data for this FY (no hardcoded 22 Cr ceiling)
@@ -19,7 +23,7 @@ export default function MonthlyPerformance() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="05" title={`Monthly Performance · FY ${year}`}>
+      <SectionHead num="02" title={`Monthly Performance · FY ${year}`}>
         Actuals against FC1 (initial plan target). Solid bars are actuals; tick marks denote target.
       </SectionHead>
 
@@ -124,6 +128,8 @@ export default function MonthlyPerformance() {
           </div>
         </div>
       </motion.div>
+
+      <SectionInsightBar insights={insights} />
     </div>
   )
 }

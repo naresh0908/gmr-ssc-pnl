@@ -31,23 +31,26 @@ function patchSampleData(revenue, cost) {
 
 const { revenue: patchedRevenue, cost: patchedCost } = patchSampleData(sampleData.revenue, sampleData.cost)
 const serviceRevenue = computeServiceRevenue(transactionFteData.transactions, transactionFteData.fte, patchedRevenue)
+const initialDerived = computeDerived(patchedRevenue, patchedCost)
+const defaultYear = initialDerived.years.at(-1) ?? new Date().getFullYear() - 1
 
 export const useDashStore = create((set, get) => ({
   rawRevenue: patchedRevenue,
   rawCost: patchedCost,
-  derived: computeDerived(patchedRevenue, patchedCost),
+  derived: initialDerived,
   serviceRevenue,
   insights: [],
 
-  year: 2025,
+  year: defaultYear,
   department: 'All',
   theme: 'light',
 
   setData: (revenue, cost) => {
     const derived = computeDerived(revenue, cost)
     const serviceRevenue = computeServiceRevenue(transactionFteData.transactions, transactionFteData.fte, revenue)
-    const insights = generateInsights(derived, get().year)
-    set({ rawRevenue: revenue, rawCost: cost, derived, serviceRevenue, insights })
+    const year = derived.years.at(-1) ?? get().year
+    const insights = generateInsights(derived, year)
+    set({ rawRevenue: revenue, rawCost: cost, derived, serviceRevenue, year, insights })
   },
 
   setYear: (y) => {

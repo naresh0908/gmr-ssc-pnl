@@ -13,19 +13,19 @@ export default function KPISection() {
     {
       label: 'Total Revenue', value: k.totalRevenue, unit: 'Cr',
       delta: prevK ? `▲ ₹${(k.totalRevenue - prevK.totalRevenue).toFixed(1)} Cr vs FY${prevYear}` : '—',
-      sub: `FC2 target: ₹${k.revFc2} Cr`,
+      sub: `FC1: ₹${k.revFc1.toFixed(1)} · FC2: ₹${k.revFc2.toFixed(1)} Cr`,
       up: prevK ? k.totalRevenue >= prevK.totalRevenue : true
     },
     {
       label: 'Total Cost', value: k.totalCost, unit: 'Cr',
       delta: prevK ? `${k.totalCost > prevK.totalCost ? '▲' : '▼'} ₹${Math.abs(k.totalCost - prevK.totalCost).toFixed(1)} Cr vs FY${prevYear}` : '—',
-      sub: `FC2 target: ₹${k.costFc2} Cr · saved ₹${(k.costFc2 - k.totalCost).toFixed(1)} Cr`,
+      sub: `FC1: ₹${k.costFc1.toFixed(1)} · FC2: ₹${k.costFc2.toFixed(1)} Cr`,
       up: prevK ? k.totalCost > prevK.totalCost : false
     },
     {
       label: 'Net Profit', value: k.netProfit, unit: 'Cr',
       delta: prevK ? `${k.netProfit >= prevK.netProfit ? '▲' : '▼'} ₹${Math.abs(k.netProfit - prevK.netProfit).toFixed(1)} Cr vs FY${prevYear}` : '—',
-      sub: `FC1 plan: ₹${(k.netProfitFc1 ?? 0).toFixed(1)} Cr`,
+      sub: `FC1: ₹${(k.netProfitFc1 ?? 0).toFixed(1)} · FC2: ₹${(k.netProfitFc2 ?? 0).toFixed(1)} Cr`,
       up: prevK ? k.netProfit >= prevK.netProfit : true
     },
     {

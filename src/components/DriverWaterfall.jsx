@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react'
 import { useDashStore } from '../store/useDashStore'
 import SectionHead from './SectionHead'
+import SectionInsightBar from './SectionInsightBar'
+import { getSectionInsights } from '../utils/sectionInsights'
 
 /* ─── Constants ─── */
 const CR = 1e7
@@ -198,9 +200,10 @@ function wrapLabel(text) {
    Main component
    ═══════════════════════════════════════════════════ */
 export default function DriverWaterfall() {
-  const { rawCost, year } = useDashStore()
-  const [scenario, setScenario] = useState('fc1')      // 'fc1' or 'fc2'
+  const { rawCost, derived, year } = useDashStore()
+  const [scenario, setScenario] = useState('fc1')
   const [dept, setDept] = useState('All')
+  const insights = useMemo(() => getSectionInsights('waterfall', { derived, year }), [derived, year])
 
   const departments = useMemo(
     () => ['All', ...new Set(rawCost.map(c => c.department))],
@@ -363,6 +366,8 @@ export default function DriverWaterfall() {
           <span className="w-3 h-0.5" style={{ background: COL.connHi }} /> Total Variance
         </span>
       </div>
+
+      <SectionInsightBar insights={insights} />
     </div>
   )
 }

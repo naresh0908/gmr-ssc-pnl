@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useDashStore } from '../store/useDashStore'
 import SectionHead from './SectionHead'
+import SectionInsightBar from './SectionInsightBar'
 import { motion } from 'framer-motion'
+import { getSectionInsights } from '../utils/sectionInsights'
 
 const CHART_H = 130
 
@@ -15,7 +17,8 @@ const short = (name) => {
 
 export default function ServiceRevenuePanel() {
   const [activeDept, setActiveDept] = useState('All')
-  const { serviceRevenue, year } = useDashStore()
+  const { serviceRevenue, derived, year } = useDashStore()
+  const insights = useMemo(() => getSectionInsights('service-revenue', { derived, serviceRevenue, year }), [derived, serviceRevenue, year])
 
   const SRY = serviceRevenue?.[year]
   if (!SRY) return null
@@ -97,6 +100,8 @@ export default function ServiceRevenuePanel() {
           ) : null}
         </div>
       </motion.div>
+
+      <SectionInsightBar insights={insights} />
     </div>
   )
 }

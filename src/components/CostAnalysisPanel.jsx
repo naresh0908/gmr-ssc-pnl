@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react'
 import { useDashStore } from '../store/useDashStore'
 import SectionHead from './SectionHead'
+import SectionInsightBar from './SectionInsightBar'
+import { getSectionInsights } from '../utils/sectionInsights'
 import { motion } from 'framer-motion'
 import {
   ComposedChart, BarChart, Bar, Line, XAxis, YAxis,
@@ -59,6 +61,12 @@ function MoMChart({ data }) {
         <Bar dataKey="OPEX"  stackId="cost" fill={TYPE_COLOR.OPEX}  name={TYPE_LABEL.OPEX}  radius={[0, 0, 0, 0]} />
         <Bar dataKey="CAPEX" stackId="cost" fill={TYPE_COLOR.CAPEX} name={TYPE_LABEL.CAPEX} radius={[3, 3, 0, 0]} />
         <Line
+          type="monotone" dataKey="fc1"
+          stroke="#D4A22F" strokeWidth={2} strokeDasharray="5 3"
+          dot={{ r: 3, fill: '#D4A22F', strokeWidth: 0 }}
+          name="FC1 Target"
+        />
+        <Line
           type="monotone" dataKey="fc2"
           stroke="#0E1116" strokeWidth={2} strokeDasharray="5 3"
           dot={{ r: 3, fill: '#0E1116', strokeWidth: 0 }}
@@ -114,18 +122,20 @@ function SubCategoryTable({ data, year }) {
         <span className="text-[11px] font-bold uppercase tracking-[.16em] text-[var(--ink-soft)]">
           Sub-Category Breakdown · FY {year}
         </span>
-        <span className="text-[11px] font-mono text-[var(--muted)]">Actual vs FC2 · ₹ Cr</span>
+        <span className="text-[11px] font-mono text-[var(--muted)]">Actual vs FC1 & FC2 · ₹ Cr</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-[12px]">
           <thead>
             <tr className="border-b border-[var(--line)] bg-[var(--bg)] text-[10.5px] uppercase tracking-[.12em] font-semibold text-[var(--ink-soft)]">
               <th className="text-left px-5 py-2 min-w-[200px]">Sub-Category</th>
-              <th className="text-left px-3 py-2 min-w-[90px]">Type</th>
-              <th className="text-right px-3 py-2 min-w-[80px]">Actual</th>
-              <th className="text-right px-3 py-2 min-w-[80px]">FC2</th>
-              <th className="text-right px-3 py-2 min-w-[80px]">Variance</th>
-              <th className="px-5 py-2 min-w-[120px]">vs FC2</th>
+              <th className="text-left px-3 py-2 min-w-[80px]">Type</th>
+              <th className="text-right px-3 py-2 min-w-[76px]">Actual</th>
+              <th className="text-right px-3 py-2 min-w-[72px] text-brand-amber">FC1</th>
+              <th className="text-right px-3 py-2 min-w-[68px] text-brand-green">Var·F1</th>
+              <th className="text-right px-3 py-2 min-w-[72px]">FC2</th>
+              <th className="text-right px-3 py-2 min-w-[68px] text-brand-blue">Var·F2</th>
+              <th className="px-5 py-2 min-w-[110px]">vs FC2</th>
             </tr>
           </thead>
           <tbody>
@@ -133,13 +143,14 @@ function SubCategoryTable({ data, year }) {
               byType[type].length > 0 && (
                 <>
                   <tr key={`hdr-${type}`} className={`border-b border-[var(--line)]`}>
-                    <td colSpan={6} className={`px-5 py-1.5 text-[10px] font-bold uppercase tracking-[.18em] ${TYPE_BG[type]} ${TYPE_TEXT[type]}`}>
+                    <td colSpan={8} className={`px-5 py-1.5 text-[10px] font-bold uppercase tracking-[.18em] ${TYPE_BG[type]} ${TYPE_TEXT[type]}`}>
                       {TYPE_LABEL[type]}
                     </td>
                   </tr>
                   {byType[type].map((row) => {
                     const pct = row.fc2 !== 0 ? ((row.actual / row.fc2 - 1) * 100) : 0
-                    const favorable = row.variance <= 0  // for costs, under-spending is good
+                    const favF1 = row.varF1 <= 0
+                    const favF2 = row.varF2 <= 0
                     return (
                       <tr key={row.sub} className="border-b border-[var(--line)] last:border-b-0 hover:bg-[var(--bg)] transition-colors">
                         <td className="px-5 py-2 font-medium text-[var(--ink)]">{row.sub}</td>
@@ -152,20 +163,26 @@ function SubCategoryTable({ data, year }) {
                           {row.actual.toFixed(2)}
                         </td>
                         <td className="px-3 py-2 text-right font-mono text-[var(--ink-soft)]">
+                          {row.fc1.toFixed(2)}
+                        </td>
+                        <td className={`px-3 py-2 text-right font-mono font-semibold ${favF1 ? 'text-brand-green' : 'text-brand-red'}`}>
+                          {row.varF1 >= 0 ? '+' : ''}{row.varF1.toFixed(2)}
+                        </td>
+                        <td className="px-3 py-2 text-right font-mono text-[var(--ink-soft)]">
                           {row.fc2.toFixed(2)}
                         </td>
-                        <td className={`px-3 py-2 text-right font-mono font-semibold ${favorable ? 'text-brand-green' : 'text-brand-red'}`}>
-                          {row.variance >= 0 ? '+' : ''}{row.variance.toFixed(2)}
+                        <td className={`px-3 py-2 text-right font-mono font-semibold ${favF2 ? 'text-brand-green' : 'text-brand-red'}`}>
+                          {row.varF2 >= 0 ? '+' : ''}{row.varF2.toFixed(2)}
                         </td>
                         <td className="px-5 py-2">
                           <div className="flex items-center gap-2">
                             <div className="flex-1 h-1.5 bg-[var(--bg)] rounded-full overflow-hidden">
                               <div
-                                className={`h-full rounded-full ${favorable ? 'bg-brand-green' : 'bg-brand-red'}`}
+                                className={`h-full rounded-full ${favF2 ? 'bg-brand-green' : 'bg-brand-red'}`}
                                 style={{ width: `${Math.min(Math.abs(pct), 100)}%` }}
                               />
                             </div>
-                            <span className={`text-[10.5px] font-mono font-semibold w-[42px] text-right ${favorable ? 'text-brand-green' : 'text-brand-red'}`}>
+                            <span className={`text-[10.5px] font-mono font-semibold w-[42px] text-right ${favF2 ? 'text-brand-green' : 'text-brand-red'}`}>
                               {pct >= 0 ? '+' : ''}{pct.toFixed(1)}%
                             </span>
                           </div>
@@ -270,18 +287,20 @@ function YoYTypeTable({ data, years }) {
 export default function CostAnalysisPanel() {
   const [view, setView] = useState('mom')
   const { rawCost, derived, year } = useDashStore()
+  const insights = useMemo(() => getSectionInsights('cost-analysis', { derived, year }), [derived, year])
 
-  // MoM: monthly PEX/OPEX/CAPEX actuals + FC2 line for selected year
+  // MoM: monthly PEX/OPEX/CAPEX actuals + FC1 + FC2 lines for selected year
   const momData = useMemo(() => {
     return MONTHS.map((m) => {
       const rows = rawCost.filter((c) => c.year === year && c.month === m)
       const pex   = r2(rows.filter((c) => c.costType === 'PEX'  ).reduce((s, c) => s + c.actual, 0) / CR)
       const opex  = r2(rows.filter((c) => c.costType === 'OPEX' ).reduce((s, c) => s + c.actual, 0) / CR)
       const capex = r2(rows.filter((c) => c.costType === 'CAPEX').reduce((s, c) => s + c.actual, 0) / CR)
+      const fc1   = r2(rows.reduce((s, c) => s + c.fc1, 0) / CR)
       const fc2   = r2(rows.reduce((s, c) => s + c.fc2, 0) / CR)
       const total = r2(pex + opex + capex)
-      return { month: m, PEX: pex, OPEX: opex, CAPEX: capex, fc2, total }
-    }).filter((d) => d.total > 0 || d.fc2 > 0)
+      return { month: m, PEX: pex, OPEX: opex, CAPEX: capex, fc1, fc2, total }
+    }).filter((d) => d.total > 0 || d.fc2 > 0 || d.fc1 > 0)
   }, [rawCost, year])
 
   // Sub-category totals for the MoM detail table
@@ -292,8 +311,9 @@ export default function CostAnalysisPanel() {
       const subRows  = rows.filter((r) => r.subCategory === sub)
       const costType = subRows[0]?.costType ?? 'OPEX'
       const actual   = r2(subRows.reduce((s, r) => s + r.actual, 0) / CR)
+      const fc1      = r2(subRows.reduce((s, r) => s + r.fc1, 0) / CR)
       const fc2      = r2(subRows.reduce((s, r) => s + r.fc2, 0) / CR)
-      return { sub, costType, actual, fc2, variance: r2(actual - fc2) }
+      return { sub, costType, actual, fc1, fc2, varF1: r2(actual - fc1), varF2: r2(actual - fc2) }
     }).sort((a, b) => b.actual - a.actual)
   }, [rawCost, year])
 
@@ -331,9 +351,9 @@ export default function CostAnalysisPanel() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="07" title={`Cost Structure Analysis · FY ${year}`}>
+      <SectionHead num="08" title={`Cost Structure Analysis · FY ${year}`}>
         {view === 'mom'
-          ? 'Monthly actual cost by category (PEX · OPEX · CAPEX) vs FC2 target. Sub-category breakdown below.'
+          ? 'Monthly actual cost by category (PEX · OPEX · CAPEX) vs FC1 & FC2 targets. Sub-category breakdown below.'
           : 'Year-on-year cost evolution — monthly and annual comparison across financial years.'}
       </SectionHead>
 
@@ -373,7 +393,7 @@ export default function CostAnalysisPanel() {
               </h4>
               <p className="m-0 text-[12px] text-[var(--muted)] mt-1">
                 {view === 'mom'
-                  ? 'Stacked bars = actual spend by type · Dashed line = FC2 target total'
+                  ? 'Stacked bars = actual spend by type · Dashed lines = FC1 (amber) & FC2 (black) targets'
                   : 'Monthly total actual cost per financial year · grouped bars'}
               </p>
             </div>
@@ -388,6 +408,10 @@ export default function CostAnalysisPanel() {
                       {t}
                     </span>
                   ))}
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[var(--bg)] text-brand-amber border border-[var(--line)]">
+                    <span className="w-4 h-0.5 inline-block" style={{ borderTop: '2px dashed #D4A22F' }} />
+                    FC1 Target
+                  </span>
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[var(--bg)] text-[var(--ink-soft)] border border-[var(--line)]">
                     <span className="w-4 h-0.5 bg-ink inline-block" style={{ borderTop: '2px dashed #0E1116' }} />
                     FC2 Target
@@ -414,6 +438,8 @@ export default function CostAnalysisPanel() {
           ? <SubCategoryTable data={subCatData} year={year} />
           : <YoYTypeTable data={yoyTypeData} years={derived.years} />}
       </motion.div>
+
+      <SectionInsightBar insights={insights} />
     </div>
   )
 }

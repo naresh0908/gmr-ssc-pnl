@@ -43,7 +43,8 @@ export default function CostStructure() {
 
       <div className="grid grid-cols-3 gap-2.5 mt-3.5">
         {Y.costByType.map((s) => {
-          const variance = s.actual - s.fc1
+          const varF1 = s.actual - s.fc1
+          const varF2 = s.actual - s.fc2
           return (
             <div key={s.type} className="p-3.5 border border-[var(--line)] rounded-[12px]"
                  style={{ borderTop: `3px solid ${colors[s.type].bg}` }}>
@@ -51,8 +52,16 @@ export default function CostStructure() {
                 {s.type}
               </div>
               <div className="font-display text-[22px] font-medium mt-1">₹{s.actual.toFixed(1)} Cr</div>
-              <div className="font-mono text-[11.5px] text-[var(--ink-soft)] mt-0.5">
-                {((s.actual / total) * 100).toFixed(1)}% · {variance < 0 ? '▼' : '▲'} ₹{Math.abs(variance).toFixed(1)} Cr vs FC1
+              <div className="font-mono text-[11px] text-[var(--ink-soft)] mt-0.5">
+                {((s.actual / total) * 100).toFixed(1)}%
+              </div>
+              <div className="font-mono text-[11px] mt-1 flex gap-3">
+                <span className={varF1 <= 0 ? 'text-brand-green' : 'text-brand-red'}>
+                  F1: {varF1 < 0 ? '▼' : '▲'} ₹{Math.abs(varF1).toFixed(1)}
+                </span>
+                <span className={varF2 <= 0 ? 'text-brand-green' : 'text-brand-red'}>
+                  F2: {varF2 < 0 ? '▼' : '▲'} ₹{Math.abs(varF2).toFixed(1)}
+                </span>
               </div>
             </div>
           )

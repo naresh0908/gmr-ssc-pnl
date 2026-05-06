@@ -1,10 +1,15 @@
+import { useMemo } from 'react'
 import { useDashStore } from '../store/useDashStore'
 import SectionHead from './SectionHead'
+import SectionInsightBar from './SectionInsightBar'
 import { motion } from 'framer-motion'
+import { getSectionInsights } from '../utils/sectionInsights'
 
 export default function EBITMatrix({ type = 'department', num = '01' }) {
   const { derived, year } = useDashStore()
   const Y = derived.byYear[year]
+  const section = type === 'customer' ? 'ebit-customer' : 'ebit-dept'
+  const insights = useMemo(() => getSectionInsights(section, { derived, year }), [derived, year, section])
   if (!Y) return null
 
   const matrix = type === 'customer' ? (Y.ebitCustomerMatrix || []) : Y.ebitMatrix
@@ -100,6 +105,8 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
           </span>
         </div>
       </motion.div>
+
+      <SectionInsightBar insights={insights} />
     </div>
   )
 }
