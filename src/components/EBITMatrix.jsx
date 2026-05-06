@@ -15,7 +15,7 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
   const min = Math.min(...allCells, 0)
   const months = matrix[0]?.cells.map((c) => c.month) || []
 
-  // Color scale: amber-soft (low) → green (high), red for negative
+  // Color s cale: amber-soft (low) → green (high), red for negative
   const cellBg = (v) => {
     if (v < 0) {
       const t = Math.min(1, Math.abs(v) / Math.max(0.01, Math.abs(min)))
