@@ -15,7 +15,7 @@ export default function MonthlyPerformance() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="02" title={`Monthly Performance · FY ${year}`}>
+      <SectionHead num="03" title={`Monthly Performance · FY ${year}`}>
         Actuals against FC1 (initial plan target). Solid bars are actuals; tick marks denote target.
       </SectionHead>
 

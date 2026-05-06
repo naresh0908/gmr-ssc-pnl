@@ -1,7 +1,11 @@
 import { create } from 'zustand'
 import { sampleData } from '../data/sampleData'
+import { transactionFteData } from '../data/transactionFteData'
 import { computeDerived } from '../utils/computeDerived'
+import { computeServiceRevenue } from '../utils/computeServiceRevenue'
 import { generateInsights } from '../utils/generateInsights'
+
+const serviceRevenue = computeServiceRevenue(transactionFteData.transactions, transactionFteData.fte)
 
 // Patch sample data to introduce realistic variance: negative YoY, loss months, mixed NP ratio
 function patchSampleData(revenue, cost) {
@@ -33,6 +37,7 @@ export const useDashStore = create((set, get) => ({
   rawRevenue: patchedRevenue,
   rawCost: patchedCost,
   derived: computeDerived(patchedRevenue, patchedCost),
+  serviceRevenue,
   insights: [],
 
   year: 2025,
