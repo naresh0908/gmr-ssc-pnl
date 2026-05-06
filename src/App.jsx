@@ -5,6 +5,7 @@ import HeroSummary from './components/HeroSummary'
 import KPISection from './components/KPISection'
 import EBITMatrix from './components/EBITMatrix'
 import ServiceRevenuePanel from './components/ServiceRevenuePanel'
+import PLStatement from './components/PLStatement'
 import MonthlyPerformance from './components/MonthlyPerformance'
 import CostStructure from './components/CostStructure'
 import DeptEBITPanel from './components/DeptEBITPanel'
@@ -28,6 +29,9 @@ export default function App() {
 
       {/* Service Revenue: FTE vs Transaction breakdown */}
       <ServiceRevenuePanel />
+
+      {/* P&L Statement: full actuals vs FC1/FC2 with dept breakdown */}
+      <PLStatement />
 
       {/* Monthly Performance */}
       <MonthlyPerformance />
