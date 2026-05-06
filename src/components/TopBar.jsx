@@ -1,6 +1,7 @@
 import { Sun, Moon } from 'lucide-react'
 import { useDashStore } from '../store/useDashStore'
 import FileUploader from './FileUploader'
+import GMRLogo from '../GMR_Group_(logo).svg'
 
 export default function TopBar() {
   const { year, setYear, theme, toggleTheme, derived, department, setDepartment } = useDashStore()
@@ -8,12 +9,10 @@ export default function TopBar() {
   return (
     <div className="flex items-center justify-between gap-6 pb-5 border-b border-[var(--line)]">
       <div className="flex items-center gap-3.5">
-        <div className="w-11 h-11 rounded-[10px] bg-ink text-bg-light flex items-center justify-center font-display text-[22px] font-medium tracking-tight shadow-[0_8px_22px_-12px_rgba(14,17,22,.5)]">
-          G
-        </div>
+        <img src={GMRLogo} alt="GMR Group" className="h-12 w-auto" />
         <div>
-          <h1 className="m-0 font-display font-medium text-[22px] tracking-tight">
-            GMR SSC <span className="text-[var(--muted)] font-normal">/ Finance Intelligence</span>
+          <h1 className="m-0 font-display font-bold text-[20px] tracking-tight text-blue-600">
+            Shared Service Center
           </h1>
           <p className="m-0 mt-0.5 text-[12.5px] text-[var(--muted)] tracking-wider uppercase">
             Decision Cockpit · CEO View
