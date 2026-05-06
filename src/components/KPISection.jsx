@@ -25,7 +25,7 @@ export default function KPISection() {
     {
       label: 'Net Profit', value: k.netProfit, unit: 'Cr',
       delta: prevK ? `${k.netProfit >= prevK.netProfit ? '▲' : '▼'} ₹${Math.abs(k.netProfit - prevK.netProfit).toFixed(1)} Cr vs FY${prevYear}` : '—',
-      sub: `FC1 plan: ₹${(k.revFc1 - k.costFc1).toFixed(1)} Cr`,
+      sub: `FC1 plan: ₹${(k.netProfitFc1 ?? 0).toFixed(1)} Cr`,
       up: prevK ? k.netProfit >= prevK.netProfit : true
     },
     {

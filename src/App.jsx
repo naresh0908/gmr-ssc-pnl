@@ -10,6 +10,7 @@ import MonthlyPerformance from './components/MonthlyPerformance'
 import CostStructure from './components/CostStructure'
 import DeptEBITPanel from './components/DeptEBITPanel'
 import DriverWaterfall from './components/DriverWaterfall'
+import CostAnalysisPanel from './components/CostAnalysisPanel'
 import InsightsPanel from './components/InsightsPanel'
 
 export default function App() {
@@ -44,6 +45,9 @@ export default function App() {
 
       {/* CHANGE 1: Driver-based cost waterfall (FC1/FC2 vs Actual) */}
       <DriverWaterfall />
+
+      {/* Cost Structure Analysis: MoM / YoY toggle */}
+      <CostAnalysisPanel />
 
       {/* AI insights */}
       <InsightsPanel />

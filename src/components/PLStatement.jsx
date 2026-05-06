@@ -15,67 +15,41 @@ function buildPL(revenue, cost, year, months) {
   const depts = [...new Set(revenue.filter((r) => r.year === year).map((r) => r.department))]
   const sumC = (arr, fn) => r2(arr.reduce((s, x) => s + fn(x), 0) / CR)
 
-  const pexR = cst.filter((c) => c.costType === 'PEX')
-  const opexR = cst.filter((c) => c.costType === 'OPEX')
+  const pexR   = cst.filter((c) => c.costType === 'PEX')
+  const opexR  = cst.filter((c) => c.costType === 'OPEX')
   const capexR = cst.filter((c) => c.costType === 'CAPEX')
 
-  const pex = { act: -sumC(pexR, (c) => c.actual), fc1: -sumC(pexR, (c) => c.fc1), fc2: -sumC(pexR, (c) => c.fc2) }
-  const opex = { act: -sumC(opexR, (c) => c.actual), fc1: -sumC(opexR, (c) => c.fc1), fc2: -sumC(opexR, (c) => c.fc2) }
-  const capex = { act: -sumC(capexR, (c) => c.actual), fc1: -sumC(capexR, (c) => c.fc1), fc2: -sumC(capexR, (c) => c.fc2) }
+  const pex   = { act: -sumC(pexR,   (c) => c.actual), fc2: -sumC(pexR,   (c) => c.fc2) }
+  const opex  = { act: -sumC(opexR,  (c) => c.actual), fc2: -sumC(opexR,  (c) => c.fc2) }
+  const capex = { act: -sumC(capexR, (c) => c.actual), fc2: -sumC(capexR, (c) => c.fc2) }
 
   const sfByDept = depts.map((dept) => {
     const dRev = rev.filter((r) => r.department === dept)
-    return {
-      dept,
-      act: sumC(dRev, (r) => r.actServiceFees),
-      fc1: sumC(dRev, (r) => r.fc1ServiceFees),
-      fc2: sumC(dRev, (r) => r.fc2ServiceFees),
-    }
+    return { dept, act: sumC(dRev, (r) => r.actServiceFees), fc2: sumC(dRev, (r) => r.fc2ServiceFees) }
   })
   const sfTotal = {
     act: r2(sfByDept.reduce((s, d) => s + d.act, 0)),
-    fc1: r2(sfByDept.reduce((s, d) => s + d.fc1, 0)),
     fc2: r2(sfByDept.reduce((s, d) => s + d.fc2, 0)),
   }
-  const otherInc = {
-    act: sumC(rev, (r) => r.actOtherIncome),
-    fc1: sumC(rev, (r) => r.fc1OtherIncome),
-    fc2: sumC(rev, (r) => r.fc2OtherIncome),
-  }
-
-  // EBIT tallies: SF + OtherInc + PEX (neg) + OPEX (neg)
-  const ebit = {
+  const otherInc = { act: sumC(rev, (r) => r.actOtherIncome), fc2: sumC(rev, (r) => r.fc2OtherIncome) }
+  const ebit     = {
     act: r2(sfTotal.act + otherInc.act + pex.act + opex.act),
-    fc1: r2(sfTotal.fc1 + otherInc.fc1 + pex.fc1 + opex.fc1),
     fc2: r2(sfTotal.fc2 + otherInc.fc2 + pex.fc2 + opex.fc2),
   }
-
-  const interest = {
-    act: sumC(rev, (r) => r.actInterest),
-    fc1: sumC(rev, (r) => r.fc1Interest),
-    fc2: sumC(rev, (r) => r.fc2Interest),
-  }
-  const tax = { act: -sumC(rev, (r) => r.actTax), fc1: -sumC(rev, (r) => r.fc1Tax), fc2: -sumC(rev, (r) => r.fc2Tax) }
-
-  const finResult = {
-    act: r2(interest.act + tax.act),
-    fc1: r2(interest.fc1 + tax.fc1),
-    fc2: r2(interest.fc2 + tax.fc2),
-  }
-  // Net Result tallies: EBIT + Financial Result
-  const netResult = {
-    act: r2(ebit.act + finResult.act),
-    fc1: r2(ebit.fc1 + finResult.fc1),
-    fc2: r2(ebit.fc2 + finResult.fc2),
-  }
+  const interest  = { act: sumC(rev, (r) => r.actInterest),  fc2: sumC(rev, (r) => r.fc2Interest) }
+  const tax       = { act: -sumC(rev, (r) => r.actTax),      fc2: -sumC(rev, (r) => r.fc2Tax) }
+  const finResult = { act: r2(interest.act + tax.act),       fc2: r2(interest.fc2 + tax.fc2) }
+  const netResult = { act: r2(ebit.act + finResult.act),     fc2: r2(ebit.fc2 + finResult.fc2) }
 
   return { pex, opex, capex, sfByDept, sfTotal, otherInc, ebit, interest, tax, finResult, netResult, depts }
 }
 
 // ─── Formatting helpers ───────────────────────────────────────────────────────
 const fv = (v) => (v == null ? '—' : v.toFixed(2))
+
+// Variance: positive = favorable for both revenue (actual > plan) and cost (actual less negative = under-budget)
 const vcls = (v) =>
-  v > 0.005 ? 'text-brand-green' : v < -0.005 ? 'text-brand-red' : 'text-[var(--muted)]'
+  v > 0.005 ? 'text-brand-green font-semibold' : v < -0.005 ? 'text-brand-red font-semibold' : 'text-[var(--muted)]'
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function PLStatement() {
@@ -89,9 +63,9 @@ export default function PLStatement() {
       setSelectedMonth(availMonths[availMonths.length - 1] || 'Dec')
   }, [year]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const selIdx = MONTHS.indexOf(selectedMonth)
+  const selIdx    = MONTHS.indexOf(selectedMonth)
   const ytdMonths = MONTHS.slice(0, selIdx + 1).filter((m) => availMonths.includes(m))
-  const ytdLabel = ytdMonths.length > 1 ? `Jan – ${selectedMonth}` : selectedMonth
+  const ytdLabel  = ytdMonths.length > 1 ? `Jan – ${selectedMonth}` : selectedMonth
 
   const ytd = buildPL(rawRevenue, rawCost, year, ytdMonths)
   const mtd = buildPL(rawRevenue, rawCost, year, [selectedMonth])
@@ -100,7 +74,7 @@ export default function PLStatement() {
   return (
     <div className="mt-7">
       <SectionHead num="04" title={`P&L Statement · FY ${year}`}>
-        Actuals vs FC1 (YTD) and FC2 (monthly). All figures in ₹ Cr — EBIT and Net Result computed from source rows.
+        Actuals vs FC2 for both YTD and MTD. Green = revenue · Red = costs. All figures ₹ Cr.
       </SectionHead>
 
       <motion.div
@@ -135,183 +109,184 @@ export default function PLStatement() {
         {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
-            {/* Column group headers */}
             <thead>
+              {/* Section labels */}
               <tr className="bg-[var(--bg)] border-b border-[var(--line)]">
-                <th className="text-left p-3 px-5 text-[10.5px] font-semibold text-[var(--ink-soft)] uppercase tracking-[.12em] min-w-[210px]" />
-                <th
-                  colSpan={3}
-                  className="text-center py-2.5 px-3 text-[10px] font-bold uppercase tracking-[.12em] text-brand-amber border-r-2 border-[var(--line)]"
-                >
+                <th className="text-left p-3 px-5 text-[10.5px] font-semibold text-[var(--ink-soft)] uppercase tracking-[.12em] min-w-[220px]" />
+                <th colSpan={3} className="text-center py-2.5 px-3 text-[10px] font-bold uppercase tracking-[.12em] text-brand-amber border-r-2 border-[var(--line)]">
                   YTD · {ytdLabel} · FY {year}
                 </th>
-                <th
-                  colSpan={3}
-                  className="text-center py-2.5 px-3 text-[10px] font-bold uppercase tracking-[.12em] text-brand-blue"
-                >
+                <th colSpan={3} className="text-center py-2.5 px-3 text-[10px] font-bold uppercase tracking-[.12em] text-brand-blue">
                   MTD · {selectedMonth} · FY {year}
                 </th>
               </tr>
+              {/* Column headers — both sections compare vs FC2 */}
               <tr className="border-b-2 border-[var(--line)] bg-[var(--bg)]">
                 <th className="py-2 px-5 text-left text-[10.5px] font-semibold tracking-[.12em] uppercase text-[var(--ink-soft)]">
                   P&L Line
                 </th>
-                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-brand-amber min-w-[80px]">
-                  Actual
-                </th>
-                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-[var(--ink-soft)] min-w-[80px]">
-                  FC1
-                </th>
-                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-brand-blue min-w-[80px] border-r-2 border-[var(--line)]">
-                  Var
-                </th>
-                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-brand-amber min-w-[80px]">
-                  Actual
-                </th>
-                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-[var(--ink-soft)] min-w-[80px]">
-                  FC2
-                </th>
-                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-brand-blue min-w-[80px]">
-                  Var
-                </th>
+                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-brand-amber   min-w-[86px]">Actual</th>
+                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-[var(--ink-soft)] min-w-[86px]">FC2</th>
+                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-brand-blue    min-w-[80px] border-r-2 border-[var(--line)]">Var</th>
+                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-brand-amber   min-w-[86px]">Actual</th>
+                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-[var(--ink-soft)] min-w-[86px]">FC2</th>
+                <th className="py-2 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-brand-blue    min-w-[80px]">Var</th>
               </tr>
             </thead>
 
             <tbody>
-              {/* ── Cost rows ── */}
-              <Row label="PEX" ytd={{ act: ytd.pex.act, fc: ytd.pex.fc1 }} mtd={{ act: mtd.pex.act, fc: mtd.pex.fc2 }} />
-              <Row label="OPEX" ytd={{ act: ytd.opex.act, fc: ytd.opex.fc1 }} mtd={{ act: mtd.opex.act, fc: mtd.opex.fc2 }} />
+              {/* ── Cost section ── */}
+              <SectionBanner label="OPERATING COSTS" color="bg-brand-red/[.07]" textColor="text-brand-red" />
+              <Row kind="cost" label="PEX · Personnel Expenses"
+                ytd={{ act: ytd.pex.act, fc: ytd.pex.fc2 }}
+                mtd={{ act: mtd.pex.act, fc: mtd.pex.fc2 }} />
+              <Row kind="cost" label="OPEX · Operating Expenses"
+                ytd={{ act: ytd.opex.act, fc: ytd.opex.fc2 }}
+                mtd={{ act: mtd.opex.act, fc: mtd.opex.fc2 }} />
 
               <Divider />
 
-              {/* ── Revenue rows ── */}
-              <Row
-                label="SERVICE FEE INCOME"
-                ytd={{ act: ytd.sfTotal.act, fc: ytd.sfTotal.fc1 }}
-                mtd={{ act: mtd.sfTotal.act, fc: mtd.sfTotal.fc2 }}
-                bold
-              />
+              {/* ── Revenue section ── */}
+              <SectionBanner label="REVENUE" color="bg-brand-green/[.07]" textColor="text-brand-green" />
+              <Row kind="revenue" label="Service Fee Income"
+                ytd={{ act: ytd.sfTotal.act, fc: ytd.sfTotal.fc2 }}
+                mtd={{ act: mtd.sfTotal.act, fc: mtd.sfTotal.fc2 }} />
               {ytd.depts.map((dept) => {
                 const yd = ytd.sfByDept.find((d) => d.dept === dept) || {}
                 const md = mtd.sfByDept.find((d) => d.dept === dept) || {}
                 return (
-                  <Row
-                    key={dept}
-                    label={dept}
-                    ytd={{ act: yd.act ?? 0, fc: yd.fc1 ?? 0 }}
-                    mtd={{ act: md.act ?? 0, fc: md.fc2 ?? 0 }}
-                    indent
-                  />
+                  <Row key={dept} kind="dept" label={dept}
+                    ytd={{ act: yd.act ?? 0, fc: yd.fc2 ?? 0 }}
+                    mtd={{ act: md.act ?? 0, fc: md.fc2 ?? 0 }} />
                 )
               })}
-              <Row
-                label="Other Income"
-                ytd={{ act: ytd.otherInc.act, fc: ytd.otherInc.fc1 }}
-                mtd={{ act: mtd.otherInc.act, fc: mtd.otherInc.fc2 }}
-              />
+              <Row kind="revenue" label="Other Income"
+                ytd={{ act: ytd.otherInc.act, fc: ytd.otherInc.fc2 }}
+                mtd={{ act: mtd.otherInc.act, fc: mtd.otherInc.fc2 }} />
 
               <Divider thick />
 
               {/* ── EBIT ── */}
-              <Row
-                label="EBIT"
-                ytd={{ act: ytd.ebit.act, fc: ytd.ebit.fc1 }}
-                mtd={{ act: mtd.ebit.act, fc: mtd.ebit.fc2 }}
-                total
-              />
+              <Row kind="ebit" label="EBIT"
+                ytd={{ act: ytd.ebit.act, fc: ytd.ebit.fc2 }}
+                mtd={{ act: mtd.ebit.act, fc: mtd.ebit.fc2 }} />
 
               <Divider />
 
               {/* ── Financial result ── */}
-              <Row
-                label="Interest Income"
-                ytd={{ act: ytd.interest.act, fc: ytd.interest.fc1 }}
-                mtd={{ act: mtd.interest.act, fc: mtd.interest.fc2 }}
-              />
-              <Row
-                label="Income Tax"
-                ytd={{ act: ytd.tax.act, fc: ytd.tax.fc1 }}
-                mtd={{ act: mtd.tax.act, fc: mtd.tax.fc2 }}
-              />
-              <Row
-                label="Financial Result"
-                ytd={{ act: ytd.finResult.act, fc: ytd.finResult.fc1 }}
-                mtd={{ act: mtd.finResult.act, fc: mtd.finResult.fc2 }}
-                bold
-              />
+              <SectionBanner label="FINANCIAL RESULT" color="bg-brand-blue/[.05]" textColor="text-brand-blue" />
+              <Row kind="financial" label="Interest Income"
+                ytd={{ act: ytd.interest.act, fc: ytd.interest.fc2 }}
+                mtd={{ act: mtd.interest.act, fc: mtd.interest.fc2 }} />
+              <Row kind="tax" label="Income Tax"
+                ytd={{ act: ytd.tax.act, fc: ytd.tax.fc2 }}
+                mtd={{ act: mtd.tax.act, fc: mtd.tax.fc2 }} />
+              <Row kind="financial" label="Financial Result"
+                ytd={{ act: ytd.finResult.act, fc: ytd.finResult.fc2 }}
+                mtd={{ act: mtd.finResult.act, fc: mtd.finResult.fc2 }} />
 
               <Divider thick />
 
               {/* ── Net Result ── */}
-              <Row
-                label="NET RESULT"
-                ytd={{ act: ytd.netResult.act, fc: ytd.netResult.fc1 }}
-                mtd={{ act: mtd.netResult.act, fc: mtd.netResult.fc2 }}
-                total
-              />
+              <Row kind="result" label="NET RESULT"
+                ytd={{ act: ytd.netResult.act, fc: ytd.netResult.fc2 }}
+                mtd={{ act: mtd.netResult.act, fc: mtd.netResult.fc2 }} />
 
               <Divider thick />
 
               {/* ── CAPEX (below the line) ── */}
-              <Row
-                label="CAPEX"
-                ytd={{ act: ytd.capex.act, fc: ytd.capex.fc1 }}
-                mtd={{ act: mtd.capex.act, fc: mtd.capex.fc2 }}
-                muted
-              />
+              <Row kind="capex" label="CAPEX (below the line)"
+                ytd={{ act: ytd.capex.act, fc: ytd.capex.fc2 }}
+                mtd={{ act: mtd.capex.act, fc: mtd.capex.fc2 }} />
             </tbody>
           </table>
         </div>
 
-        {/* Tally note */}
-        <div className="px-5 py-3 border-t border-[var(--line)] bg-[var(--bg)] text-[11px] text-[var(--muted)] font-mono flex gap-6 flex-wrap">
-          <span>EBIT = Service Fee + Other Income + PEX + OPEX</span>
-          <span>Net Result = EBIT + Financial Result</span>
-          <span className="ml-auto">All values ₹ Cr</span>
+        {/* Footer legend */}
+        <div className="px-5 py-3 border-t border-[var(--line)] bg-[var(--bg)] text-[11px] text-[var(--muted)] font-mono flex gap-6 flex-wrap items-center">
+          <span className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-sm bg-brand-green inline-block" /> Revenue items
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-sm bg-brand-red inline-block" /> Cost items
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-sm bg-brand-green inline-block opacity-50" /> Var: favorable
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-sm bg-brand-red inline-block opacity-50" /> Var: unfavorable
+          </span>
+          <span className="ml-auto">EBIT = Revenue − PEX − OPEX · Net Result = EBIT + Financial Result · All ₹ Cr</span>
         </div>
       </motion.div>
     </div>
   )
 }
 
-// ─── Row components ───────────────────────────────────────────────────────────
-function Row({ label, ytd, mtd, bold, indent, total, muted }) {
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function SectionBanner({ label, color, textColor }) {
+  return (
+    <tr>
+      <td colSpan={7} className={`px-5 py-1.5 text-[10px] font-bold uppercase tracking-[.18em] ${color} ${textColor}`}>
+        {label}
+      </td>
+    </tr>
+  )
+}
+
+// kind: 'cost' | 'revenue' | 'dept' | 'ebit' | 'financial' | 'tax' | 'result' | 'capex'
+function Row({ label, ytd, mtd, kind = 'neutral' }) {
   const varYtd = r2(ytd.act - ytd.fc)
   const varMtd = r2(mtd.act - mtd.fc)
 
-  const rowCls = total
-    ? 'bg-[var(--bg)] border-y border-[var(--line)]'
-    : 'border-b border-[var(--line)] hover:bg-[var(--bg)] transition'
+  const isSubtotal = kind === 'ebit' || kind === 'result'
 
-  const labelCls = total
-    ? 'font-bold text-[13px] text-[var(--ink)] tracking-[.04em] uppercase'
-    : bold
-    ? 'font-semibold text-[13px] text-[var(--ink)]'
-    : indent
-    ? 'text-[12px] text-[var(--ink-soft)] pl-10'
-    : muted
-    ? 'text-[12px] text-[var(--ink-soft)] italic'
-    : 'text-[12.5px] text-[var(--ink)]'
+  const rowCls = isSubtotal
+    ? 'bg-[var(--bg)] border-y-2 border-[var(--line)]'
+    : 'border-b border-[var(--line)] hover:bg-[var(--bg)]/60 transition-colors'
 
-  const numCls = total ? 'font-bold text-[13px]' : bold ? 'font-semibold text-[12px]' : 'font-normal text-[12px]'
+  // Label cell
+  const labelPad = kind === 'dept' ? 'py-2 pl-12 pr-5' : 'py-2.5 px-5'
+  const labelText =
+    kind === 'cost'     ? 'text-[12.5px] font-semibold text-brand-red' :
+    kind === 'revenue'  ? 'text-[12.5px] font-semibold text-brand-green' :
+    kind === 'dept'     ? 'text-[11.5px] text-brand-green/80' :
+    kind === 'ebit'     ? 'text-[13px] font-bold text-brand-blue uppercase tracking-[.05em]' :
+    kind === 'result'   ? 'text-[13.5px] font-bold text-[var(--ink)] uppercase tracking-[.05em]' :
+    kind === 'capex'    ? 'text-[12px] text-[var(--muted)] italic' :
+    kind === 'tax'      ? 'text-[12.5px] text-brand-amber' :
+    kind === 'financial'? 'text-[12.5px] text-brand-blue' :
+    'text-[12.5px] text-[var(--ink)]'
+
+  // Actual value color (driven by sign + kind)
+  const actCol = (v) => {
+    if (kind === 'cost' || kind === 'capex') return 'text-brand-red font-semibold'
+    if (kind === 'revenue' || kind === 'dept') return 'text-brand-green font-semibold'
+    if (kind === 'ebit' || kind === 'result') return v >= 0 ? 'text-brand-blue font-bold' : 'text-brand-red font-bold'
+    if (kind === 'tax') return 'text-brand-amber font-semibold'
+    if (kind === 'financial') return 'text-brand-blue'
+    return 'text-[var(--ink)]'
+  }
+
+  const numSz  = isSubtotal ? 'text-[13px]' : 'text-[12px]'
+  const fcText = isSubtotal ? 'text-[13px] text-[var(--ink-soft)] font-medium' : 'text-[12px] text-[var(--ink-soft)]'
 
   return (
     <tr className={rowCls}>
-      <td className={`py-2.5 px-5 ${labelCls}`}>{label}</td>
-      {/* YTD Actual */}
-      <td className={`py-2.5 px-3 text-right font-mono ${numCls} text-[var(--ink)]`}>{fv(ytd.act)}</td>
-      {/* YTD FC1 */}
-      <td className={`py-2.5 px-3 text-right font-mono ${numCls} text-[var(--ink-soft)]`}>{fv(ytd.fc)}</td>
-      {/* YTD Var */}
-      <td className={`py-2.5 px-3 text-right font-mono font-semibold text-[12px] border-r-2 border-[var(--line)] ${vcls(varYtd)}`}>
+      <td className={`${labelPad} ${labelText}`}>{label}</td>
+
+      {/* YTD */}
+      <td className={`py-2.5 px-3 text-right font-mono ${numSz} ${actCol(ytd.act)}`}>{fv(ytd.act)}</td>
+      <td className={`py-2.5 px-3 text-right font-mono ${fcText}`}>{fv(ytd.fc)}</td>
+      <td className={`py-2.5 px-3 text-right font-mono text-[12px] border-r-2 border-[var(--line)] ${vcls(varYtd)}`}>
         {fv(varYtd)}
       </td>
-      {/* MTD Actual */}
-      <td className={`py-2.5 px-3 text-right font-mono ${numCls} text-[var(--ink)]`}>{fv(mtd.act)}</td>
-      {/* MTD FC2 */}
-      <td className={`py-2.5 px-3 text-right font-mono ${numCls} text-[var(--ink-soft)]`}>{fv(mtd.fc)}</td>
-      {/* MTD Var */}
-      <td className={`py-2.5 px-3 text-right font-mono font-semibold text-[12px] ${vcls(varMtd)}`}>
+
+      {/* MTD */}
+      <td className={`py-2.5 px-3 text-right font-mono ${numSz} ${actCol(mtd.act)}`}>{fv(mtd.act)}</td>
+      <td className={`py-2.5 px-3 text-right font-mono ${fcText}`}>{fv(mtd.fc)}</td>
+      <td className={`py-2.5 px-3 text-right font-mono text-[12px] ${vcls(varMtd)}`}>
         {fv(varMtd)}
       </td>
     </tr>
@@ -321,7 +296,7 @@ function Row({ label, ytd, mtd, bold, indent, total, muted }) {
 function Divider({ thick }) {
   return (
     <tr>
-      <td colSpan={7} className={thick ? 'h-[2px] bg-[var(--line)]' : 'h-px bg-[var(--line)] opacity-50'} />
+      <td colSpan={7} className={thick ? 'h-[3px] bg-[var(--line)]' : 'h-px bg-[var(--line)] opacity-40'} />
     </tr>
   )
 }
