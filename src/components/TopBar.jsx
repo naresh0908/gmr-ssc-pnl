@@ -11,8 +11,8 @@ export default function TopBar() {
       <div className="flex items-center gap-3.5">
         <img src={GMRLogo} alt="GMR Group" className="h-12 w-auto" />
         <div>
-          <h1 className="m-0 font-display font-bold text-[20px] tracking-tight text-blue-600">
-            Shared Service Center
+          <h1 className="m-0 font-display font-bold text-[20px] tracking-tight" style={{ color: '#003974' }}>
+            Shared Services Center
           </h1>
           <p className="m-0 mt-0.5 text-[12.5px] text-[var(--muted)] tracking-wider uppercase">
             Decision Cockpit · CEO View
