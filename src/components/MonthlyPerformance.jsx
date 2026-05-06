@@ -2,12 +2,16 @@ import { useDashStore } from '../store/useDashStore'
 import SectionHead from './SectionHead'
 import { motion } from 'framer-motion'
 
-const REV_AXIS = 22
-
 export default function MonthlyPerformance() {
   const { derived, year } = useDashStore()
   const Y = derived.byYear[year]
   if (!Y) return null
+
+  // Scale revenue axis to the data for this FY (no hardcoded 22 Cr ceiling)
+  const REV_AXIS = Math.max(
+    1,
+    ...Y.monthly.flatMap((d) => [d.revAct, d.revFc1, d.revFc2 ?? 0])
+  ) * 1.08
 
   const yoyMax = Math.max(15, ...Y.monthly.map(d => Math.abs(d.yoy ?? 0)))
   const npMax = Math.max(2.5, ...Y.monthly.flatMap(d => [Math.abs(d.npAct), Math.abs(d.npFc1), Math.abs(d.npFc2 ?? 0)]))
@@ -15,7 +19,7 @@ export default function MonthlyPerformance() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="04" title={`Monthly Performance · FY ${year}`}>
+      <SectionHead num="05" title={`Monthly Performance · FY ${year}`}>
         Actuals against FC1 (initial plan target). Solid bars are actuals; tick marks denote target.
       </SectionHead>
 

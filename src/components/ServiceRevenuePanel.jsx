@@ -33,7 +33,7 @@ export default function ServiceRevenuePanel() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="02" title={`Service Revenue · FTE & Transaction · FY ${year}`}>
+      <SectionHead num="03" title={`Service Revenue · FTE & Transaction · FY ${year}`}>
         Revenue by billing model — FTE-based (recurring headcount) and transaction-based (volume-driven).
       </SectionHead>
 

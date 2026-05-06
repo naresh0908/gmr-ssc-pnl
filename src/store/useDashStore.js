@@ -5,8 +5,6 @@ import { computeDerived } from '../utils/computeDerived'
 import { computeServiceRevenue } from '../utils/computeServiceRevenue'
 import { generateInsights } from '../utils/generateInsights'
 
-const serviceRevenue = computeServiceRevenue(transactionFteData.transactions, transactionFteData.fte)
-
 // Patch sample data to introduce realistic variance: negative YoY, loss months, mixed NP ratio
 function patchSampleData(revenue, cost) {
   // Mar, Aug 2025: revenue dip below prior-year levels → negative YoY; Mar also dips into loss territory
@@ -32,6 +30,7 @@ function patchSampleData(revenue, cost) {
 }
 
 const { revenue: patchedRevenue, cost: patchedCost } = patchSampleData(sampleData.revenue, sampleData.cost)
+const serviceRevenue = computeServiceRevenue(transactionFteData.transactions, transactionFteData.fte, patchedRevenue)
 
 export const useDashStore = create((set, get) => ({
   rawRevenue: patchedRevenue,
@@ -46,8 +45,9 @@ export const useDashStore = create((set, get) => ({
 
   setData: (revenue, cost) => {
     const derived = computeDerived(revenue, cost)
+    const serviceRevenue = computeServiceRevenue(transactionFteData.transactions, transactionFteData.fte, revenue)
     const insights = generateInsights(derived, get().year)
-    set({ rawRevenue: revenue, rawCost: cost, derived, insights })
+    set({ rawRevenue: revenue, rawCost: cost, derived, serviceRevenue, insights })
   },
 
   setYear: (y) => {

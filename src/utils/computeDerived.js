@@ -81,27 +81,30 @@ export function computeDerived(revenue, cost) {
 
     // ---- Monthly EBIT matrix (dept x month) ----
     const ebitMatrix = departments.map((d) => {
-      const cells = MONTHS.map((m) => {
+      const allCells = MONTHS.map((m) => {
         const rRows = rev.filter((r) => r.department === d && r.month === m)
         const cRows = cst.filter((c) => c.department === d && c.month === m)
         const rAct = sumRev(rRows, 'act') / CR
         const cAct = cRows.reduce((a, c) => a + c.actual, 0) / CR
         return { month: m, ebit: round(rAct - cAct), revenue: round(rAct) }
-      }).filter(c => c.revenue > 0)
-      const total = round(cells.reduce((a, c) => a + c.ebit, 0))
+      })
+      // Total must include ALL months (even zero-revenue months that still have cost)
+      const total = round(allCells.reduce((a, c) => a + c.ebit, 0))
+      const cells = allCells.filter(c => c.revenue > 0 || Math.abs(c.ebit) > 0.001)
       return { department: d, cells, total }
     }).sort((a, b) => b.total - a.total)
 
     // ---- Monthly EBIT matrix (customer x month) ----
     const ebitCustomerMatrix = customers.map((cu) => {
-      const cells = MONTHS.map((m) => {
+      const allCells = MONTHS.map((m) => {
         const rRows = rev.filter((r) => r.customer === cu && r.month === m)
         const cRows = cst.filter((c) => c.customer === cu && c.month === m)
         const rAct = sumRev(rRows, 'act') / CR
         const cAct = cRows.reduce((a, c) => a + c.actual, 0) / CR
         return { month: m, ebit: round(rAct - cAct), revenue: round(rAct) }
-      }).filter(c => c.revenue > 0)
-      const total = round(cells.reduce((a, c) => a + c.ebit, 0))
+      })
+      const total = round(allCells.reduce((a, c) => a + c.ebit, 0))
+      const cells = allCells.filter(c => c.revenue > 0 || Math.abs(c.ebit) > 0.001)
       return { department: cu, cells, total }
     }).sort((a, b) => b.total - a.total)
 

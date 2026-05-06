@@ -25,7 +25,7 @@ export default function App() {
 
       {/* EBIT matrices: Department then Customer */}
       <EBITMatrix type="department" num="01" />
-      <EBITMatrix type="customer" num="01" />
+      <EBITMatrix type="customer" num="02" />
 
       {/* Service Revenue: FTE vs Transaction breakdown */}
       <ServiceRevenuePanel />

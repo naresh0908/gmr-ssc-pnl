@@ -99,7 +99,7 @@ export default function PLStatement() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="03" title={`P&L Statement · FY ${year}`}>
+      <SectionHead num="04" title={`P&L Statement · FY ${year}`}>
         Actuals vs FC1 (YTD) and FC2 (monthly). All figures in ₹ Cr — EBIT and Net Result computed from source rows.
       </SectionHead>
 

@@ -9,7 +9,8 @@ export default function HeroSummary() {
   const k = Y.kpis
   const revGap = (k.totalRevenue - k.revFc1).toFixed(1)
   const revGapFc2 = (k.totalRevenue - k.revFc2).toFixed(1)
-  const yoy = k.yoyGrowth ?? 0
+  const yoy = k.yoyGrowth   // undefined for the base year
+  const isBaseYear = yoy == null
 
   return (
     <motion.div
@@ -27,11 +28,12 @@ export default function HeroSummary() {
           FY {year} · Executive Summary
         </div>
         <h2 className="font-display font-normal text-[42px] leading-[1.05] tracking-[-1px] mt-2.5 mb-1.5 relative">
-          Revenue {yoy >= 0 ? 'up' : 'down'}{' '}
-          <em className="not-italic text-brand-blue font-medium italic">
-            {Math.abs(yoy).toFixed(1)}%
-          </em>
-          ,<br />execution {revGap < 0 ? 'trailing' : 'beating'} plan by{' '}
+          {isBaseYear ? (
+            <>FY {year} –{' '}<em className="not-italic text-brand-blue font-medium italic">base year</em>,<br /></>
+          ) : (
+            <>Revenue {yoy >= 0 ? 'up' : 'down'}{' '}<em className="not-italic text-brand-blue font-medium italic">{Math.abs(yoy).toFixed(1)}%</em>,<br /></>
+          )}
+          execution {revGap < 0 ? 'trailing' : 'beating'} plan by{' '}
           <em className="not-italic text-brand-blue font-medium italic">
             ₹{Math.abs(revGap)} Cr
           </em>
@@ -64,7 +66,11 @@ export default function HeroSummary() {
         <div className="flex gap-3 flex-wrap">
           <Pill label="Actual vs FC1" value={`₹${revGap} Cr`} dir={revGap < 0 ? 'down' : 'up'} />
           <Pill label="Actual vs FC2" value={`₹${revGapFc2} Cr`} dir={revGapFc2 < 0 ? 'down' : 'up'} />
-          <Pill label="YoY Growth" value={`${yoy >= 0 ? '+' : ''}${yoy.toFixed(1)}%`} dir={yoy >= 0 ? 'up' : 'down'} />
+          <Pill
+            label="YoY Growth"
+            value={isBaseYear ? '— N/A' : `${yoy >= 0 ? '+' : ''}${yoy.toFixed(1)}%`}
+            dir={isBaseYear ? 'neutral' : yoy >= 0 ? 'up' : 'down'}
+          />
         </div>
       </div>
     </motion.div>
@@ -72,11 +78,13 @@ export default function HeroSummary() {
 }
 
 function Pill({ label, value, dir }) {
+  const color = dir === 'up' ? 'text-[#7DDBA0]' : dir === 'down' ? 'text-[#FF7A7A]' : 'text-[#9AA4B5]'
+  const arrow = dir === 'up' ? '▲' : dir === 'down' ? '▼' : ''
   return (
     <span className="bg-white/5 border border-white/10 px-3 py-2 rounded-[10px] text-[12.5px] text-[#E8ECF3] inline-flex items-center gap-2">
       <span>{label}</span>
-      <span className={`font-mono font-semibold ${dir === 'up' ? 'text-[#7DDBA0]' : 'text-[#FF7A7A]'}`}>
-        {dir === 'up' ? '▲' : '▼'} {value}
+      <span className={`font-mono font-semibold ${color}`}>
+        {arrow}{arrow ? ' ' : ''}{value}
       </span>
     </span>
   )

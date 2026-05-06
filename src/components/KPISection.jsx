@@ -35,10 +35,12 @@ export default function KPISection() {
       up: prevK ? k.margin >= prevK.margin : true
     },
     {
-      label: 'YoY Growth', value: k.yoyGrowth ?? 0, unit: '%',
-      delta: (k.yoyGrowth ?? 0) >= 0 ? '▲ healthy' : '▼ contraction',
-      sub: prevYear ? `vs FY${prevYear} actual ₹${prevK?.totalRevenue} Cr` : 'No prior year',
-      up: (k.yoyGrowth ?? 0) >= 0
+      label: 'YoY Growth',
+      value: k.yoyGrowth ?? null,
+      unit: '%',
+      delta: k.yoyGrowth == null ? '— Base year' : k.yoyGrowth >= 0 ? '▲ healthy' : '▼ contraction',
+      sub: prevYear ? `vs FY${prevYear} actual ₹${prevK?.totalRevenue} Cr` : 'No prior-year data',
+      up: k.yoyGrowth == null ? null : k.yoyGrowth >= 0
     }
   ]
 
@@ -54,10 +56,10 @@ export default function KPISection() {
         >
           <div className="text-[11px] tracking-[.14em] uppercase text-[var(--muted)] font-semibold">{c.label}</div>
           <div className="font-display font-medium text-[30px] tracking-[-.5px] mt-2">
-            {c.value.toFixed(c.unit === '%' ? 1 : 1)}
-            <span className="font-mono text-[13px] text-[var(--muted)] font-medium ml-1">{c.unit}</span>
+            {c.value != null ? c.value.toFixed(1) : '—'}
+            <span className="font-mono text-[13px] text-[var(--muted)] font-medium ml-1">{c.value != null ? c.unit : ''}</span>
           </div>
-          <div className={`text-[12px] mt-1.5 font-mono font-medium ${c.up ? 'text-brand-green' : 'text-brand-red'}`}>
+          <div className={`text-[12px] mt-1.5 font-mono font-medium ${c.up == null ? 'text-[var(--muted)]' : c.up ? 'text-brand-green' : 'text-brand-red'}`}>
             {c.delta}
           </div>
           <div className="text-[11.5px] text-[var(--muted)] mt-1">{c.sub}</div>
