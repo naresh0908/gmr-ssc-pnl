@@ -4,6 +4,7 @@ import TopBar from './components/TopBar'
 import HeroSummary from './components/HeroSummary'
 import KPISection from './components/KPISection'
 import EBITMatrix from './components/EBITMatrix'
+import ServiceRevenuePanel from './components/ServiceRevenuePanel'
 import MonthlyPerformance from './components/MonthlyPerformance'
 import CostStructure from './components/CostStructure'
 import DeptEBITPanel from './components/DeptEBITPanel'
@@ -25,7 +26,10 @@ export default function App() {
       <EBITMatrix type="department" num="01" />
       <EBITMatrix type="customer" num="01" />
 
-      {/* Monthly Performance — with Net Profit Ratio legend (CHANGE 3) */}
+      {/* Service Revenue: FTE vs Transaction breakdown */}
+      <ServiceRevenuePanel />
+
+      {/* Monthly Performance */}
       <MonthlyPerformance />
 
       {/* Cost structure + dept EBIT side-by-side */}
