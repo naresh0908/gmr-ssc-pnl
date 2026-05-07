@@ -357,7 +357,7 @@ export default function CostAnalysisPanel() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="07" title={`Cost & Revenue Analysis · ${periodLabel}`}>
+      <SectionHead num="03" title={`Cost & Revenue Analysis · ${periodLabel}`}>
         {view === 'cost'     && 'Monthly cost split by type — PEX, OPEX, CAPEX vs forecast targets.'}
         {view === 'revenue'  && 'Monthly revenue split by stream — Service Fees, Other Income, Interest vs forecast targets.'}
         {view === 'combined' && 'Side-by-side view of revenue and cost per month — visualises monthly profit at a glance.'}

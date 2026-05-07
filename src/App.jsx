@@ -40,20 +40,20 @@ export default function App() {
       {/* 02 · Monthly Performance */}
       <MonthlyPerformance />
 
-      {/* 03 · Service Revenue: FTE vs Transaction billing */}
+      {/* 03 · Cost & Revenue Analysis */}
+      <CostAnalysisPanel />
+
+      {/* 04 · Service Revenue: FTE vs Transaction billing */}
       <ServiceRevenuePanel />
 
-      {/* 04 · EBIT Matrix · Department */}
-      <EBITMatrix type="department" num="04" />
+      {/* 05 · EBIT Matrix · Department */}
+      <EBITMatrix type="department" num="05" />
 
-      {/* 05 · Driver-based Cost Bridge */}
+      {/* 06 · Driver-based Cost Bridge */}
       <DriverWaterfall />
 
-      {/* 06 · EBIT Matrix · Customer */}
-      <EBITMatrix type="customer" num="06" />
-
-      {/* 07 · Cost & Revenue Analysis */}
-      <CostAnalysisPanel />
+      {/* 07 · EBIT Matrix · Customer */}
+      <EBITMatrix type="customer" num="07" />
 
       <footer className="mt-8 pt-5 border-t border-[var(--line)] flex justify-between items-center text-[11.5px] text-[var(--muted)]">
         <span className="font-mono">GMR SSC · Financial Decision Intelligence · v0.1</span>
