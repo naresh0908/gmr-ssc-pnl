@@ -44,6 +44,16 @@ export default function MonthlyPerformance() {
         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
         className="bg-[var(--card)] border border-[var(--line)] rounded-[18px] overflow-hidden"
       >
+        {/* Legend — top right */}
+        <div className="flex items-center justify-end gap-4 px-5 py-2.5 border-b border-[var(--line)] bg-[var(--bg)] flex-wrap">
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-3 h-2 rounded-sm bg-brand-blue inline-block" /> Positive</span>
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-3 h-2 rounded-sm bg-brand-blue-soft inline-block" /> Below target</span>
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-3 h-2 rounded-sm bg-brand-red inline-block" /> Negative</span>
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-[3px] h-3.5 bg-ink rounded-sm inline-block" /> FC1</span>
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-[3px] h-3.5 bg-brand-amber rounded-sm inline-block" /> FC2</span>
+          <span className="text-[11px] text-[var(--muted)]">centre = 0</span>
+        </div>
+
         {/* Header */}
         <div className="grid grid-cols-[80px_1.5fr_1fr_1fr_1fr] bg-[var(--bg)] border-b border-[var(--line)] text-[11px] tracking-[.16em] uppercase font-semibold text-[var(--ink-soft)]">
           <div className="p-3.5 px-4 border-r border-[var(--line)]">Month</div>
@@ -108,38 +118,6 @@ export default function MonthlyPerformance() {
           )
         })}
 
-        {/* Legend */}
-        <div className="border-t border-[var(--line)] bg-[var(--bg)]">
-          <div className="flex flex-wrap gap-x-6 gap-y-2 px-4 py-3 text-[12px] text-[var(--ink-soft)] items-center">
-            <span className="font-semibold uppercase tracking-wider text-[10.5px]">Revenue</span>
-            <Legend swatch="bg-brand-blue" label="Above Target (Actual)" />
-            <Legend swatch="bg-brand-blue-soft" label="Below Target (Actual)" />
-            <Legend swatch="bg-brand-grey" label="Target (FC1)" />
-            <span className="inline-flex items-center gap-2">
-              <span className="w-[3px] h-4 bg-ink rounded-sm" />
-              <span>FC1 Target</span>
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <span className="w-[3px] h-4 bg-brand-amber rounded-sm" />
-              <span>FC2 Target</span>
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 px-4 pb-3 text-[12px] text-[var(--ink-soft)] items-center border-t border-dashed border-[var(--line)] pt-3">
-            <span className="font-semibold uppercase tracking-wider text-[10.5px]">Bidirectional Bars</span>
-            <Legend swatch="bg-brand-blue" label="Positive / Above Target" />
-            <Legend swatch="bg-brand-blue-soft" label="Below Target (Actual)" textCls="text-brand-blue" />
-            <Legend swatch="bg-brand-red" label="Negative Actual" />
-            <span className="inline-flex items-center gap-2">
-              <span className="w-[3px] h-4 bg-ink rounded-sm" />
-              <span>FC1 Target</span>
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <span className="w-[3px] h-4 bg-brand-amber rounded-sm" />
-              <span>FC2 Target</span>
-            </span>
-            <span className="ml-auto text-[var(--muted)]">Center line = 0 baseline</span>
-          </div>
-        </div>
       </motion.div>
 
       <SectionInsightBar insights={insights} />

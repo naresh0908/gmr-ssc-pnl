@@ -6,7 +6,7 @@ import { getSectionInsights } from '../utils/sectionInsights'
 import { motion } from 'framer-motion'
 import {
   ComposedChart, Bar, Line, XAxis, YAxis,
-  CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine,
+  CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine,
 } from 'recharts'
 import { MONTHS } from '../utils/computeDerived'
 import { getAvailMonths, getActivePeriodMonths, getPeriodLabel } from '../utils/periodUtils'
@@ -64,7 +64,6 @@ function CostMoMChart({ data }) {
           label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', offset: 12, style: { fontSize: 10, fill: 'var(--muted)' } }}
         />
         <Tooltip content={<ChartTooltip />} />
-        <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'monospace', paddingTop: 8 }} formatter={(v) => <span style={{ color: 'var(--ink-soft)' }}>{v}</span>} />
         <Bar dataKey="PEX"   stackId="cost" fill={TYPE_COLOR.PEX}   name={TYPE_LABEL.PEX} />
         <Bar dataKey="OPEX"  stackId="cost" fill={TYPE_COLOR.OPEX}  name={TYPE_LABEL.OPEX} />
         <Bar dataKey="CAPEX" stackId="cost" fill={TYPE_COLOR.CAPEX} name={TYPE_LABEL.CAPEX} radius={[3, 3, 0, 0]} />
@@ -89,7 +88,6 @@ function RevenueMoMChart({ data }) {
           label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', offset: 12, style: { fontSize: 10, fill: 'var(--muted)' } }}
         />
         <Tooltip content={<ChartTooltip />} />
-        <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'monospace', paddingTop: 8 }} formatter={(v) => <span style={{ color: 'var(--ink-soft)' }}>{v}</span>} />
         <Bar dataKey="sf" stackId="rev" fill={REV_COLOR.sf} name={REV_LABEL.sf} />
         <Bar dataKey="oi" stackId="rev" fill={REV_COLOR.oi} name={REV_LABEL.oi} />
         <Bar dataKey="it" stackId="rev" fill={REV_COLOR.it} name={REV_LABEL.it} radius={[3, 3, 0, 0]} />
@@ -114,7 +112,6 @@ function CombinedChart({ data }) {
           label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', offset: 12, style: { fontSize: 10, fill: 'var(--muted)' } }}
         />
         <Tooltip content={<ChartTooltip />} />
-        <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'monospace', paddingTop: 8 }} formatter={(v) => <span style={{ color: 'var(--ink-soft)' }}>{v}</span>} />
         <ReferenceLine y={0} stroke="var(--line)" />
         <Bar dataKey="PEX"   stackId="cost" fill={TYPE_COLOR.PEX}   name={TYPE_LABEL.PEX} />
         <Bar dataKey="OPEX"  stackId="cost" fill={TYPE_COLOR.OPEX}  name={TYPE_LABEL.OPEX} />
@@ -141,7 +138,6 @@ function YoYChart({ data, years }) {
           label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', offset: 12, style: { fontSize: 10, fill: 'var(--muted)' } }}
         />
         <Tooltip content={<ChartTooltip />} />
-        <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'monospace', paddingTop: 8 }} formatter={(v) => <span style={{ color: 'var(--ink-soft)' }}>{v}</span>} />
         <ReferenceLine y={0} stroke="var(--line)" />
         {years.map((y, i) => (
           <Bar

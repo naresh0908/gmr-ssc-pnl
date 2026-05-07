@@ -17,10 +17,8 @@ export default function KPISection() {
   const pk          = useMemo(() => derivePeriodKPIs(Y.monthly, activeMonths) ?? Y.kpis, [Y.monthly, Y.kpis, activeMonths])
   const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
 
-  // Always compare against the earliest available year (FY2024 base), not the immediately prior year.
-  // This avoids FY2025 (a disrupted year) acting as the baseline when viewing FY2026.
-  const baseYear  = derived.years[0]
-  const prevYear  = year !== baseYear ? baseYear : null
+  // Compare against the immediately prior year
+  const prevYear  = derived.years[derived.years.indexOf(year) - 1] ?? null
   const prevY     = prevYear ? derived.byYear[prevYear] : null
   const prevAvail = useMemo(
     () => (prevYear ? getAvailMonths(rawRevenue, prevYear) : []),
