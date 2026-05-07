@@ -8,7 +8,7 @@ export default function TopBar() {
   return (
     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-6 pb-3 md:pb-5 border-b border-[var(--line)]">
       <div className="flex items-center gap-2 md:gap-3.5 min-w-0">
-        <img src={GMRLogo} alt="GMR Group" className="hidden md:block h-12 w-auto flex-shrink-0" />
+        <img src={GMRLogo} alt="GMR Group" className="h-10 md:h-12 w-auto flex-shrink-0" />
         <div className="min-w-0">
           <h1 className="m-0 font-display font-bold text-[16px] md:text-[20px] tracking-tight truncate" style={{ color: '#003974' }}>
             Shared Services Center
