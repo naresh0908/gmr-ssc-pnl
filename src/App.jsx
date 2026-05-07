@@ -20,13 +20,13 @@ export default function App() {
     <div>
       {/* Sticky header - full viewport width so background covers edge-to-edge */}
       <div className="sticky top-0 z-40 bg-[var(--bg)] shadow-[0_4px_16px_rgba(0,0,0,0.06)]">
-        <div className="max-w-[1440px] mx-auto px-9 pt-7 pb-3">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-9 pt-4 md:pt-7 pb-2 md:pb-3">
           <TopBar />
           <PeriodBar />
         </div>
       </div>
 
-    <div className="max-w-[1440px] mx-auto px-9 pb-20">
+    <div className="max-w-[1440px] mx-auto px-4 md:px-9 pb-12 md:pb-20">
       {/* Executive summary block: hero + KPI cards + cost structure overview */}
       <HeroSummary />
       <KPISection />

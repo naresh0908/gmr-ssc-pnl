@@ -246,7 +246,7 @@ export default function PLStatement() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-[var(--bg)] border-b-2 border-[var(--line)]">
-                <th className="py-2.5 px-5 text-left text-[10.5px] font-semibold tracking-[.12em] uppercase text-[var(--ink-soft)] min-w-[260px]">P&L Line</th>
+                <th className="py-2.5 px-5 text-left text-[10.5px] font-semibold tracking-[.12em] uppercase text-[var(--ink-soft)] min-w-[260px] sticky left-0 bg-[var(--bg)] z-20 shadow-[2px_0_4px_rgba(0,0,0,0.1)]">P&L Line</th>
                 {viewMode === 'variance' ? (
                   <>
                     <th className="py-2.5 px-3 text-right text-[10px] font-semibold uppercase tracking-[.1em] text-brand-amber    min-w-[80px]">Actual</th>
@@ -390,7 +390,7 @@ function Row({ row, months, viewMode, expanded, onToggle }) {
 
   return (
     <tr className={`${rowCls} ${onToggle ? 'cursor-pointer' : ''}`} onClick={onToggle || undefined}>
-      <td className={`${labelPad} ${labelText} ${onToggle ? 'select-none' : ''}`}>
+      <td className={`${labelPad} ${labelText} ${onToggle ? 'select-none' : ''} sticky left-0 z-20 shadow-[2px_0_4px_rgba(0,0,0,0.1)] ${kind === 'section' ? 'bg-inherit' : 'bg-[var(--bg)]'}`}>
         <span className="inline-flex items-center gap-1.5">
           {onToggle && (
             <span className="text-[var(--ink-soft)] flex-shrink-0">

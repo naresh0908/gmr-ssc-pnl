@@ -20,8 +20,8 @@ export default function PeriodBar() {
   const isYear = periodMode === 'year'
 
   return (
-    <div className="mt-5 flex items-center gap-1 px-1 py-1.5 bg-[var(--card)] border border-[var(--line)] rounded-[14px] flex-wrap">
-      <span className="text-[10px] font-bold uppercase tracking-[.2em] text-[var(--muted)] px-2 select-none shrink-0">
+    <div className="mt-3 md:mt-5 flex items-center gap-1 px-1 py-1.5 bg-[var(--card)] border border-[var(--line)] rounded-[14px] overflow-x-auto">
+      <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-[.2em] text-[var(--muted)] px-1.5 md:px-2 select-none shrink-0">
         Period
       </span>
 
@@ -68,5 +68,5 @@ export default function PeriodBar() {
 
 const pill = (active) =>
   active
-    ? 'px-3 py-1 text-[11px] font-semibold font-mono rounded-full bg-brand-blue text-white transition-all'
-    : 'px-3 py-1 text-[11px] font-semibold font-mono rounded-full text-[var(--ink-soft)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-all'
+    ? 'px-2.5 md:px-3 py-1 text-[9px] md:text-[11px] font-semibold font-mono rounded-full bg-brand-blue text-white transition-all whitespace-nowrap'
+    : 'px-2.5 md:px-3 py-1 text-[9px] md:text-[11px] font-semibold font-mono rounded-full text-[var(--ink-soft)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-all whitespace-nowrap'

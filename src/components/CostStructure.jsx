@@ -33,22 +33,22 @@ export default function CostStructure() {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-      className="bg-[var(--card)] border border-[var(--line)] rounded-[18px] p-6"
+      className="bg-[var(--card)] border border-[var(--line)] rounded-[14px] md:rounded-[18px] p-4 md:p-6"
     >
-      <h4 className="m-0 font-display font-medium text-[18px] tracking-[-.2px]">
+      <h4 className="m-0 font-display font-medium text-[16px] md:text-[18px] tracking-[-.2px]">
         Cost Structure · {periodLabel}
       </h4>
-      <div className="text-[12px] text-[var(--muted)] mt-1 mb-4">
+      <div className="text-[11px] md:text-[12px] text-[var(--muted)] mt-1 mb-3 md:mb-4">
         PEX dominates. CAPEX deferred - savings may surface in next FY.
       </div>
 
-      <div className="flex h-[46px] rounded-[10px] overflow-hidden border border-[var(--line)]">
+      <div className="flex h-10 md:h-[46px] rounded-[10px] overflow-hidden border border-[var(--line)]">
         {costByType.map((s) => {
           const pct = total > 0 ? (s.actual / total) * 100 : 0
           return (
             <div
               key={s.type}
-              className="flex items-center justify-center font-mono text-[12px] font-semibold"
+              className="flex items-center justify-center font-mono text-[9px] md:text-[12px] font-semibold min-w-[40px]"
               style={{ flex: `${Math.max(pct, 1)} 0 0`, background: colors[s.type].bg, color: colors[s.type].text }}
             >
               {s.type} · {pct.toFixed(0)}%
@@ -57,18 +57,18 @@ export default function CostStructure() {
         })}
       </div>
 
-      <div className="grid grid-cols-3 gap-2.5 mt-3.5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-2.5 mt-2.5 md:mt-3.5">
         {costByType.map((s) => {
           const varF1 = s.actual - s.fc1
           const varF2 = s.actual - s.fc2
           const pct   = total > 0 ? (s.actual / total) * 100 : 0
           return (
-            <div key={s.type} className="p-3.5 border border-[var(--line)] rounded-[12px]"
+            <div key={s.type} className="p-2.5 md:p-3.5 border border-[var(--line)] rounded-[10px] md:rounded-[12px]"
                  style={{ borderTop: `3px solid ${colors[s.type].bg}` }}>
-              <div className="text-[11px] text-[var(--muted)] tracking-wider uppercase font-semibold">{s.type}</div>
-              <div className="font-display text-[22px] font-medium mt-1">₹{s.actual.toFixed(1)} Cr</div>
-              <div className="font-mono text-[11px] text-[var(--ink-soft)] mt-0.5">{pct.toFixed(1)}%</div>
-              <div className="font-mono text-[11px] mt-1 flex gap-3">
+              <div className="text-[10px] md:text-[11px] text-[var(--muted)] tracking-wider uppercase font-semibold">{s.type}</div>
+              <div className="font-display text-[18px] md:text-[22px] font-medium mt-0.5 md:mt-1">₹{s.actual.toFixed(1)} Cr</div>
+              <div className="font-mono text-[10px] md:text-[11px] text-[var(--ink-soft)] mt-0.5">{pct.toFixed(1)}%</div>
+              <div className="font-mono text-[9px] md:text-[11px] mt-0.5 md:mt-1 flex flex-col md:flex-row gap-1 md:gap-3">
                 <span className={varF1 <= 0 ? 'text-brand-green' : 'text-brand-red'}>
                   FC1: {varF1 < 0 ? '▼' : '▲'} ₹{Math.abs(varF1).toFixed(1)}
                 </span>
