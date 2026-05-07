@@ -4,9 +4,9 @@ import { motion } from 'framer-motion'
 import { getAvailMonths, getActivePeriodMonths, getPeriodLabel, derivePeriodCostByType } from '../utils/periodUtils'
 
 const colors = {
-  PEX:   { bg: '#1F6FEB', text: '#fff' },
-  OPEX:  { bg: '#5B8FF2', text: '#fff' },
-  CAPEX: { bg: '#A9C3F5', text: '#1F2530' }
+  PEX:   { bg: '#C0392B', text: '#fff' },
+  OPEX:  { bg: '#B7791F', text: '#fff' },
+  CAPEX: { bg: '#1F6FEB', text: '#fff' }
 }
 
 export default function CostStructure() {
@@ -70,10 +70,10 @@ export default function CostStructure() {
               <div className="font-mono text-[11px] text-[var(--ink-soft)] mt-0.5">{pct.toFixed(1)}%</div>
               <div className="font-mono text-[11px] mt-1 flex gap-3">
                 <span className={varF1 <= 0 ? 'text-brand-green' : 'text-brand-red'}>
-                  F1: {varF1 < 0 ? '▼' : '▲'} ₹{Math.abs(varF1).toFixed(1)}
+                  FC1: {varF1 < 0 ? '▼' : '▲'} ₹{Math.abs(varF1).toFixed(1)}
                 </span>
                 <span className={varF2 <= 0 ? 'text-brand-green' : 'text-brand-red'}>
-                  F2: {varF2 < 0 ? '▼' : '▲'} ₹{Math.abs(varF2).toFixed(1)}
+                  FC2: {varF2 < 0 ? '▼' : '▲'} ₹{Math.abs(varF2).toFixed(1)}
                 </span>
               </div>
             </div>

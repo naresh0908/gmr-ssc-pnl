@@ -182,8 +182,14 @@ export default function PLStatement() {
     })
   }
 
-  // Build display rows in the requested order: COSTS → REVENUE → EBIT → FINANCIAL → NET RESULT
+  // Build display rows in the requested order: REVENUE → COSTS → EBIT → TAX → NET RESULT
   const rowDefs = []
+  rowDefs.push({ kind: 'section', label: 'REVENUE', color: 'green' })
+  rowDefs.push({ kind: 'revenue', id: 'sf', label: 'Service Fee Income', data: pl.sfTotal, expandable: true })
+  if (expanded.has('sf')) pl.sfByDept.forEach((d) => rowDefs.push({ kind: 'subcat-rev', id: `sf.${d.dept}`, label: d.dept, data: d }))
+  rowDefs.push({ kind: 'revenue', id: 'oi', label: 'Other Income', data: pl.otherInc })
+  rowDefs.push({ kind: 'rev-total', id: 'totalrev', label: 'Total Revenue (Service Fees + Other Income)', data: pl.revenueTotal })
+
   rowDefs.push({ kind: 'section', label: 'COSTS', color: 'red' })
   rowDefs.push({ kind: 'cost', costType: 'PEX',   id: 'pex',   label: 'PEX · Personnel Expenses',  data: pl.pex,   expandable: true })
   if (expanded.has('pex'))   pl.pex.subcats.forEach((s)   => rowDefs.push({ kind: 'subcat-cost', costType: 'PEX',   id: `pex.${s.sub}`,   label: s.sub, data: s }))
@@ -192,12 +198,6 @@ export default function PLStatement() {
   rowDefs.push({ kind: 'cost', costType: 'CAPEX', id: 'capex', label: 'CAPEX · Capital Expenses',  data: pl.capex, expandable: true })
   if (expanded.has('capex')) pl.capex.subcats.forEach((s) => rowDefs.push({ kind: 'subcat-cost', costType: 'CAPEX', id: `capex.${s.sub}`, label: s.sub, data: s }))
   rowDefs.push({ kind: 'cost-total', id: 'totalcost', label: 'Total Costs (PEX + OPEX + CAPEX)', data: pl.costsTotal })
-
-  rowDefs.push({ kind: 'section', label: 'REVENUE', color: 'green' })
-  rowDefs.push({ kind: 'revenue', id: 'sf', label: 'Service Fee Income', data: pl.sfTotal, expandable: true })
-  if (expanded.has('sf')) pl.sfByDept.forEach((d) => rowDefs.push({ kind: 'subcat-rev', id: `sf.${d.dept}`, label: d.dept, data: d }))
-  rowDefs.push({ kind: 'revenue', id: 'oi', label: 'Other Income', data: pl.otherInc })
-  rowDefs.push({ kind: 'rev-total', id: 'totalrev', label: 'Total Revenue (Service Fees + Other Income)', data: pl.revenueTotal })
 
   rowDefs.push({ kind: 'ebit', id: 'ebit', label: 'EBIT', data: pl.ebit })
 
@@ -365,10 +365,10 @@ function Row({ row, months, viewMode, expanded, onToggle }) {
   const labelPad = isSubcat ? 'py-2 pl-12 pr-5' : 'py-2.5 px-5'
   const labelText =
     kind === 'cost'        ? 'text-[12.5px] font-semibold text-brand-red' :
-    kind === 'subcat-cost' ? 'text-[11.5px] text-brand-red/70' :
+    kind === 'subcat-cost' ? 'text-[11.5px] font-medium text-brand-red' :
     kind === 'cost-total'  ? 'text-[12.5px] font-bold text-brand-red uppercase tracking-[.04em]' :
     kind === 'revenue'     ? 'text-[12.5px] font-semibold text-brand-green' :
-    kind === 'subcat-rev'  ? 'text-[11.5px] text-brand-green/70' :
+    kind === 'subcat-rev'  ? 'text-[11.5px] font-medium text-brand-green' :
     kind === 'rev-total'   ? 'text-[12.5px] font-bold text-brand-green uppercase tracking-[.04em]' :
     kind === 'ebit'        ? 'text-[13px] font-bold text-brand-blue uppercase tracking-[.05em]' :
     kind === 'result'      ? 'text-[13.5px] font-bold text-[var(--ink)] uppercase tracking-[.05em]' :
@@ -403,10 +403,10 @@ function Row({ row, months, viewMode, expanded, onToggle }) {
 
       {viewMode === 'variance' ? (
         <>
-          <td className={`py-2.5 px-3 text-right font-mono ${numSize} ${numColor(data.act)}`}>{fv(data.act)}</td>
-          <td className={`py-2.5 px-3 text-right font-mono ${fcText}`}>{fv(data.fc1)}</td>
+          <td className={`py-2.5 px-3 text-right font-mono ${numSize} ${numColor(data.act)} ${isSubcat ? 'font-medium' : ''}`}>{fv(data.act)}</td>
+          <td className={`py-2.5 px-3 text-right font-mono ${fcText} ${isSubcat ? 'font-medium' : ''}`}>{fv(data.fc1)}</td>
           <td className={`py-2.5 px-3 text-right font-mono text-[12px] ${vcls(var1)}`}>{fv(var1)}</td>
-          <td className={`py-2.5 px-3 text-right font-mono ${fcText}`}>{fv(data.fc2)}</td>
+          <td className={`py-2.5 px-3 text-right font-mono ${fcText} ${isSubcat ? 'font-medium' : ''}`}>{fv(data.fc2)}</td>
           <td className={`py-2.5 px-3 text-right font-mono text-[12px] ${vcls(var2)}`}>{fv(var2)}</td>
         </>
       ) : (
@@ -414,7 +414,7 @@ function Row({ row, months, viewMode, expanded, onToggle }) {
           {months.map((m) => {
             const v = data.byMonth?.[m] ?? 0
             return (
-              <td key={m} className={`py-2.5 px-2.5 text-right font-mono ${numSize} ${numColor(v)}`}>
+              <td key={m} className={`py-2.5 px-2.5 text-right font-mono ${numSize} ${numColor(v)} ${isSubcat ? 'font-medium' : ''}`}>
                 {Math.abs(v) < 0.005 ? '-' : v.toFixed(2)}
               </td>
             )
