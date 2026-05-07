@@ -1,47 +1,77 @@
+import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useDashStore } from '../store/useDashStore'
+import { getAvailMonths, getActivePeriodMonths, getPeriodLabel, derivePeriodKPIs } from '../utils/periodUtils'
 
 export default function KPISection() {
-  const { derived, year } = useDashStore()
+  const { derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const rawRevenue = useDashStore((s) => s.rawRevenue)
   const Y = derived.byYear[year]
   if (!Y) return null
-  const k = Y.kpis
-  const prevYear = derived.years[derived.years.indexOf(year) - 1]
-  const prevK = prevYear ? derived.byYear[prevYear].kpis : null
+
+  const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
+  const activeMonths = useMemo(
+    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
+    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+  )
+  const pk          = useMemo(() => derivePeriodKPIs(Y.monthly, activeMonths) ?? Y.kpis, [Y.monthly, Y.kpis, activeMonths])
+  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+
+  // Prior-year same-period comparison
+  const prevYear  = derived.years[derived.years.indexOf(year) - 1]
+  const prevY     = prevYear ? derived.byYear[prevYear] : null
+  const prevAvail = useMemo(
+    () => (prevYear ? getAvailMonths(rawRevenue, prevYear) : []),
+    [rawRevenue, prevYear]
+  )
+  const prevActive = useMemo(
+    () => (prevYear ? getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, prevAvail) : []),
+    [periodMode, selectedQ, selectedPeriodMonth, prevAvail, prevYear]
+  )
+  const prevPk = useMemo(
+    () => (prevY ? derivePeriodKPIs(prevY.monthly, prevActive) ?? prevY.kpis : null),
+    [prevY, prevActive]
+  )
+
+  const deltaLabel = periodMode === 'year' ? `FY${prevYear}` : `${periodLabel.replace(` · FY ${year}`, '')} FY${prevYear}`
 
   const cards = [
     {
-      label: 'Total Revenue', value: k.totalRevenue, unit: 'Cr',
-      delta: prevK ? `▲ ₹${(k.totalRevenue - prevK.totalRevenue).toFixed(1)} Cr vs FY${prevYear}` : '—',
-      sub: `FC1: ₹${k.revFc1.toFixed(1)} · FC2: ₹${k.revFc2.toFixed(1)} Cr`,
-      up: prevK ? k.totalRevenue >= prevK.totalRevenue : true
+      label: 'Total Revenue', value: pk.totalRevenue, unit: 'Cr',
+      delta: prevPk ? `${pk.totalRevenue >= prevPk.totalRevenue ? '▲' : '▼'} ₹${Math.abs(pk.totalRevenue - prevPk.totalRevenue).toFixed(1)} Cr vs ${deltaLabel}` : '—',
+      sub: `FC1: ₹${(pk.revFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.revFc2 ?? 0).toFixed(1)} Cr`,
+      up: prevPk ? pk.totalRevenue >= prevPk.totalRevenue : true,
     },
     {
-      label: 'Total Cost', value: k.totalCost, unit: 'Cr',
-      delta: prevK ? `${k.totalCost > prevK.totalCost ? '▲' : '▼'} ₹${Math.abs(k.totalCost - prevK.totalCost).toFixed(1)} Cr vs FY${prevYear}` : '—',
-      sub: `FC1: ₹${k.costFc1.toFixed(1)} · FC2: ₹${k.costFc2.toFixed(1)} Cr`,
-      up: prevK ? k.totalCost > prevK.totalCost : false
+      label: 'Total Cost', value: pk.totalCost, unit: 'Cr',
+      delta: prevPk ? `${pk.totalCost > prevPk.totalCost ? '▲' : '▼'} ₹${Math.abs(pk.totalCost - prevPk.totalCost).toFixed(1)} Cr vs ${deltaLabel}` : '—',
+      sub: `FC1: ₹${(pk.costFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.costFc2 ?? 0).toFixed(1)} Cr`,
+      up: prevPk ? pk.totalCost <= prevPk.totalCost : false,
     },
     {
-      label: 'Net Profit', value: k.netProfit, unit: 'Cr',
-      delta: prevK ? `${k.netProfit >= prevK.netProfit ? '▲' : '▼'} ₹${Math.abs(k.netProfit - prevK.netProfit).toFixed(1)} Cr vs FY${prevYear}` : '—',
-      sub: `FC1: ₹${(k.netProfitFc1 ?? 0).toFixed(1)} · FC2: ₹${(k.netProfitFc2 ?? 0).toFixed(1)} Cr`,
-      up: prevK ? k.netProfit >= prevK.netProfit : true
+      label: 'Net Profit', value: pk.netProfit, unit: 'Cr',
+      delta: prevPk ? `${pk.netProfit >= prevPk.netProfit ? '▲' : '▼'} ₹${Math.abs(pk.netProfit - prevPk.netProfit).toFixed(1)} Cr vs ${deltaLabel}` : '—',
+      sub: `FC1: ₹${(pk.netProfitFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.netProfitFc2 ?? 0).toFixed(1)} Cr`,
+      up: prevPk ? pk.netProfit >= prevPk.netProfit : true,
     },
     {
-      label: 'Profit Margin', value: k.margin, unit: '%',
-      delta: prevK ? `${k.margin >= prevK.margin ? '▲' : '▼'} ${Math.abs(k.margin - prevK.margin).toFixed(1)} pts vs FY${prevYear}` : '—',
+      label: 'Profit Margin', value: pk.margin, unit: '%',
+      delta: prevPk ? `${pk.margin >= prevPk.margin ? '▲' : '▼'} ${Math.abs(pk.margin - prevPk.margin).toFixed(1)} pts vs ${deltaLabel}` : '—',
       sub: 'Cost vs revenue trajectory',
-      up: prevK ? k.margin >= prevK.margin : true
+      up: prevPk ? pk.margin >= prevPk.margin : true,
     },
     {
-      label: 'YoY Growth',
-      value: k.yoyGrowth ?? null,
+      label: periodMode === 'year' ? 'YoY Growth' : 'Period Label',
+      value: periodMode === 'year' ? (Y.kpis.yoyGrowth ?? null) : null,
       unit: '%',
-      delta: k.yoyGrowth == null ? '— Base year' : k.yoyGrowth >= 0 ? '▲ healthy' : '▼ contraction',
-      sub: prevYear ? `vs FY${prevYear} actual ₹${prevK?.totalRevenue} Cr` : 'No prior-year data',
-      up: k.yoyGrowth == null ? null : k.yoyGrowth >= 0
-    }
+      delta: periodMode === 'year'
+        ? (Y.kpis.yoyGrowth == null ? '— Base year' : Y.kpis.yoyGrowth >= 0 ? '▲ healthy' : '▼ contraction')
+        : periodLabel,
+      sub: periodMode === 'year'
+        ? (prevYear ? `vs FY${prevYear} actual ₹${prevPk?.totalRevenue} Cr` : 'No prior-year data')
+        : `Actuals vs FC2 var: ₹${((pk.totalRevenue ?? 0) - (pk.revFc2 ?? 0)).toFixed(1)} Cr`,
+      up: periodMode === 'year' ? (Y.kpis.yoyGrowth == null ? null : Y.kpis.yoyGrowth >= 0) : null,
+    },
   ]
 
   return (

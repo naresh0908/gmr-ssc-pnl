@@ -4,27 +4,40 @@ import SectionHead from './SectionHead'
 import SectionInsightBar from './SectionInsightBar'
 import { motion } from 'framer-motion'
 import { getSectionInsights } from '../utils/sectionInsights'
+import { getAvailMonths, getActivePeriodMonths, getPeriodLabel } from '../utils/periodUtils'
 
 export default function MonthlyPerformance() {
-  const { derived, year } = useDashStore()
+  const { derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const rawRevenue = useDashStore((s) => s.rawRevenue)
   const Y = derived.byYear[year]
   const insights = useMemo(() => getSectionInsights('monthly', { derived, year }), [derived, year])
   if (!Y) return null
 
+  const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
+  const activeMonths = useMemo(
+    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
+    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+  )
+  const filteredMonthly = useMemo(
+    () => Y.monthly.filter((d) => activeMonths.includes(d.month)),
+    [Y.monthly, activeMonths]
+  )
+  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+
   // Scale revenue axis to the data for this FY (no hardcoded 22 Cr ceiling)
   const REV_AXIS = Math.max(
     1,
-    ...Y.monthly.flatMap((d) => [d.revAct, d.revFc1, d.revFc2 ?? 0])
+    ...filteredMonthly.flatMap((d) => [d.revAct, d.revFc1, d.revFc2 ?? 0])
   ) * 1.08
 
-  const yoyMax = Math.max(15, ...Y.monthly.map(d => Math.abs(d.yoy ?? 0)))
-  const npMax = Math.max(2.5, ...Y.monthly.flatMap(d => [Math.abs(d.npAct), Math.abs(d.npFc1), Math.abs(d.npFc2 ?? 0)]))
-  const npRatioMax = Math.max(15, ...Y.monthly.map(d => Math.abs(d.npRatio)))
+  const yoyMax = Math.max(15, ...filteredMonthly.map(d => Math.abs(d.yoy ?? 0)))
+  const npMax = Math.max(2.5, ...filteredMonthly.flatMap(d => [Math.abs(d.npAct), Math.abs(d.npFc1), Math.abs(d.npFc2 ?? 0)]))
+  const npRatioMax = Math.max(15, ...filteredMonthly.map(d => Math.abs(d.npRatio)))
 
   return (
     <div className="mt-7">
-      <SectionHead num="02" title={`Monthly Performance · FY ${year}`}>
-        Actuals against FC1 (initial plan target). Solid bars are actuals; tick marks denote target.
+      <SectionHead num="02" title={`Monthly Performance · ${periodLabel}`}>
+        Actuals against FC1 and FC2 for the selected period. Solid bars are actuals; tick marks denote target.
       </SectionHead>
 
       <motion.div
@@ -41,7 +54,7 @@ export default function MonthlyPerformance() {
         </div>
 
         {/* Rows */}
-        {Y.monthly.map((d) => {
+        {filteredMonthly.map((d) => {
           const revAct = Math.min((d.revAct / REV_AXIS) * 100, 100)
           const revFc1 = Math.min((d.revFc1 / REV_AXIS) * 100, 100)
           const revFc2 = Math.min((d.revFc2 / REV_AXIS) * 100, 100)

@@ -9,6 +9,7 @@ import {
   CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine
 } from 'recharts'
 import { MONTHS } from '../utils/computeDerived'
+import { getAvailMonths, getActivePeriodMonths, getPeriodLabel } from '../utils/periodUtils'
 
 const CR = 1e7
 const r2 = (n) => Math.round(n * 100) / 100
@@ -112,7 +113,7 @@ function YoYChart({ data, years }) {
 }
 
 // ─── Sub-category breakdown table (MoM detail) ───────────────────────────────
-function SubCategoryTable({ data, year }) {
+function SubCategoryTable({ data, periodLabel }) {
   const byType = { PEX: [], OPEX: [], CAPEX: [] }
   data.forEach((d) => { if (byType[d.costType]) byType[d.costType].push(d) })
 
@@ -120,7 +121,7 @@ function SubCategoryTable({ data, year }) {
     <div className="bg-[var(--card)] border border-[var(--line)] rounded-[18px] overflow-hidden">
       <div className="px-5 py-3 border-b border-[var(--line)] bg-[var(--bg)] flex items-center justify-between">
         <span className="text-[11px] font-bold uppercase tracking-[.16em] text-[var(--ink-soft)]">
-          Sub-Category Breakdown · FY {year}
+          Sub-Category Breakdown · {periodLabel}
         </span>
         <span className="text-[11px] font-mono text-[var(--muted)]">Actual vs FC1 & FC2 · ₹ Cr</span>
       </div>
@@ -286,12 +287,20 @@ function YoYTypeTable({ data, years }) {
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function CostAnalysisPanel() {
   const [view, setView] = useState('mom')
-  const { rawCost, derived, year } = useDashStore()
-  const insights = useMemo(() => getSectionInsights('cost-analysis', { derived, year }), [derived, year])
+  const { rawCost, derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const rawRevenue = useDashStore((s) => s.rawRevenue)
+  const insights = useMemo(() => getSectionInsights('cost-analysis', { derived, year, rawCost }), [derived, year, rawCost])
+
+  const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
+  const activeMonths = useMemo(
+    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
+    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+  )
+  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
 
   // MoM: monthly PEX/OPEX/CAPEX actuals + FC1 + FC2 lines for selected year
   const momData = useMemo(() => {
-    return MONTHS.map((m) => {
+    return MONTHS.filter((m) => activeMonths.includes(m)).map((m) => {
       const rows = rawCost.filter((c) => c.year === year && c.month === m)
       const pex   = r2(rows.filter((c) => c.costType === 'PEX'  ).reduce((s, c) => s + c.actual, 0) / CR)
       const opex  = r2(rows.filter((c) => c.costType === 'OPEX' ).reduce((s, c) => s + c.actual, 0) / CR)
@@ -301,11 +310,11 @@ export default function CostAnalysisPanel() {
       const total = r2(pex + opex + capex)
       return { month: m, PEX: pex, OPEX: opex, CAPEX: capex, fc1, fc2, total }
     }).filter((d) => d.total > 0 || d.fc2 > 0 || d.fc1 > 0)
-  }, [rawCost, year])
+  }, [rawCost, year, activeMonths])
 
   // Sub-category totals for the MoM detail table
   const subCatData = useMemo(() => {
-    const rows = rawCost.filter((c) => c.year === year)
+    const rows = rawCost.filter((c) => c.year === year && activeMonths.includes(c.month))
     const subs  = [...new Set(rows.map((r) => r.subCategory))].filter(Boolean)
     return subs.map((sub) => {
       const subRows  = rows.filter((r) => r.subCategory === sub)
@@ -315,7 +324,7 @@ export default function CostAnalysisPanel() {
       const fc2      = r2(subRows.reduce((s, r) => s + r.fc2, 0) / CR)
       return { sub, costType, actual, fc1, fc2, varF1: r2(actual - fc1), varF2: r2(actual - fc2) }
     }).sort((a, b) => b.actual - a.actual)
-  }, [rawCost, year])
+  }, [rawCost, year, activeMonths])
 
   // YoY: monthly total cost per year (for chart)
   const yoyMonthlyData = useMemo(() => {
@@ -351,7 +360,7 @@ export default function CostAnalysisPanel() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="08" title={`Cost Structure Analysis · FY ${year}`}>
+      <SectionHead num="08" title={`Cost Structure Analysis · ${periodLabel}`}>
         {view === 'mom'
           ? 'Monthly actual cost by category (PEX · OPEX · CAPEX) vs FC1 & FC2 targets. Sub-category breakdown below.'
           : 'Year-on-year cost evolution — monthly and annual comparison across financial years.'}
@@ -388,7 +397,7 @@ export default function CostAnalysisPanel() {
             <div>
               <h4 className="m-0 font-display font-medium text-[18px] tracking-[-.2px]">
                 {view === 'mom'
-                  ? `Monthly Cost Breakdown · FY ${year}`
+                  ? `Monthly Cost Breakdown · ${periodLabel}`
                   : `Cost Evolution · ${derived.years.map((y) => `FY ${y}`).join(' vs ')}`}
               </h4>
               <p className="m-0 text-[12px] text-[var(--muted)] mt-1">
@@ -435,7 +444,7 @@ export default function CostAnalysisPanel() {
 
         {/* Detail table */}
         {view === 'mom'
-          ? <SubCategoryTable data={subCatData} year={year} />
+          ? <SubCategoryTable data={subCatData} periodLabel={periodLabel} />
           : <YoYTypeTable data={yoyTypeData} years={derived.years} />}
       </motion.div>
 

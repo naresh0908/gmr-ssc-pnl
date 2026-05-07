@@ -3,6 +3,7 @@ import { useDashStore } from '../store/useDashStore'
 import SectionHead from './SectionHead'
 import SectionInsightBar from './SectionInsightBar'
 import { getSectionInsights } from '../utils/sectionInsights'
+import { getAvailMonths, getActivePeriodMonths, getPeriodLabel } from '../utils/periodUtils'
 
 /* ─── Constants ─── */
 const CR = 1e7
@@ -200,10 +201,18 @@ function wrapLabel(text) {
    Main component
    ═══════════════════════════════════════════════════ */
 export default function DriverWaterfall() {
-  const { rawCost, derived, year } = useDashStore()
+  const { rawCost, derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const rawRevenue = useDashStore((s) => s.rawRevenue)
   const [scenario, setScenario] = useState('fc1')
   const [dept, setDept] = useState('All')
-  const insights = useMemo(() => getSectionInsights('waterfall', { derived, year }), [derived, year])
+  const insights = useMemo(() => getSectionInsights('waterfall', { derived, year, rawCost }), [derived, year, rawCost])
+
+  const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
+  const activeMonths = useMemo(
+    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
+    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+  )
+  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
 
   const departments = useMemo(
     () => ['All', ...new Set(rawCost.map(c => c.department))],
@@ -212,7 +221,7 @@ export default function DriverWaterfall() {
 
   /* Compute driver-based waterfall data */
   const waterfallData = useMemo(() => {
-    const rows = rawCost.filter(c => c.year === year && (dept === 'All' || c.department === dept))
+    const rows = rawCost.filter(c => c.year === year && activeMonths.includes(c.month) && (dept === 'All' || c.department === dept))
 
     const fcKey = scenario === 'fc1' ? 'fc1' : 'fc2'
 
@@ -246,8 +255,8 @@ export default function DriverWaterfall() {
        Since no actual headcount exists, use Salaries as FTE proxy.
        We break PEX into department-level drivers to show an
        "FTE impact" bridge (Salary variance by department) */
-    const depts = [...new Set(rawCost.filter(c => c.year === year).map(c => c.department))]
-    const salaryRows = rawCost.filter(c => c.year === year && c.costType === 'PEX' && c.subCategory === 'Salaries')
+    const depts = [...new Set(rawCost.filter(c => c.year === year && activeMonths.includes(c.month)).map(c => c.department))]
+    const salaryRows = rawCost.filter(c => c.year === year && activeMonths.includes(c.month) && c.costType === 'PEX' && c.subCategory === 'Salaries')
     const fteFcTotal = salaryRows.reduce((a, r) => a + r[fcKey], 0) / CR
     const fteActTotal = salaryRows.reduce((a, r) => a + r.actual, 0) / CR
 
@@ -281,7 +290,7 @@ export default function DriverWaterfall() {
     }
 
     return { pexFcTotal, pexActTotal, pexDrivers, opexFcTotal, opexActTotal, opexDrivers, fteFcTotal, fteActTotal, fteDrivers }
-  }, [rawCost, year, scenario, dept])
+  }, [rawCost, year, scenario, dept, activeMonths])
 
   if (!waterfallData) return null
 
@@ -290,7 +299,7 @@ export default function DriverWaterfall() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="06" title={`Driver-Based Cost Bridge · FY ${year}`}>
+      <SectionHead num="06" title={`Driver-Based Cost Bridge · ${periodLabel}`}>
         Variance decomposed by business driver. Each waterfall bridges from the Forecast
         anchor to the Actual result — showing exactly which categories drove cost over- or under-spend.
       </SectionHead>

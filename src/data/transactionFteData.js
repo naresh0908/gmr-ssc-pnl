@@ -79,13 +79,14 @@ const DEPT_CFG = {
   },
 }
 
-const GROWTH = { 2024: 1.0, 2025: 1.07 } // 7% YoY growth
+const GROWTH = { 2024: 1.0, 2025: 1.07, 2026: 1.15 } // 7% then 8% YoY growth
 
+// 2026: only Jan-Apr have actuals; May-Dec are forecast-only (still generate for service revenue panel)
 function generateData() {
   const transactions = []
   const fte = []
 
-  ;[2024, 2025].forEach((year) => {
+  ;[2024, 2025, 2026].forEach((year) => {
     const gf = GROWTH[year]
     MONTHS.forEach((month, mi) => {
       const sea = SEA[mi]

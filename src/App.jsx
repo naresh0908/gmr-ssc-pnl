@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useDashStore } from './store/useDashStore'
 import TopBar from './components/TopBar'
+import PeriodBar from './components/PeriodBar'
 import HeroSummary from './components/HeroSummary'
 import KPISection from './components/KPISection'
 import EBITMatrix from './components/EBITMatrix'
@@ -24,6 +25,7 @@ export default function App() {
   return (
     <div className="max-w-[1440px] mx-auto px-9 pt-7 pb-20">
       <TopBar />
+      <PeriodBar />
       <HeroSummary />
       <KPISection />
 

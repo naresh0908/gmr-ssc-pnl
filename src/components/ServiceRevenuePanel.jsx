@@ -4,6 +4,7 @@ import SectionHead from './SectionHead'
 import SectionInsightBar from './SectionInsightBar'
 import { motion } from 'framer-motion'
 import { getSectionInsights } from '../utils/sectionInsights'
+import { getAvailMonths, getActivePeriodMonths, getPeriodLabel } from '../utils/periodUtils'
 
 const CHART_H = 130
 
@@ -17,26 +18,50 @@ const short = (name) => {
 
 export default function ServiceRevenuePanel() {
   const [activeDept, setActiveDept] = useState('All')
-  const { serviceRevenue, derived, year } = useDashStore()
+  const { serviceRevenue, derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const rawRevenue = useDashStore((s) => s.rawRevenue)
   const insights = useMemo(() => getSectionInsights('service-revenue', { derived, serviceRevenue, year }), [derived, serviceRevenue, year])
 
   const SRY = serviceRevenue?.[year]
   if (!SRY) return null
 
-  const depts = SRY.byDept.map((d) => d.dept)
-  const deptData = activeDept !== 'All' ? SRY.byDept.find((d) => d.dept === activeDept) : null
+  const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
+  const activeMonths = useMemo(
+    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
+    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+  )
+  const periodLabel  = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
 
-  const monthly = deptData ? deptData.monthly : SRY.monthly
+  // Filter SRY data to active period months
+  const filteredByDept = useMemo(() =>
+    SRY.byDept.map((d) => {
+      const months = d.monthly.filter((m) => activeMonths.includes(m.month))
+      const total      = Math.round(months.reduce((s, m) => s + m.total, 0) * 100) / 100
+      const txnRevenue = Math.round(months.reduce((s, m) => s + m.txnRevenue, 0) * 100) / 100
+      const fteRevenue = Math.round(months.reduce((s, m) => s + m.fteRevenue, 0) * 100) / 100
+      return { ...d, total, txnRevenue, fteRevenue }
+    }).sort((a, b) => b.total - a.total),
+    [SRY.byDept, activeMonths]
+  )
+  const filteredMonthly = useMemo(
+    () => SRY.monthly.filter((m) => activeMonths.includes(m.month)),
+    [SRY.monthly, activeMonths]
+  )
+
+  const depts = filteredByDept.map((d) => d.dept)
+  const deptData = activeDept !== 'All' ? filteredByDept.find((d) => d.dept === activeDept) : null
+
+  const monthly = deptData ? deptData.monthly.filter((m) => activeMonths.includes(m.month)) : filteredMonthly
   const maxMonthly = Math.max(...monthly.map((m) => m.total), 0.01)
 
-  const sumFte = deptData ? deptData.fteRevenue : SRY.totalFte
-  const sumTxn = deptData ? deptData.txnRevenue : SRY.totalTxn
-  const sumTotal = deptData ? deptData.total : SRY.total
-  const ftePct = sumTotal > 0 ? Math.round((sumFte / sumTotal) * 100) : 0
+  const sumFte   = deptData ? deptData.fteRevenue : filteredByDept.reduce((s, d) => s + d.fteRevenue, 0)
+  const sumTxn   = deptData ? deptData.txnRevenue : filteredByDept.reduce((s, d) => s + d.txnRevenue, 0)
+  const sumTotal = deptData ? deptData.total      : filteredByDept.reduce((s, d) => s + d.total, 0)
+  const ftePct   = sumTotal > 0 ? Math.round((sumFte / sumTotal) * 100) : 0
 
   return (
     <div className="mt-7">
-      <SectionHead num="03" title={`Service Revenue · FTE & Transaction · FY ${year}`}>
+      <SectionHead num="03" title={`Service Revenue · FTE & Transaction · ${periodLabel}`}>
         Revenue by billing model — FTE-based (recurring headcount) and transaction-based (volume-driven).
       </SectionHead>
 
@@ -94,7 +119,7 @@ export default function ServiceRevenuePanel() {
         {/* Bottom detail section */}
         <div className="border-t border-[var(--line)]">
           {activeDept === 'All' ? (
-            <DeptTable depts={SRY.byDept} />
+            <DeptTable depts={filteredByDept} />
           ) : deptData ? (
             <ServiceDetail data={deptData} />
           ) : null}

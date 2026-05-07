@@ -4,15 +4,33 @@ import SectionHead from './SectionHead'
 import SectionInsightBar from './SectionInsightBar'
 import { motion } from 'framer-motion'
 import { getSectionInsights } from '../utils/sectionInsights'
+import { getAvailMonths, getActivePeriodMonths, getPeriodLabel } from '../utils/periodUtils'
 
 export default function EBITMatrix({ type = 'department', num = '01' }) {
-  const { derived, year } = useDashStore()
+  const { derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const rawRevenue = useDashStore((s) => s.rawRevenue)
   const Y = derived.byYear[year]
   const section = type === 'customer' ? 'ebit-customer' : 'ebit-dept'
   const insights = useMemo(() => getSectionInsights(section, { derived, year }), [derived, year, section])
   if (!Y) return null
 
-  const matrix = type === 'customer' ? (Y.ebitCustomerMatrix || []) : Y.ebitMatrix
+  const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
+  const activeMonths = useMemo(
+    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
+    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+  )
+  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+
+  const fullMatrix = type === 'customer' ? (Y.ebitCustomerMatrix || []) : Y.ebitMatrix
+  if (fullMatrix.length === 0) return null
+
+  // Filter cells to active period months and recompute totals
+  const matrix = useMemo(() => fullMatrix.map((row) => {
+    const cells = row.cells.filter((c) => activeMonths.includes(c.month))
+    const total = Math.round(cells.reduce((s, c) => s + c.ebit, 0) * 100) / 100
+    return { ...row, cells, total }
+  }).filter((row) => row.cells.length > 0).sort((a, b) => b.total - a.total), [fullMatrix, activeMonths])
+
   if (matrix.length === 0) return null
 
   const allCells = matrix.flatMap((r) => r.cells.map((c) => c.ebit))
@@ -33,7 +51,7 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
 
   return (
     <div className="mt-7">
-      <SectionHead num={num} title={`EBIT Matrix · Month × ${type === 'customer' ? 'Customer' : 'Department'} · FY ${year}`}>
+      <SectionHead num={num} title={`EBIT Matrix · ${type === 'customer' ? 'Customer' : 'Department'} · ${periodLabel}`}>
         Per-month EBIT contribution (₹ Cr) by {type === 'customer' ? 'customer' : 'service line'}. Hover any cell to see contribution share.
       </SectionHead>
 
