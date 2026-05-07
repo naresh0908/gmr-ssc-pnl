@@ -56,10 +56,10 @@ function CostMoMChart({ data }) {
     <ResponsiveContainer width="100%" height={300}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'monospace', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
-          tick={{ fontSize: 11, fontFamily: 'monospace', fill: 'var(--muted)' }}
+          tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
           axisLine={false} tickLine={false}
           label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', offset: 12, style: { fontSize: 10, fill: 'var(--muted)' } }}
         />
@@ -80,10 +80,10 @@ function RevenueMoMChart({ data }) {
     <ResponsiveContainer width="100%" height={300}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'monospace', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
-          tick={{ fontSize: 11, fontFamily: 'monospace', fill: 'var(--muted)' }}
+          tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
           axisLine={false} tickLine={false}
           label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', offset: 12, style: { fontSize: 10, fill: 'var(--muted)' } }}
         />
@@ -104,10 +104,10 @@ function CombinedChart({ data }) {
     <ResponsiveContainer width="100%" height={320}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'monospace', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
-          tick={{ fontSize: 11, fontFamily: 'monospace', fill: 'var(--muted)' }}
+          tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
           axisLine={false} tickLine={false}
           label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', offset: 12, style: { fontSize: 10, fill: 'var(--muted)' } }}
         />
@@ -130,10 +130,10 @@ function YoYChart({ data, years }) {
     <ResponsiveContainer width="100%" height={300}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'monospace', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
-          tick={{ fontSize: 11, fontFamily: 'monospace', fill: 'var(--muted)' }}
+          tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
           axisLine={false} tickLine={false}
           label={{ value: '₹ Cr', angle: -90, position: 'insideLeft', offset: 12, style: { fontSize: 10, fill: 'var(--muted)' } }}
         />
@@ -219,10 +219,10 @@ function YoYTypeTable({ data, years }) {
                     </td>
                   ))}
                   <td className={`px-4 py-2.5 text-right font-mono font-semibold ${favorable ? 'text-brand-green' : 'text-brand-red'}`}>
-                    {row.change != null ? `${row.change >= 0 ? '+' : ''}${row.change.toFixed(2)}` : '—'}
+                    {row.change != null ? `${row.change >= 0 ? '+' : ''}${row.change.toFixed(2)}` : '-'}
                   </td>
                   <td className={`px-5 py-2.5 text-right font-mono font-semibold ${yoyChg == null ? 'text-[var(--muted)]' : favorable ? 'text-brand-green' : 'text-brand-red'}`}>
-                    {yoyChg == null ? '—' : `${yoyChg >= 0 ? '+' : ''}${yoyChg.toFixed(1)}%`}
+                    {yoyChg == null ? '-' : `${yoyChg >= 0 ? '+' : ''}${yoyChg.toFixed(1)}%`}
                   </td>
                 </tr>
               )
@@ -262,7 +262,7 @@ export default function CostAnalysisPanel() {
     }).filter((d) => d.total > 0 || d.fc2 > 0 || d.fc1 > 0)
   }, [rawCost, year, activeMonths])
 
-  // MoM revenue data — Service Fees + Other Income + Interest, with FC1/FC2 totals
+  // MoM revenue data - Service Fees + Other Income + Interest, with FC1/FC2 totals
   const revenueMoMData = useMemo(() => {
     return MONTHS.filter((m) => activeMonths.includes(m)).map((m) => {
       const rows = rawRevenue.filter((r) => r.year === year && r.month === m)
@@ -276,7 +276,7 @@ export default function CostAnalysisPanel() {
     }).filter((d) => d.total > 0 || d.fc1 > 0 || d.fc2 > 0)
   }, [rawRevenue, year, activeMonths])
 
-  // Combined data — cost stacked bars + revenue line + net profit line
+  // Combined data - cost stacked bars + revenue line + net profit line
   const combinedData = useMemo(() => {
     return MONTHS.filter((m) => activeMonths.includes(m)).map((m) => {
       const cRows = rawCost.filter((c) => c.year === year && c.month === m)
@@ -354,10 +354,10 @@ export default function CostAnalysisPanel() {
   return (
     <div className="mt-7">
       <SectionHead num="03" title={`Cost & Revenue Analysis · ${periodLabel}`}>
-        {view === 'cost'     && 'Monthly cost split by type — PEX, OPEX, CAPEX vs forecast targets.'}
-        {view === 'revenue'  && 'Monthly revenue split by stream — Service Fees, Other Income, Interest vs forecast targets.'}
-        {view === 'combined' && 'Side-by-side view of revenue and cost per month — visualises monthly profit at a glance.'}
-        {view === 'yoy'      && 'Year-on-year cost evolution — monthly and annual comparison across financial years.'}
+        {view === 'cost'     && 'Monthly cost split by type - PEX, OPEX, CAPEX vs forecast targets.'}
+        {view === 'revenue'  && 'Monthly revenue split by stream - Service Fees, Other Income, Interest vs forecast targets.'}
+        {view === 'combined' && 'Side-by-side view of revenue and cost per month - visualises monthly profit at a glance.'}
+        {view === 'yoy'      && 'Year-on-year cost evolution - monthly and annual comparison across financial years.'}
       </SectionHead>
 
       <motion.div

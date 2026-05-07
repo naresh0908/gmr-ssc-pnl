@@ -39,7 +39,7 @@ export default function CostStructure() {
         Cost Structure · {periodLabel}
       </h4>
       <div className="text-[12px] text-[var(--muted)] mt-1 mb-4">
-        PEX dominates. CAPEX deferred — savings may surface in next FY.
+        PEX dominates. CAPEX deferred - savings may surface in next FY.
       </div>
 
       <div className="flex h-[46px] rounded-[10px] overflow-hidden border border-[var(--line)]">

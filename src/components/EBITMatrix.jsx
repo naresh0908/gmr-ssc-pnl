@@ -62,6 +62,25 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
         Per-month EBIT contribution (₹ Cr) by {type === 'customer' ? 'customer' : 'service line'}. Hover any cell to see contribution share.
       </SectionHead>
 
+      <div className="flex items-center gap-4 mb-3 px-1 text-[12px] text-[var(--ink-soft)] flex-wrap">
+        <span className="font-semibold uppercase tracking-wider text-[10.5px]">EBIT Heat</span>
+        <span className="inline-flex items-center gap-2">
+          <span className="w-4 h-3 rounded-sm" style={{ background: 'rgba(192,57,43,.55)' }} /> Loss
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="w-4 h-3 rounded-sm" style={{ background: 'rgba(31,138,76,.18)' }} /> Low
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="w-4 h-3 rounded-sm" style={{ background: 'rgba(31,138,76,.40)' }} /> Mid
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="w-4 h-3 rounded-sm" style={{ background: 'rgba(31,138,76,.65)' }} /> High
+        </span>
+        <span className="ml-auto font-mono text-[var(--muted)]">
+          Range: ₹{min.toFixed(2)} → ₹{max.toFixed(2)} Cr
+        </span>
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
         className="bg-[var(--card)] border border-[var(--line)] rounded-[18px] overflow-hidden"
@@ -131,25 +150,6 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
           </table>
         </div>
 
-        {/* Heatmap legend */}
-        <div className="flex items-center gap-4 px-5 py-3 border-t border-[var(--line)] bg-[var(--bg)] text-[12px] text-[var(--ink-soft)] flex-wrap">
-          <span className="font-semibold uppercase tracking-wider text-[10.5px]">EBIT Heat</span>
-          <span className="inline-flex items-center gap-2">
-            <span className="w-4 h-3 rounded-sm" style={{ background: 'rgba(192,57,43,.55)' }} /> Loss
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="w-4 h-3 rounded-sm" style={{ background: 'rgba(31,138,76,.18)' }} /> Low
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="w-4 h-3 rounded-sm" style={{ background: 'rgba(31,138,76,.40)' }} /> Mid
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <span className="w-4 h-3 rounded-sm" style={{ background: 'rgba(31,138,76,.65)' }} /> High
-          </span>
-          <span className="ml-auto font-mono text-[var(--muted)]">
-            Range: ₹{min.toFixed(2)} → ₹{max.toFixed(2)} Cr
-          </span>
-        </div>
       </motion.div>
 
       <SectionInsightBar insights={insights} />

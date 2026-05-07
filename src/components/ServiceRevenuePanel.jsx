@@ -34,7 +34,7 @@ export default function ServiceRevenuePanel() {
   )
   const periodLabel  = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
 
-  // The "scope" months — when a bar is clicked, scope down to that single month.
+  // The "scope" months - when a bar is clicked, scope down to that single month.
   const scopeMonths = useMemo(
     () => (selectedMonth && activeMonths.includes(selectedMonth) ? [selectedMonth] : activeMonths),
     [selectedMonth, activeMonths]
@@ -53,7 +53,7 @@ export default function ServiceRevenuePanel() {
   )
 
   // Bar chart always shows every active-period month (so users can see a bar to click).
-  // Independent of selectedMonth — selecting just highlights one bar.
+  // Independent of selectedMonth - selecting just highlights one bar.
   const chartMonthly = useMemo(() => {
     if (activeDept !== 'All') {
       const dept = SRY.byDept.find((d) => d.dept === activeDept)
@@ -63,7 +63,7 @@ export default function ServiceRevenuePanel() {
   }, [SRY, activeDept, activeMonths])
   const maxMonthly = Math.max(...chartMonthly.map((m) => m.total), 0.01)
 
-  // Detail dept (when single dept is active in tabs) — share is prorated to scope months.
+  // Detail dept (when single dept is active in tabs) - share is prorated to scope months.
   const deptData = useMemo(() => {
     if (activeDept === 'All') return null
     const d = filteredByDept.find((dd) => dd.dept === activeDept)
@@ -88,8 +88,18 @@ export default function ServiceRevenuePanel() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="04" title={`Service Revenue · FTE & Transaction · ${periodLabel}`}>
-        Revenue by billing model — FTE-based (recurring headcount) and transaction-based (volume-driven).
+      <SectionHead
+        num="04"
+        title={(
+          <span className="inline-flex flex-col leading-tight">
+            <span>Service Revenue</span>
+            <span className="font-mono text-[12px] uppercase tracking-[.12em] text-[var(--muted)] mt-1">
+              FTE Revenue & Transaction Revenue
+            </span>
+          </span>
+        )}
+      >
+        Revenue by billing model - FTE-based (recurring headcount) and transaction-based (volume-driven).
       </SectionHead>
 
       <motion.div
@@ -116,7 +126,7 @@ export default function ServiceRevenuePanel() {
           })}
         </div>
 
-        {/* Summary KPI strip — reflects selected month if any, otherwise the period */}
+        {/* Summary KPI strip - reflects selected month if any, otherwise the period */}
         <div className="grid grid-cols-3 divide-x divide-[var(--line)] border-b border-[var(--line)]">
           <KPICard label="Total Revenue"        value={sumTotal} sub={scopeLabel} />
           <KPICard label="FTE Revenue"          value={sumFte}   pct={ftePct}        color="green" sub={scopeLabel} />

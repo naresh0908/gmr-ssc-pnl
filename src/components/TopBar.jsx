@@ -1,6 +1,5 @@
 import { Sun, Moon } from 'lucide-react'
 import { useDashStore } from '../store/useDashStore'
-import FileUploader from './FileUploader'
 import GMRLogo from '../GMR_Group_(logo).svg'
 
 export default function TopBar() {
@@ -42,8 +41,6 @@ export default function TopBar() {
         >
           {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
         </button>
-
-        <FileUploader />
       </div>
     </div>
   )

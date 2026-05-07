@@ -116,7 +116,7 @@ function WaterfallChart({ title, unit, fcTotal, actTotal, drivers }) {
               stroke="var(--line)" strokeDasharray="2 4"
             />
             <text x={PAD_L - 8} y={yScale(t) + 4} textAnchor="end"
-                  fill="var(--muted)" style={{ fontSize: 10, fontFamily: 'monospace' }}>
+              fill="var(--muted)" style={{ fontSize: 10, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
               {unit === 'FTE' ? t.toFixed(0) : t.toFixed(1)}
             </text>
           </g>
@@ -133,8 +133,8 @@ function WaterfallChart({ title, unit, fcTotal, actTotal, drivers }) {
                     stroke={COL.connHi} strokeWidth={1.5} />
               <line x1={lastBar.cx} x2={lastBar.cx} y1={y} y2={y + 8}
                     stroke={COL.connHi} strokeWidth={1.5} />
-              <text x={(firstBar.cx + lastBar.cx) / 2} y={y - 4} textAnchor="middle"
-                    fill={COL.connHi} style={{ fontSize: 11, fontWeight: 700, fontFamily: 'monospace' }}>
+                <text x={(firstBar.cx + lastBar.cx) / 2} y={y - 4} textAnchor="middle"
+                  fill={COL.connHi} style={{ fontSize: 11, fontWeight: 700, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
                 {fmtDelta(totalDelta, unit)}
               </text>
             </g>
@@ -152,16 +152,16 @@ function WaterfallChart({ title, unit, fcTotal, actTotal, drivers }) {
             />
             {/* value label */}
             <text x={b.cx} y={b.yTop - 6} textAnchor="middle"
-                  fill={b.color}
-                  style={{ fontSize: 10.5, fontWeight: 600, fontFamily: 'monospace' }}>
+              fill={b.color}
+              style={{ fontSize: 10.5, fontWeight: 600, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
               {b.kind === 'anchor' || b.kind === 'anchorEnd'
                 ? fmt(b.value, unit)
                 : fmtDelta(b.value, unit)}
             </text>
             {/* x-axis label */}
             <text x={b.cx} y={H - PAD_B + 16} textAnchor="middle"
-                  fill="var(--ink-soft)"
-                  style={{ fontSize: 9.5, fontFamily: 'monospace' }}>
+              fill="var(--ink-soft)"
+              style={{ fontSize: 9.5, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
               {wrapLabel(b.label, b.cx, H - PAD_B + 16)}
             </text>
           </g>
@@ -301,7 +301,7 @@ export default function DriverWaterfall() {
     <div className="mt-7">
       <SectionHead num="06" title={`Driver-Based Cost Bridge · ${periodLabel}`}>
         Variance decomposed by business driver. Each waterfall bridges from the Forecast
-        anchor to the Actual result — showing exactly which categories drove cost over- or under-spend.
+        anchor to the Actual result - showing exactly which categories drove cost over- or under-spend.
       </SectionHead>
 
       {/* controls */}
@@ -331,6 +331,26 @@ export default function DriverWaterfall() {
         </div>
       </div>
 
+      {/* legend */}
+      <div className="flex flex-wrap gap-x-5 gap-y-2 mb-4 pt-1 text-[12px] text-[var(--ink-soft)]">
+        <span className="font-semibold uppercase tracking-wider text-[10.5px]">Legend</span>
+        <span className="inline-flex items-center gap-2">
+          <span className="w-3.5 h-2.5 rounded-sm" style={{ background: COL.anchor }} /> Forecast Anchor
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="w-3.5 h-2.5 rounded-sm" style={{ background: COL.anchorEnd }} /> Actual
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="w-3.5 h-2.5 rounded-sm" style={{ background: COL.down }} /> Under-spend (Saving)
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="w-3.5 h-2.5 rounded-sm" style={{ background: COL.up }} /> Over-spend
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="w-3 h-0.5" style={{ background: COL.connHi }} /> Total Variance
+        </span>
+      </div>
+
       {/* three waterfalls */}
       <div className="space-y-5">
         <WaterfallChart
@@ -354,26 +374,6 @@ export default function DriverWaterfall() {
           actTotal={opexActTotal}
           drivers={opexDrivers}
         />
-      </div>
-
-      {/* legend */}
-      <div className="flex flex-wrap gap-x-5 gap-y-2 mt-4 pt-4 border-t border-[var(--line)] text-[12px] text-[var(--ink-soft)]">
-        <span className="font-semibold uppercase tracking-wider text-[10.5px]">Legend</span>
-        <span className="inline-flex items-center gap-2">
-          <span className="w-3.5 h-2.5 rounded-sm" style={{ background: COL.anchor }} /> Forecast Anchor
-        </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="w-3.5 h-2.5 rounded-sm" style={{ background: COL.anchorEnd }} /> Actual
-        </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="w-3.5 h-2.5 rounded-sm" style={{ background: COL.down }} /> Under-spend (Saving)
-        </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="w-3.5 h-2.5 rounded-sm" style={{ background: COL.up }} /> Over-spend
-        </span>
-        <span className="inline-flex items-center gap-2">
-          <span className="w-3 h-0.5" style={{ background: COL.connHi }} /> Total Variance
-        </span>
       </div>
 
       <SectionInsightBar insights={insights} />

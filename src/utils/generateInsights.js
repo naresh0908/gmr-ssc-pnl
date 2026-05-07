@@ -42,7 +42,7 @@ export function generateInsights(derived, year) {
         ? `Cost ran ₹${Math.abs(costGapFc1).toFixed(1)} Cr below FC1`
         : `Cost overshot FC1 by ₹${costGapFc1.toFixed(1)} Cr`,
       reason: costGapFc1 < 0
-        ? `Largely from delayed hiring and CAPEX deferral. Some savings are timing — they may flow into FY${year + 1}.`
+        ? `Largely from delayed hiring and CAPEX deferral. Some savings are timing - they may flow into FY${year + 1}.`
         : `Cost discipline weakened. Investigate top-3 deviating cost lines.`,
       chips: ['All cost lines', costGapFc1 < 0 ? 'Saving' : 'Overrun']
     })
@@ -71,7 +71,7 @@ export function generateInsights(derived, year) {
       severity: 'info',
       tag: 'CAPEX · FC1 → Actual',
       title: `CAPEX deferred ₹${(capex.fc1 - capex.actual).toFixed(1)} Cr`,
-      reason: `Laptop/equipment refresh slipped. Likely to land in FY${year + 1} Q1 — model the cash impact now.`,
+      reason: `Laptop/equipment refresh slipped. Likely to land in FY${year + 1} Q1 - model the cash impact now.`,
       chips: ['CAPEX', `FY${year + 1} Q1 risk`]
     })
   }
@@ -87,7 +87,7 @@ export function generateInsights(derived, year) {
       reason: `EBIT ₹${worst.ebit} Cr on revenue ₹${worst.revAct} Cr. ${
         worst.execChange > 0
           ? `Cost overshot FC2 by ₹${worst.execChange.toFixed(1)} Cr.`
-          : `Cost ran ₹${Math.abs(worst.execChange).toFixed(1)} Cr below FC2 — savings may not be structural.`
+          : `Cost ran ₹${Math.abs(worst.execChange).toFixed(1)} Cr below FC2 - savings may not be structural.`
       }`,
       chips: [worst.department, `Margin ${worst.margin}%`]
     })

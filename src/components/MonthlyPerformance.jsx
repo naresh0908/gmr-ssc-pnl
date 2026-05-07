@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useDashStore } from '../store/useDashStore'
 import SectionHead from './SectionHead'
 import SectionInsightBar from './SectionInsightBar'
@@ -10,6 +10,7 @@ export default function MonthlyPerformance() {
   const { derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const Y = derived.byYear[year]
+  const [targetView, setTargetView] = useState('fc1')
   const insights = useMemo(() => getSectionInsights('monthly', { derived, year }), [derived, year])
   if (!Y) return null
 
@@ -44,13 +45,29 @@ export default function MonthlyPerformance() {
         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
         className="bg-[var(--card)] border border-[var(--line)] rounded-[18px] overflow-hidden"
       >
-        {/* Legend — top right */}
+        {/* Legend - top right */}
         <div className="flex items-center justify-end gap-4 px-5 py-2.5 border-b border-[var(--line)] bg-[var(--bg)] flex-wrap">
           <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-3 h-2 rounded-sm bg-brand-blue inline-block" /> Positive</span>
           <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-3 h-2 rounded-sm bg-brand-blue-soft inline-block" /> Below target</span>
           <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-3 h-2 rounded-sm bg-brand-red inline-block" /> Negative</span>
-          <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-[3px] h-3.5 bg-ink rounded-sm inline-block" /> FC1</span>
-          <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-[3px] h-3.5 bg-brand-amber rounded-sm inline-block" /> FC2</span>
+          <div className="flex items-center gap-1 bg-[var(--card)] border border-[var(--line)] rounded-full p-0.5">
+            {[
+              { id: 'fc1', label: 'FC1 Target' },
+              { id: 'fc2', label: 'FC2 Target' },
+            ].map((opt) => (
+              <button
+                key={opt.id}
+                onClick={() => setTargetView(opt.id)}
+                className={`px-3 py-1.5 rounded-full text-[11px] font-semibold transition ${
+                  targetView === opt.id
+                    ? 'bg-ink text-bg-light'
+                    : 'text-[var(--ink-soft)] hover:text-[var(--ink)]'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
           <span className="text-[11px] text-[var(--muted)]">centre = 0</span>
         </div>
 
@@ -68,8 +85,11 @@ export default function MonthlyPerformance() {
           const revAct = Math.min((d.revAct / REV_AXIS) * 100, 100)
           const revFc1 = Math.min((d.revFc1 / REV_AXIS) * 100, 100)
           const revFc2 = Math.min((d.revFc2 / REV_AXIS) * 100, 100)
-          const revBelow = d.revAct < d.revFc1
+          const revTarget = targetView === 'fc1' ? d.revFc1 : d.revFc2
+          const revTargetPct = targetView === 'fc1' ? revFc1 : revFc2
+          const revBelow = d.revAct < revTarget
           const yoyVal = d.yoy ?? 0
+          const npTarget = targetView === 'fc1' ? d.npFc1 : d.npFc2
 
           return (
             <div key={d.month} className="grid grid-cols-[80px_1.5fr_1fr_1fr_1fr] border-b border-[var(--line)] last:border-b-0 hover:bg-[var(--bg)] transition">
@@ -77,16 +97,19 @@ export default function MonthlyPerformance() {
                 {d.month.toUpperCase()}
               </div>
 
-              {/* Revenue bar — one-directional, never negative */}
+              {/* Revenue bar - one-directional, never negative */}
               <div className="p-3.5 px-4 border-r border-[var(--line)] flex items-center">
                 <Bar
-                  actual={d.revAct} target={d.revFc1} target2={d.revFc2}
-                  actualPct={revAct} targetPct={revFc1} target2Pct={revFc2}
+                  actual={d.revAct}
+                  target={revTarget}
+                  actualPct={revAct}
+                  targetPct={revTargetPct}
+                  targetColor={targetView === 'fc1' ? 'bg-ink' : 'bg-brand-amber'}
                   below={revBelow} fmt={(v) => v.toFixed(1)}
                 />
               </div>
 
-              {/* YoY Growth — bidirectional, no target */}
+              {/* YoY Growth - bidirectional, no target */}
               <div className="p-3.5 px-4 border-r border-[var(--line)] flex items-center">
                 <BiBar
                   actual={yoyVal}
@@ -95,18 +118,18 @@ export default function MonthlyPerformance() {
                 />
               </div>
 
-              {/* Net Profit — bidirectional with FC1 + FC2 targets */}
+              {/* Net Profit - bidirectional with selected benchmark */}
               <div className="p-3.5 px-4 border-r border-[var(--line)] flex items-center">
                 <BiBar
                   actual={d.npAct}
-                  target={d.npFc1}
-                  target2={d.npFc2}
+                  target={npTarget}
+                  targetColor={targetView === 'fc1' ? 'bg-ink' : 'bg-brand-amber'}
                   maxAbs={npMax}
                   fmt={(v) => v < 0 ? `(${Math.abs(v).toFixed(2)})` : v.toFixed(2)}
                 />
               </div>
 
-              {/* Net Profit Ratio — bidirectional, no target tick */}
+              {/* Net Profit Ratio - bidirectional, no target tick */}
               <div className="p-3.5 px-4 flex items-center">
                 <BiBar
                   actual={d.npRatio}
@@ -125,7 +148,7 @@ export default function MonthlyPerformance() {
   )
 }
 
-function Bar({ actual, target, target2, actualPct, targetPct, target2Pct, below, fmt }) {
+function Bar({ actual, target, actualPct, targetPct, targetColor, below, fmt }) {
   return (
     <div className="relative w-full h-[22px]">
       <div className="absolute inset-0 bg-[var(--bg)] rounded-[4px]" />
@@ -138,12 +161,8 @@ function Bar({ actual, target, target2, actualPct, targetPct, target2Pct, below,
           {fmt(actual)}
         </span>
       </div>
-      {/* FC1 target tick */}
-      <div className="absolute -top-[3px] h-[28px] w-[3px] bg-ink rounded-sm z-10" style={{ left: `calc(${targetPct}% - 1.5px)` }} />
-      {/* FC2 target tick */}
-      {target2 !== undefined && (
-        <div className="absolute -top-[3px] h-[28px] w-[3px] bg-brand-amber rounded-sm z-10" style={{ left: `calc(${target2Pct}% - 1.5px)` }} />
-      )}
+      {/* selected target tick */}
+      <div className={`absolute -top-[3px] h-[28px] w-[3px] rounded-sm z-10 ${targetColor ?? 'bg-ink'}`} style={{ left: `calc(${targetPct}% - 1.5px)` }} />
       <span className="absolute right-2 top-1/2 -translate-y-1/2 font-mono text-[11px] font-semibold text-[var(--ink-soft)]">
         {fmt(target)}
       </span>
@@ -151,14 +170,12 @@ function Bar({ actual, target, target2, actualPct, targetPct, target2Pct, below,
   )
 }
 
-function BiBar({ actual, target, target2, maxAbs, fmt }) {
+function BiBar({ actual, target, targetColor, maxAbs, fmt }) {
   const HALF = 50
   const actualHalfPct = Math.min((Math.abs(actual) / maxAbs) * HALF, HALF)
   const targetHalfPct = target !== undefined ? Math.min((Math.abs(target) / maxAbs) * HALF, HALF) : 0
-  const target2HalfPct = target2 !== undefined ? Math.min((Math.abs(target2) / maxAbs) * HALF, HALF) : 0
   const isActNeg = actual < 0
   const isTgtNeg = target !== undefined && target < 0
-  const isTgt2Neg = target2 !== undefined && target2 < 0
   const isBelowTarget = !isActNeg && target !== undefined && actual < target
 
   const isWide = actualHalfPct > 15
@@ -196,19 +213,11 @@ function BiBar({ actual, target, target2, maxAbs, fmt }) {
       {/* Zero baseline */}
       <div className="absolute top-0 bottom-0 w-[2px] bg-[var(--line)] z-10" style={{ left: 'calc(50% - 1px)' }} />
 
-      {/* FC1 target tick */}
+      {/* selected target tick */}
       {target !== undefined && (
         <div
-          className="absolute -top-[3px] h-[28px] w-[3px] bg-ink rounded-sm z-20"
+          className={`absolute -top-[3px] h-[28px] w-[3px] rounded-sm z-20 ${targetColor ?? 'bg-ink'}`}
           style={{ left: isTgtNeg ? `calc(50% - ${targetHalfPct}% - 1.5px)` : `calc(50% + ${targetHalfPct}% - 1.5px)` }}
-        />
-      )}
-
-      {/* FC2 target tick */}
-      {target2 !== undefined && (
-        <div
-          className="absolute -top-[3px] h-[28px] w-[3px] bg-brand-amber rounded-sm z-20"
-          style={{ left: isTgt2Neg ? `calc(50% - ${target2HalfPct}% - 1.5px)` : `calc(50% + ${target2HalfPct}% - 1.5px)` }}
         />
       )}
 
@@ -220,7 +229,7 @@ function BiBar({ actual, target, target2, maxAbs, fmt }) {
         {fmt(actual)}
       </span>
 
-      {/* FC1 target value label — far edge */}
+      {/* selected target value label - far edge */}
       {target !== undefined && (
         <span
           className="absolute top-1/2 -translate-y-1/2 font-mono text-[11px] font-semibold text-[var(--ink-soft)] z-20"

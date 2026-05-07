@@ -49,7 +49,7 @@ export default function HeroSummary() {
         </h2>
         <p className="m-0 text-[14.5px] text-[var(--ink-soft)] max-w-[60ch] leading-[1.55] relative">
           {periodMode === 'year'
-            ? 'Actuals are running ' + (Number(revGap) < 0 ? 'below' : 'above') + ' FC1 across service lines, primarily driven by hiring timing and CAPEX deferrals. FC2 was already revised — actuals are tracking close to FC2.'
+            ? 'Actuals are running ' + (Number(revGap) < 0 ? 'below' : 'above') + ' FC1 across service lines, primarily driven by hiring timing and CAPEX deferrals. FC2 was already revised - actuals are tracking close to FC2.'
             : `Showing ${periodLabel} actuals. Net profit ₹${pk.netProfit.toFixed(1)} Cr vs FC1 ₹${(pk.netProfitFc1 ?? 0).toFixed(1)} Cr / FC2 ₹${(pk.netProfitFc2 ?? 0).toFixed(1)} Cr.`}
         </p>
         <div className="mt-5 flex flex-wrap gap-5 text-[12px] text-[var(--muted)] relative">
@@ -68,8 +68,8 @@ export default function HeroSummary() {
           {Number(revGap) < 0 && (yoy == null || yoy >= 0)
             ? <>Plan was ambitious.{' '}<em className="not-italic italic text-[#7BB0FF]">Execution is steady but conservative.</em></>
             : Number(revGap) > 0
-            ? <>Beating plan —{' '}<em className="not-italic italic text-[#7BB0FF]">lock in baseline upgrade for next year.</em></>
-            : <>Period held flat —{' '}<em className="not-italic italic text-[#7BB0FF]">growth pipeline needs attention.</em></>}
+            ? <>Beating plan -{' '}<em className="not-italic italic text-[#7BB0FF]">lock in baseline upgrade for next year.</em></>
+            : <>Period held flat -{' '}<em className="not-italic italic text-[#7BB0FF]">growth pipeline needs attention.</em></>}
         </div>
         <div className="flex gap-3 flex-wrap">
           <Pill label="Actual vs FC1" value={`₹${revGap} Cr`}    dir={Number(revGap)    < 0 ? 'down' : 'up'} />

@@ -13,14 +13,14 @@ import { getLastActualMonth, monthToQuarter } from '../utils/periodUtils'
 // Department views surface the right culprit instead of blanket variance).
 //
 // FY 2025 storyline:
-//   Mar — Bangalore Aviation Group deferred Q1 PO batch (P&C scope) +
+//   Mar - Bangalore Aviation Group deferred Q1 PO batch (P&C scope) +
 //         one-time SAP R/3 refresh blew up Consulting OPEX
-//   Jun — Hyderabad campus facility expansion front-loaded — FMS / Facilities OPEX
-//   Aug — Client-wide discretionary spend pause hit transactional services (HR, FMS)
-//   Nov — Year-end PEX accruals + 12 hires onboarded for Dec peak (HR, IT)
+//   Jun - Hyderabad campus facility expansion front-loaded - FMS / Facilities OPEX
+//   Aug - Client-wide discretionary spend pause hit transactional services (HR, FMS)
+//   Nov - Year-end PEX accruals + 12 hires onboarded for Dec peak (HR, IT)
 //
 // FY 2024 baseline lift: small uniform pullback so 2024 reads as a healthy year
-// (a positive net result anchor) — makes the 2025 deterioration visible.
+// (a positive net result anchor) - makes the 2025 deterioration visible.
 function patchSampleData(revenue, cost) {
   // Per-department revenue multipliers (`*` = all departments)
   const revPatches = {
@@ -61,7 +61,7 @@ function patchSampleData(revenue, cost) {
   }
 
   // FY 2024 baseline lift: small uniform actuals boost + tax credit so 2024
-  // shows a clear positive net result — frames it as "the healthy year".
+  // shows a clear positive net result - frames it as "the healthy year".
   const rev = revenue.map((r) => {
     if (r.year === 2024) {
       return {
@@ -118,7 +118,7 @@ export const useDashStore = create((set, get) => ({
   department: 'All',
   theme: 'light',
 
-  // Global period selector — drives every chart from HeroSummary to CostAnalysis
+  // Global period selector - drives every chart from HeroSummary to CostAnalysis
   periodMode: 'year',            // 'year' | 'quarter' | 'month'
   selectedQ: defaultSelectedQ,   // 'Q1' | 'Q2' | 'Q3' | 'Q4'
   selectedPeriodMonth: defaultPeriodMonth,

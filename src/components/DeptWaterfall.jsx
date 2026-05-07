@@ -31,7 +31,7 @@ export default function DeptWaterfall() {
     { kind: 'anchor', label: 'Actual',       value: act, runningTo: act }
   ]
 
-  // Y-axis scale — pad ±5% around min/max of [fc1, fc2, act]
+  // Y-axis scale - pad ±5% around min/max of [fc1, fc2, act]
   const allVals = [fc1, fc2, act]
   const yMax = Math.max(...allVals) * 1.04
   const yMin = Math.max(0, Math.min(...allVals) * 0.92)

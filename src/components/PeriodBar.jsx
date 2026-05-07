@@ -56,7 +56,7 @@ export default function PeriodBar() {
             key={m}
             onClick={() => setSelectedPeriodMonth(m)}
             className={`${pill(periodMode === 'month' && selectedPeriodMonth === m)} ${!hasActuals ? 'opacity-50' : ''}`}
-            title={hasActuals ? m : `${m} — forecast only`}
+            title={hasActuals ? m : `${m} - forecast only`}
           >
             {m}
           </button>

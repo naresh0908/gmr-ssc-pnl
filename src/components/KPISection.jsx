@@ -38,13 +38,13 @@ export default function KPISection() {
   const cards = [
     {
       label: 'Total Revenue', value: pk.totalRevenue, unit: 'Cr',
-      delta: prevPk ? `${pk.totalRevenue >= prevPk.totalRevenue ? '▲' : '▼'} ₹${Math.abs(pk.totalRevenue - prevPk.totalRevenue).toFixed(1)} Cr vs ${deltaLabel}` : '—',
+      delta: prevPk ? `${pk.totalRevenue >= prevPk.totalRevenue ? '▲' : '▼'} ₹${Math.abs(pk.totalRevenue - prevPk.totalRevenue).toFixed(1)} Cr vs ${deltaLabel}` : '-',
       sub: `FC1: ₹${(pk.revFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.revFc2 ?? 0).toFixed(1)} Cr`,
       up: prevPk ? pk.totalRevenue >= prevPk.totalRevenue : true,
     },
     {
       label: 'Total Cost', value: pk.totalCost, unit: 'Cr',
-      delta: prevPk ? `${pk.totalCost > prevPk.totalCost ? '▲' : '▼'} ₹${Math.abs(pk.totalCost - prevPk.totalCost).toFixed(1)} Cr vs ${deltaLabel}` : '—',
+      delta: prevPk ? `${pk.totalCost > prevPk.totalCost ? '▲' : '▼'} ₹${Math.abs(pk.totalCost - prevPk.totalCost).toFixed(1)} Cr vs ${deltaLabel}` : '-',
       sub: `FC1: ₹${(pk.costFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.costFc2 ?? 0).toFixed(1)} Cr`,
       up: prevPk ? pk.totalCost <= prevPk.totalCost : false,
     },
@@ -54,19 +54,19 @@ export default function KPISection() {
       unit: 'Cr',
       delta: prevPk
         ? `${(pk.ebit ?? 0) >= (prevPk.ebit ?? 0) ? '▲' : '▼'} ₹${Math.abs((pk.ebit ?? 0) - (prevPk.ebit ?? 0)).toFixed(1)} Cr vs ${deltaLabel}`
-        : '—',
+        : '-',
       sub: `FC1: ₹${(pk.ebitFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.ebitFc2 ?? 0).toFixed(1)} Cr · ${(pk.ebitMargin ?? 0).toFixed(1)}% margin`,
       up: prevPk ? (pk.ebit ?? 0) >= (prevPk.ebit ?? 0) : (pk.ebit ?? 0) >= 0,
     },
     {
       label: 'Net Profit', value: pk.netProfit, unit: 'Cr',
-      delta: prevPk ? `${pk.netProfit >= prevPk.netProfit ? '▲' : '▼'} ₹${Math.abs(pk.netProfit - prevPk.netProfit).toFixed(1)} Cr vs ${deltaLabel}` : '—',
+      delta: prevPk ? `${pk.netProfit >= prevPk.netProfit ? '▲' : '▼'} ₹${Math.abs(pk.netProfit - prevPk.netProfit).toFixed(1)} Cr vs ${deltaLabel}` : '-',
       sub: `FC1: ₹${(pk.netProfitFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.netProfitFc2 ?? 0).toFixed(1)} Cr`,
       up: prevPk ? pk.netProfit >= prevPk.netProfit : true,
     },
     {
       label: 'Profit Margin', value: pk.margin, unit: '%',
-      delta: prevPk ? `${pk.margin >= prevPk.margin ? '▲' : '▼'} ${Math.abs(pk.margin - prevPk.margin).toFixed(1)} pts vs ${deltaLabel}` : '—',
+      delta: prevPk ? `${pk.margin >= prevPk.margin ? '▲' : '▼'} ${Math.abs(pk.margin - prevPk.margin).toFixed(1)} pts vs ${deltaLabel}` : '-',
       sub: 'Cost vs revenue trajectory',
       up: prevPk ? pk.margin >= prevPk.margin : true,
     },
@@ -84,7 +84,7 @@ export default function KPISection() {
         >
           <div className="text-[11px] tracking-[.14em] uppercase text-[var(--muted)] font-semibold">{c.label}</div>
           <div className="font-display font-medium text-[30px] tracking-[-.5px] mt-2">
-            {c.value != null ? c.value.toFixed(1) : '—'}
+            {c.value != null ? c.value.toFixed(1) : '-'}
             <span className="font-mono text-[13px] text-[var(--muted)] font-medium ml-1">{c.value != null ? c.unit : ''}</span>
           </div>
           <div className={`text-[12px] mt-1.5 font-mono font-medium ${c.up == null ? 'text-[var(--muted)]' : c.up ? 'text-brand-green' : 'text-brand-red'}`}>

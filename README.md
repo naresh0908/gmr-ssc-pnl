@@ -1,6 +1,6 @@
 # GMR SSC · Financial Decision Intelligence Dashboard
 
-A React-based decision intelligence dashboard for GMR SSC Finance. Not just reporting — every metric answers _what happened, why, what changed vs plan, where to act_.
+A React-based decision intelligence dashboard for GMR SSC Finance. Not just reporting - every metric answers _what happened, why, what changed vs plan, where to act_.
 
 ## Quick start
 
@@ -15,12 +15,12 @@ Open http://localhost:5173
 
 ```
 src/
-├── App.jsx                      # Layout shell — section ordering
+├── App.jsx                      # Layout shell - section ordering
 ├── main.jsx
 ├── index.css                    # Tailwind + CSS variables for theming
 │
 ├── store/
-│   └── useDashStore.js          # Zustand store — single source of truth
+│   └── useDashStore.js          # Zustand store - single source of truth
 │
 ├── utils/
 │   ├── parseExcel.js            # XLSX → normalized rows
@@ -46,14 +46,14 @@ src/
 
 ## Section order (top → bottom)
 
-1. TopBar — year toggle, dept filter, theme toggle, Excel upload
-2. Hero Summary — narrative + executive verdict
-3. KPI Row — Revenue / Cost / Net Profit / Margin / YoY
-4. **EBIT Matrix** (Month × Department) — heatmap, FY total per dept
-5. **Monthly Performance** — horizontal Above/Below Target bars + Net Profit Ratio legend
+1. TopBar - year toggle, dept filter, theme toggle, Excel upload
+2. Hero Summary - narrative + executive verdict
+3. KPI Row - Revenue / Cost / Net Profit / Margin / YoY
+4. **EBIT Matrix** (Month × Department) - heatmap, FY total per dept
+5. **Monthly Performance** - horizontal Above/Below Target bars + Net Profit Ratio legend
 6. Cost Structure + Dept EBIT (side by side)
-7. **Department-wise Cost Waterfall** — switch dept via chip selector
-8. AI Insights Panel — rule-based, LLM-ready
+7. **Department-wise Cost Waterfall** - switch dept via chip selector
+8. AI Insights Panel - rule-based, LLM-ready
 
 ## Excel format expected
 
@@ -85,5 +85,5 @@ CSS variables in `index.css` driven by a `.dark` class on `<html>`. Theme toggle
 ## Known constraints
 
 - All money values are converted to **crores (₹ Cr)** at the derive layer for display readability.
-- Monthly Performance uses fixed axis caps (`REV_AXIS=22 Cr`, `NP_AXIS=2.5 Cr`) — adjust in `MonthlyPerformance.jsx` if your data scales differ.
-- `Comments` field is parsed but not yet surfaced — wire it into `generateInsights` when populated.
+- Monthly Performance uses fixed axis caps (`REV_AXIS=22 Cr`, `NP_AXIS=2.5 Cr`) - adjust in `MonthlyPerformance.jsx` if your data scales differ.
+- `Comments` field is parsed but not yet surfaced - wire it into `generateInsights` when populated.

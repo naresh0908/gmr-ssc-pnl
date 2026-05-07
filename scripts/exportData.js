@@ -3,20 +3,20 @@
 // Output:    GMR_SSC_Data_Export.xlsx in repo root.
 //
 // Sheets:
-//   1.  Overview                — KPIs per FY (Hero/KPI cards)
-//   2.  PL Statement            — full P&L line items per FY (matches PLStatement.jsx)
-//   3.  Monthly P&L             — month-level revAct/Fc1/Fc2, costAct/Fc1/Fc2, npAct/Fc1/Fc2
-//   4.  Department Annual       — annual EBIT, margin, cost vs FC1/FC2 by dept
-//   5.  EBIT Matrix Dept-Month  — Dept × Month EBIT heatmap data
-//   6.  Cost By Type            — PEX/OPEX/CAPEX annual actual/FC1/FC2
-//   7.  Cost Sub-Category       — sub-category breakdown across years
-//   8.  Service Revenue Annual  — Dept × Year FTE/Txn/Total split
-//   9.  Service Monthly         — monthly FTE vs Txn split per dept
-//  10.  Transactions Raw        — service-level txn rows
-//  11.  FTE Raw                 — function-level FTE rows
-//  12.  Revenue Raw             — full revenue ledger
-//  13.  Cost Raw                — full cost ledger
-//  14.  Data Audit              — coverage stats & sanity-check flags
+//   1.  Overview                - KPIs per FY (Hero/KPI cards)
+//   2.  PL Statement            - full P&L line items per FY (matches PLStatement.jsx)
+//   3.  Monthly P&L             - month-level revAct/Fc1/Fc2, costAct/Fc1/Fc2, npAct/Fc1/Fc2
+//   4.  Department Annual       - annual EBIT, margin, cost vs FC1/FC2 by dept
+//   5.  EBIT Matrix Dept-Month  - Dept × Month EBIT heatmap data
+//   6.  Cost By Type            - PEX/OPEX/CAPEX annual actual/FC1/FC2
+//   7.  Cost Sub-Category       - sub-category breakdown across years
+//   8.  Service Revenue Annual  - Dept × Year FTE/Txn/Total split
+//   9.  Service Monthly         - monthly FTE vs Txn split per dept
+//  10.  Transactions Raw        - service-level txn rows
+//  11.  FTE Raw                 - function-level FTE rows
+//  12.  Revenue Raw             - full revenue ledger
+//  13.  Cost Raw                - full cost ledger
+//  14.  Data Audit              - coverage stats & sanity-check flags
 
 import { writeFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
@@ -34,7 +34,7 @@ const OUT = resolve(__dirname, '..', 'GMR_SSC_Data_Export.xlsx')
 const CR  = 1e7
 const r2  = (n) => Math.round(n * 100) / 100
 
-// Replicates the patch logic in src/store/useDashStore.js — keep in sync.
+// Replicates the patch logic in src/store/useDashStore.js - keep in sync.
 function patchSampleData(revenue, cost) {
   const revPatches = {
     Mar: {
@@ -416,7 +416,7 @@ function sheetDataAudit() {
       'Departments':  depts.length,
       'Months in Plan': monthsWithRev.length,
       'Months with Actuals': monthsWithActuals.length,
-      'Last Actual Month':   monthsWithActuals[monthsWithActuals.length - 1] ?? '—',
+      'Last Actual Month':   monthsWithActuals[monthsWithActuals.length - 1] ?? '-',
       'Negative Revenue Rows': rev.filter((r) => r.actServiceFees < 0).length,
       'Negative Cost Rows':    cst.filter((c) => c.actual < 0).length,
       'Total Rev Actual (Cr)': r2(rev.reduce((s, r) =>
@@ -453,7 +453,7 @@ const sheets = [
 sheets.forEach(([name, ws]) => XLSX.utils.book_append_sheet(wb, ws, name))
 
 // Console audit summary
-console.log('GMR SSC Data Export — sanity audit')
+console.log('GMR SSC Data Export - sanity audit')
 console.log('───────────────────────────────────')
 derived.years.forEach((y) => {
   const k = derived.byYear[y].kpis
@@ -462,7 +462,7 @@ derived.years.forEach((y) => {
   console.log(
     `FY ${y}:  Rev=₹${k.totalRevenue.toFixed(1)} Cr  Cost=₹${k.totalCost.toFixed(1)} Cr  ` +
     `Net=₹${k.netProfit.toFixed(1)} Cr  Margin=${k.margin.toFixed(1)}%  ` +
-    `Actuals through ${actMonths[actMonths.length - 1] ?? '—'} (${actMonths.length} mo)`
+    `Actuals through ${actMonths[actMonths.length - 1] ?? '-'} (${actMonths.length} mo)`
   )
 })
 

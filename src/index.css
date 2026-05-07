@@ -22,7 +22,7 @@
 html, body, #root { height: 100%; }
 body {
   margin: 0;
-  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   background: var(--bg);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -42,9 +42,9 @@ body {
     var(--bg);
 }
 
-.font-display { font-family: 'Fraunces', serif; }
-.font-mono { font-family: 'JetBrains Mono', monospace; }
+.font-display { font-family: 'DM Sans', system-ui, sans-serif; }
+.font-mono { font-family: 'DM Sans', system-ui, sans-serif; }
 
 /* Recharts overrides */
-.recharts-cartesian-axis-tick-value { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.recharts-cartesian-axis-tick-value { font-family: 'DM Sans', system-ui, sans-serif; font-size: 11px; }
 .recharts-tooltip-wrapper { outline: none !important; }

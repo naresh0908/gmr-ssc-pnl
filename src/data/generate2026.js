@@ -8,18 +8,18 @@
  *   Actuals May–Dec          → 0  (future months, forecast only)
  *
  * Causal patterns baked into actuals:
- *  Jan: +4% all depts — HR onboarded TechFab Industries (new payroll + onboarding scope)
- *  Feb: P&C −9% — Arora Engineering delayed bulk PO batch due to SAP R/3→S4 migration;
- *       OPEX Consulting +42% all depts — advisory fees for same migration project
- *  Mar: IT +4% — new airport helpdesk SLA started; OPEX IT +52%, Consulting +48% —
+ *  Jan: +4% all depts - HR onboarded TechFab Industries (new payroll + onboarding scope)
+ *  Feb: P&C −9% - Arora Engineering delayed bulk PO batch due to SAP R/3→S4 migration;
+ *       OPEX Consulting +42% all depts - advisory fees for same migration project
+ *  Mar: IT +4% - new airport helpdesk SLA started; OPEX IT +52%, Consulting +48% -
  *       technology migration go-live; one-time SAP implementation cost
- *  Apr: F&A +8%, IT +6% — new service contracts signed; HR −2% — MNR Aviation paused FTE scope;
- *       PEX Salaries +12%, Recruitment +35% — 8 new hires onboarded for contract expansion
+ *  Apr: F&A +8%, IT +6% - new service contracts signed; HR −2% - MNR Aviation paused FTE scope;
+ *       PEX Salaries +12%, Recruitment +35% - 8 new hires onboarded for contract expansion
  */
 
 const ACTUALS_MONTHS = new Set(['Jan', 'Feb', 'Mar', 'Apr'])
 
-// Revenue actual multiplier vs FC2 — { month: { dept?: mult, default: mult } }
+// Revenue actual multiplier vs FC2 - { month: { dept?: mult, default: mult } }
 const REV_ACT = {
   Jan: { default: 1.04 },
   Feb: { default: 1.01, 'Procurement & Contracts': 0.91 },
@@ -32,7 +32,7 @@ const REV_ACT = {
   },
 }
 
-// Cost actual multiplier vs FC2 — { month: { 'TYPE:SUB'?: mult, default: mult } }
+// Cost actual multiplier vs FC2 - { month: { 'TYPE:SUB'?: mult, default: mult } }
 const COST_ACT = {
   Jan: { default: 0.975 },
   Feb: {

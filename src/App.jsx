@@ -18,7 +18,7 @@ export default function App() {
 
   return (
     <div>
-      {/* Sticky header — full viewport width so background covers edge-to-edge */}
+      {/* Sticky header - full viewport width so background covers edge-to-edge */}
       <div className="sticky top-0 z-40 bg-[var(--bg)] shadow-[0_4px_16px_rgba(0,0,0,0.06)]">
         <div className="max-w-[1440px] mx-auto px-9 pt-7 pb-3">
           <TopBar />

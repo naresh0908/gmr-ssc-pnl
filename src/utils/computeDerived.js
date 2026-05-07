@@ -1,12 +1,12 @@
 export const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 export const CR = 1e7   // 1 crore = 10^7
 
-// Operating revenue: Service Fees + Other Income (used for EBIT — Interest is a financial item, below EBIT)
+// Operating revenue: Service Fees + Other Income (used for EBIT - Interest is a financial item, below EBIT)
 const sumRevOps = (rows, type) => rows.reduce(
   (a, r) => a + (r[`${type}ServiceFees`] || 0) + (r[`${type}OtherIncome`] || 0),
   0
 )
-// All revenue including Interest — used for the "Total Revenue" KPI card only
+// All revenue including Interest - used for the "Total Revenue" KPI card only
 const sumRev = (rows, type) => rows.reduce(
   (a, r) => a + (r[`${type}ServiceFees`] || 0) + (r[`${type}OtherIncome`] || 0) + (r[`${type}Interest`] || 0),
   0
@@ -14,7 +14,7 @@ const sumRev = (rows, type) => rows.reduce(
 const sumInt  = (rows, type) => rows.reduce((a, r) => a + (r[`${type}Interest`] || 0), 0)
 const sumTax  = (rows, type) => rows.reduce((a, r) => a + (r[`${type}Tax`]      || 0), 0)
 
-// Operating costs only (PEX + OPEX) — CAPEX is a capital item, excluded from EBIT / Net Result
+// Operating costs only (PEX + OPEX) - CAPEX is a capital item, excluded from EBIT / Net Result
 const opsFilter = (c) => c.costType !== 'CAPEX'
 
 /**
@@ -38,12 +38,12 @@ export function computeDerived(revenue, cost) {
     const cst = cost.filter((c) => c.year === y)
 
     // ── Revenue ──────────────────────────────────────────────────────────────
-    // Total revenue (all streams) — for KPI "Total Revenue" card
+    // Total revenue (all streams) - for KPI "Total Revenue" card
     const revAct = sumRev(rev, 'act') / CR
     const revFc1 = sumRev(rev, 'fc1') / CR
     const revFc2 = sumRev(rev, 'fc2') / CR
 
-    // Operating revenue (SF + OtherInc) — for EBIT
+    // Operating revenue (SF + OtherInc) - for EBIT
     const opsRevAct = sumRevOps(rev, 'act') / CR
     const opsRevFc1 = sumRevOps(rev, 'fc1') / CR
     const opsRevFc2 = sumRevOps(rev, 'fc2') / CR
@@ -57,12 +57,12 @@ export function computeDerived(revenue, cost) {
     const taxFc2 = sumTax(rev, 'fc2') / CR
 
     // ── Costs ─────────────────────────────────────────────────────────────────
-    // All costs (PEX + OPEX + CAPEX) — for KPI "Total Cost" card
+    // All costs (PEX + OPEX + CAPEX) - for KPI "Total Cost" card
     const costAct = cst.reduce((a, c) => a + c.actual, 0) / CR
     const costFc1 = cst.reduce((a, c) => a + c.fc1, 0) / CR
     const costFc2 = cst.reduce((a, c) => a + c.fc2, 0) / CR
 
-    // Operating costs (PEX + OPEX) — for EBIT
+    // Operating costs (PEX + OPEX) - for EBIT
     const opsCostAct = cst.filter(opsFilter).reduce((a, c) => a + c.actual, 0) / CR
     const opsCostFc1 = cst.filter(opsFilter).reduce((a, c) => a + c.fc1, 0) / CR
     const opsCostFc2 = cst.filter(opsFilter).reduce((a, c) => a + c.fc2, 0) / CR
@@ -213,7 +213,7 @@ export function computeDerived(revenue, cost) {
 
   // Compute YoY for every year vs the base year (years[0] = FY2024).
   // This ensures FY2025 shows deviation from the healthy baseline,
-  // and FY2026 shows recovery progress vs the same anchor — not vs disrupted FY2025.
+  // and FY2026 shows recovery progress vs the same anchor - not vs disrupted FY2025.
   // Months with no actuals in the current year (e.g. future months) get yoy = 0.
   const baseYr = years[0]
   const baseYrData = byYear[baseYr]

@@ -9,7 +9,7 @@ import { getAvailMonths, getActivePeriodMonths, getPeriodLabel } from '../utils/
 
 const CR = 1e7
 const r2 = (n) => Math.round(n * 100) / 100
-const fv = (v) => (v == null ? '—' : v.toFixed(2))
+const fv = (v) => (v == null ? '-' : v.toFixed(2))
 const vcls = (v) =>
   v > 0.005 ? 'text-brand-green font-semibold' : v < -0.005 ? 'text-brand-red font-semibold' : 'text-[var(--muted)]'
 
@@ -134,15 +134,14 @@ function buildPL(revenue, cost, year, months) {
   const costsTotal   = sumLines(pex, opex, capex)             // PEX + OPEX + CAPEX (incl. CAPEX for completeness)
   const revenueTotal = sumLines(sfTotal, otherInc)            // SF + OI (operating revenue)
 
-  // EBIT excludes CAPEX (standard) and excludes Interest / Tax
+  // EBIT excludes CAPEX (standard); the displayed net result carries the tax adjustment.
   const ebit      = sumLines(sfTotal, otherInc, pex, opex)
-  const finResult = sumLines(interest, tax)
-  const netResult = sumLines(ebit, finResult)
+  const netResult = sumLines(ebit, tax)
 
   return {
     pex, opex, capex, costsTotal,
     sfByDept, sfTotal, otherInc, revenueTotal,
-    interest, tax, finResult, ebit, netResult, months,
+    tax, ebit, netResult, months,
   }
 }
 
@@ -202,9 +201,7 @@ export default function PLStatement() {
 
   rowDefs.push({ kind: 'ebit', id: 'ebit', label: 'EBIT', data: pl.ebit })
 
-  rowDefs.push({ kind: 'financial', id: 'int',  label: 'Interest Income',  data: pl.interest })
   rowDefs.push({ kind: 'tax',       id: 'tax',  label: 'Income Tax',       data: pl.tax })
-  rowDefs.push({ kind: 'financial', id: 'finr', label: 'Financial Result', data: pl.finResult, isSubSubtotal: true })
 
   rowDefs.push({ kind: 'result', id: 'net', label: 'NET RESULT', data: pl.netResult })
 
@@ -313,7 +310,7 @@ export default function PLStatement() {
               <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-brand-red inline-block opacity-50" /> Var: unfavorable</span>
             </>
           )}
-          <span className="ml-auto">EBIT = Revenue − PEX − OPEX · Net Result = EBIT + Interest − Tax · CAPEX is informational</span>
+          <span className="ml-auto">EBIT = Revenue - Cost | Net Result = EBIT + Tax</span>
         </div>
       </motion.div>
 
@@ -322,7 +319,7 @@ export default function PLStatement() {
   )
 }
 
-// Background tint per cost type — applied to the entire row so the table reads
+// Background tint per cost type - applied to the entire row so the table reads
 // as colour-coded category bands.
 const COST_ROW_BG = {
   PEX:   'bg-[#FCEEEC]',  // soft red wash
@@ -418,7 +415,7 @@ function Row({ row, months, viewMode, expanded, onToggle }) {
             const v = data.byMonth?.[m] ?? 0
             return (
               <td key={m} className={`py-2.5 px-2.5 text-right font-mono ${numSize} ${numColor(v)}`}>
-                {Math.abs(v) < 0.005 ? '—' : v.toFixed(2)}
+                {Math.abs(v) < 0.005 ? '-' : v.toFixed(2)}
               </td>
             )
           })}
