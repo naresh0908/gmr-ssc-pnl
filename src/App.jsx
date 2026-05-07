@@ -60,5 +60,6 @@ export default function App() {
         <span className="font-mono">Re-upload Excel anytime to refresh</span>
       </footer>
     </div>
+    </div>
   )
 }
