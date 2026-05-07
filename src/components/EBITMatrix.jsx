@@ -38,6 +38,13 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
   const min = Math.min(...allCells, 0)
   const months = matrix[0]?.cells.map((c) => c.month) || []
 
+  // Column totals (one EBIT figure per month) + grand FY total
+  const monthTotals = months.map((m) => ({
+    month: m,
+    ebit: Math.round(matrix.reduce((s, r) => s + (r.cells.find((c) => c.month === m)?.ebit ?? 0), 0) * 100) / 100,
+  }))
+  const grandTotal = Math.round(matrix.reduce((s, r) => s + r.total, 0) * 100) / 100
+
   // Color s cale: amber-soft (low) → green (high), red for negative
   const cellBg = (v) => {
     if (v < 0) {
@@ -99,6 +106,27 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
                   </td>
                 </tr>
               ))}
+              {/* Column totals row */}
+              <tr className="border-t-2 border-[var(--line)] bg-[var(--bg)]">
+                <td className="p-3 px-4 text-[12px] font-bold uppercase tracking-[.08em] text-[var(--ink)] sticky left-0 bg-[var(--bg)] border-r border-[var(--line)]">
+                  Total · All {type === 'customer' ? 'Customers' : 'Departments'}
+                </td>
+                {monthTotals.map((c) => (
+                  <td
+                    key={c.month}
+                    className="p-0 border-r border-[var(--line)] last:border-r-0"
+                    style={{ background: cellBg(c.ebit) }}
+                    title={`Total EBIT · ${c.month}: ₹${c.ebit} Cr`}
+                  >
+                    <div className="px-2.5 py-3 text-center font-mono text-[12.5px] font-bold" style={{ color: cellText(c.ebit) }}>
+                      {c.ebit.toFixed(2)}
+                    </div>
+                  </td>
+                ))}
+                <td className="p-3 px-3 text-right font-mono text-[13.5px] font-bold bg-[var(--ink)] text-white">
+                  ₹{grandTotal.toFixed(1)}
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>

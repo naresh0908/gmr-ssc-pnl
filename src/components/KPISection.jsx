@@ -17,8 +17,10 @@ export default function KPISection() {
   const pk          = useMemo(() => derivePeriodKPIs(Y.monthly, activeMonths) ?? Y.kpis, [Y.monthly, Y.kpis, activeMonths])
   const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
 
-  // Prior-year same-period comparison
-  const prevYear  = derived.years[derived.years.indexOf(year) - 1]
+  // Always compare against the earliest available year (FY2024 base), not the immediately prior year.
+  // This avoids FY2025 (a disrupted year) acting as the baseline when viewing FY2026.
+  const baseYear  = derived.years[0]
+  const prevYear  = year !== baseYear ? baseYear : null
   const prevY     = prevYear ? derived.byYear[prevYear] : null
   const prevAvail = useMemo(
     () => (prevYear ? getAvailMonths(rawRevenue, prevYear) : []),
@@ -49,6 +51,16 @@ export default function KPISection() {
       up: prevPk ? pk.totalCost <= prevPk.totalCost : false,
     },
     {
+      label: 'EBIT',
+      value: pk.ebit ?? Y.kpis.ebit ?? null,
+      unit: 'Cr',
+      delta: prevPk
+        ? `${(pk.ebit ?? 0) >= (prevPk.ebit ?? 0) ? '▲' : '▼'} ₹${Math.abs((pk.ebit ?? 0) - (prevPk.ebit ?? 0)).toFixed(1)} Cr vs ${deltaLabel}`
+        : '—',
+      sub: `FC1: ₹${(pk.ebitFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.ebitFc2 ?? 0).toFixed(1)} Cr · ${(pk.ebitMargin ?? 0).toFixed(1)}% margin`,
+      up: prevPk ? (pk.ebit ?? 0) >= (prevPk.ebit ?? 0) : (pk.ebit ?? 0) >= 0,
+    },
+    {
       label: 'Net Profit', value: pk.netProfit, unit: 'Cr',
       delta: prevPk ? `${pk.netProfit >= prevPk.netProfit ? '▲' : '▼'} ₹${Math.abs(pk.netProfit - prevPk.netProfit).toFixed(1)} Cr vs ${deltaLabel}` : '—',
       sub: `FC1: ₹${(pk.netProfitFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.netProfitFc2 ?? 0).toFixed(1)} Cr`,
@@ -59,18 +71,6 @@ export default function KPISection() {
       delta: prevPk ? `${pk.margin >= prevPk.margin ? '▲' : '▼'} ${Math.abs(pk.margin - prevPk.margin).toFixed(1)} pts vs ${deltaLabel}` : '—',
       sub: 'Cost vs revenue trajectory',
       up: prevPk ? pk.margin >= prevPk.margin : true,
-    },
-    {
-      label: periodMode === 'year' ? 'YoY Growth' : 'Period Label',
-      value: periodMode === 'year' ? (Y.kpis.yoyGrowth ?? null) : null,
-      unit: '%',
-      delta: periodMode === 'year'
-        ? (Y.kpis.yoyGrowth == null ? '— Base year' : Y.kpis.yoyGrowth >= 0 ? '▲ healthy' : '▼ contraction')
-        : periodLabel,
-      sub: periodMode === 'year'
-        ? (prevYear ? `vs FY${prevYear} actual ₹${prevPk?.totalRevenue} Cr` : 'No prior-year data')
-        : `Actuals vs FC2 var: ₹${((pk.totalRevenue ?? 0) - (pk.revFc2 ?? 0)).toFixed(1)} Cr`,
-      up: periodMode === 'year' ? (Y.kpis.yoyGrowth == null ? null : Y.kpis.yoyGrowth >= 0) : null,
     },
   ]
 

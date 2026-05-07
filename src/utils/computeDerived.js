@@ -106,6 +106,11 @@ export function computeDerived(revenue, cost) {
       const cOpsFc1 = cRows.filter(opsFilter).reduce((a, c) => a + c.fc1, 0) / CR
       const cOpsFc2 = cRows.filter(opsFilter).reduce((a, c) => a + c.fc2, 0) / CR
 
+      // EBIT per month = Operating Revenue − Operating Cost (no Interest, no Tax, no CAPEX)
+      const ebitMAct = round(rOpsAct - cOpsAct)
+      const ebitMFc1 = round(rOpsFc1 - cOpsFc1)
+      const ebitMFc2 = round(rOpsFc2 - cOpsFc2)
+
       // Net profit per month = EBIT + Interest − Tax
       const npAct = round(rOpsAct - cOpsAct + mIntAct - mTaxAct)
       const npFc1 = round(rOpsFc1 - cOpsFc1 + mIntFc1 - mTaxFc1)
@@ -115,6 +120,7 @@ export function computeDerived(revenue, cost) {
         month: m,
         revAct: round(rAct), revFc1: round(rFc1), revFc2: round(rFc2),
         costAct: round(cAct), costFc1: round(cFc1), costFc2: round(cFc2),
+        ebitAct: ebitMAct, ebitFc1: ebitMFc1, ebitFc2: ebitMFc2,
         npAct, npFc1, npFc2,
         npRatio: rAct > 0 ? round(npAct / rAct * 100) : 0
       }
@@ -205,23 +211,26 @@ export function computeDerived(revenue, cost) {
     }
   })
 
-  // YoY growth on most recent year
-  const latest = years[years.length - 1]
-  const prev   = years[years.length - 2]
-  if (prev && byYear[latest] && byYear[prev]) {
-    byYear[latest].kpis.yoyGrowth = round(
-      (byYear[latest].kpis.totalRevenue - byYear[prev].kpis.totalRevenue) /
-      byYear[prev].kpis.totalRevenue * 100
-    )
-    // Inject prior-year monthly revenue for YoY% bars
-    byYear[latest].monthly = byYear[latest].monthly.map((m) => {
-      const prevMonth = byYear[prev].monthly.find((x) => x.month === m.month)
-      const yoy = prevMonth && prevMonth.revAct > 0
-        ? round((m.revAct - prevMonth.revAct) / prevMonth.revAct * 100)
+  // Compute YoY for every year vs the base year (years[0] = FY2024).
+  // This ensures FY2025 shows deviation from the healthy baseline,
+  // and FY2026 shows recovery progress vs the same anchor — not vs disrupted FY2025.
+  // Months with no actuals in the current year (e.g. future months) get yoy = 0.
+  const baseYr = years[0]
+  const baseYrData = byYear[baseYr]
+  years.forEach((y) => {
+    if (y === baseYr || !byYear[y] || !baseYrData) return
+    const cur = byYear[y]
+    cur.kpis.yoyGrowth = baseYrData.kpis.totalRevenue > 0
+      ? round((cur.kpis.totalRevenue - baseYrData.kpis.totalRevenue) / baseYrData.kpis.totalRevenue * 100)
+      : 0
+    cur.monthly = cur.monthly.map((m) => {
+      const baseMonth = baseYrData.monthly.find((x) => x.month === m.month)
+      const yoy = m.revAct > 0 && baseMonth && baseMonth.revAct > 0
+        ? round((m.revAct - baseMonth.revAct) / baseMonth.revAct * 100)
         : 0
       return { ...m, yoy }
     })
-  }
+  })
 
   return { years, departments, byYear }
 }

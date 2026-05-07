@@ -13,11 +13,13 @@ const short = (name) => {
   const m = name.match(/\(([^)]+)\)/)
   if (m) return m[1]
   const words = name.split(' ')
-  return words.length >= 3 ? words.slice(0, 2).join(' ') : name
+  const s = words.length >= 3 ? words.slice(0, 2).join(' ') : name
+  return s.replace(/\s*&\s*$/, '')
 }
 
 export default function ServiceRevenuePanel() {
-  const [activeDept, setActiveDept] = useState('All')
+  const [activeDept, setActiveDept]     = useState('All')
+  const [selectedMonth, setSelectedMonth] = useState(null)   // null = whole period; bar click sets one month
   const { serviceRevenue, derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const insights = useMemo(() => getSectionInsights('service-revenue', { derived, serviceRevenue, year }), [derived, serviceRevenue, year])
@@ -32,32 +34,57 @@ export default function ServiceRevenuePanel() {
   )
   const periodLabel  = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
 
-  // Filter SRY data to active period months
+  // The "scope" months — when a bar is clicked, scope down to that single month.
+  const scopeMonths = useMemo(
+    () => (selectedMonth && activeMonths.includes(selectedMonth) ? [selectedMonth] : activeMonths),
+    [selectedMonth, activeMonths]
+  )
+
+  // Aggregate by department for the active scope (period or single selected month)
   const filteredByDept = useMemo(() =>
     SRY.byDept.map((d) => {
-      const months = d.monthly.filter((m) => activeMonths.includes(m.month))
+      const months = d.monthly.filter((m) => scopeMonths.includes(m.month))
       const total      = Math.round(months.reduce((s, m) => s + m.total, 0) * 100) / 100
       const txnRevenue = Math.round(months.reduce((s, m) => s + m.txnRevenue, 0) * 100) / 100
       const fteRevenue = Math.round(months.reduce((s, m) => s + m.fteRevenue, 0) * 100) / 100
       return { ...d, total, txnRevenue, fteRevenue }
     }).sort((a, b) => b.total - a.total),
-    [SRY.byDept, activeMonths]
+    [SRY.byDept, scopeMonths]
   )
-  const filteredMonthly = useMemo(
-    () => SRY.monthly.filter((m) => activeMonths.includes(m.month)),
-    [SRY.monthly, activeMonths]
-  )
+
+  // Bar chart always shows every active-period month (so users can see a bar to click).
+  // Independent of selectedMonth — selecting just highlights one bar.
+  const chartMonthly = useMemo(() => {
+    if (activeDept !== 'All') {
+      const dept = SRY.byDept.find((d) => d.dept === activeDept)
+      return (dept?.monthly ?? []).filter((m) => activeMonths.includes(m.month))
+    }
+    return SRY.monthly.filter((m) => activeMonths.includes(m.month))
+  }, [SRY, activeDept, activeMonths])
+  const maxMonthly = Math.max(...chartMonthly.map((m) => m.total), 0.01)
+
+  // Detail dept (when single dept is active in tabs) — share is prorated to scope months.
+  const deptData = useMemo(() => {
+    if (activeDept === 'All') return null
+    const d = filteredByDept.find((dd) => dd.dept === activeDept)
+    if (!d) return null
+    const monthsInScope = d.monthly.filter((m) => scopeMonths.includes(m.month))
+    const annualTotal = d.monthly.reduce((s, m) => s + m.total, 0)
+    const scopeTotal  = monthsInScope.reduce((s, m) => s + m.total, 0)
+    const scale = annualTotal > 0 ? scopeTotal / annualTotal : 1
+    const txnByService  = (d.txnByService ?? []).map((s) => ({ ...s, revenue: Math.round(s.revenue * scale * 100) / 100 }))
+    const fteByFunction = (d.fteByFunction ?? []).map((f) => ({ ...f, revenue: Math.round(f.revenue * scale * 100) / 100 }))
+    return { ...d, txnByService, fteByFunction }
+  }, [activeDept, filteredByDept, scopeMonths])
 
   const depts = filteredByDept.map((d) => d.dept)
-  const deptData = activeDept !== 'All' ? filteredByDept.find((d) => d.dept === activeDept) : null
-
-  const monthly = deptData ? deptData.monthly.filter((m) => activeMonths.includes(m.month)) : filteredMonthly
-  const maxMonthly = Math.max(...monthly.map((m) => m.total), 0.01)
 
   const sumFte   = deptData ? deptData.fteRevenue : filteredByDept.reduce((s, d) => s + d.fteRevenue, 0)
   const sumTxn   = deptData ? deptData.txnRevenue : filteredByDept.reduce((s, d) => s + d.txnRevenue, 0)
   const sumTotal = deptData ? deptData.total      : filteredByDept.reduce((s, d) => s + d.total, 0)
   const ftePct   = sumTotal > 0 ? Math.round((sumFte / sumTotal) * 100) : 0
+
+  const scopeLabel = selectedMonth ? `${selectedMonth} · FY ${year}` : `${periodLabel}`
 
   return (
     <div className="mt-7">
@@ -76,7 +103,7 @@ export default function ServiceRevenuePanel() {
             return (
               <button
                 key={d}
-                onClick={() => setActiveDept(d)}
+                onClick={() => { setActiveDept(d); setSelectedMonth(null) }}
                 className={`px-3 py-1.5 text-[11.5px] rounded-full font-semibold transition-colors ${
                   active
                     ? 'bg-brand-blue text-white'
@@ -89,19 +116,34 @@ export default function ServiceRevenuePanel() {
           })}
         </div>
 
-        {/* Summary KPI strip */}
+        {/* Summary KPI strip — reflects selected month if any, otherwise the period */}
         <div className="grid grid-cols-3 divide-x divide-[var(--line)] border-b border-[var(--line)]">
-          <KPICard label="Total Revenue" value={sumTotal} sub={`Annual FY ${year}`} />
-          <KPICard label="FTE Revenue" value={sumFte} pct={ftePct} color="green" />
-          <KPICard label="Transaction Revenue" value={sumTxn} pct={100 - ftePct} color="blue" />
+          <KPICard label="Total Revenue"        value={sumTotal} sub={scopeLabel} />
+          <KPICard label="FTE Revenue"          value={sumFte}   pct={ftePct}        color="green" sub={scopeLabel} />
+          <KPICard label="Transaction Revenue"  value={sumTxn}   pct={100 - ftePct}  color="blue"  sub={scopeLabel} />
         </div>
 
         {/* Monthly stacked bar chart */}
         <div className="px-5 pt-5 pb-3">
-          <div className="text-[10.5px] uppercase tracking-[.14em] font-semibold text-[var(--ink-soft)] mb-4">
-            Monthly Revenue (₹ Cr)
+          <div className="flex items-center justify-between mb-4 gap-3">
+            <div className="text-[10.5px] uppercase tracking-[.14em] font-semibold text-[var(--ink-soft)]">
+              Monthly Revenue (₹ Cr) · click a bar to filter the breakdown below
+            </div>
+            {selectedMonth && (
+              <button
+                onClick={() => setSelectedMonth(null)}
+                className="text-[10.5px] font-semibold text-brand-blue hover:underline"
+              >
+                ✕ Clear · showing {selectedMonth}
+              </button>
+            )}
           </div>
-          <MonthlyChart monthly={monthly} max={maxMonthly} />
+          <MonthlyChart
+            monthly={chartMonthly}
+            max={maxMonthly}
+            selectedMonth={selectedMonth}
+            onSelect={(m) => setSelectedMonth((cur) => (cur === m ? null : m))}
+          />
         </div>
 
         {/* Legend */}
@@ -150,7 +192,7 @@ function KPICard({ label, value, pct, color, sub }) {
 }
 
 // ─── Monthly stacked bar chart ─────────────────────────────────────────────────
-function MonthlyChart({ monthly, max }) {
+function MonthlyChart({ monthly, max, selectedMonth, onSelect }) {
   return (
     <div>
       {/* Bars */}
@@ -159,18 +201,28 @@ function MonthlyChart({ monthly, max }) {
           const barH = max > 0 ? (m.total / max) * CHART_H : 0
           const txnH = m.total > 0 ? (m.txnRevenue / m.total) * barH : 0
           const fteH = barH - txnH
+          const isSel    = selectedMonth === m.month
+          const isOther  = selectedMonth && !isSel
 
           return (
-            <div
+            <button
+              type="button"
               key={m.month}
-              className="relative flex-1 group flex flex-col justify-end cursor-default"
-              style={{ height: CHART_H }}
+              onClick={() => onSelect?.(m.month)}
+              className={`relative flex-1 group flex flex-col justify-end transition-opacity ${onSelect ? 'cursor-pointer hover:brightness-110' : 'cursor-default'} ${isOther ? 'opacity-40 hover:opacity-70' : 'opacity-100'}`}
+              style={{ height: CHART_H, padding: 0, border: 0, background: 'transparent' }}
             >
+              {/* Selected indicator ring */}
+              {isSel && (
+                <div className="absolute inset-x-[-2px] top-[-4px] bottom-0 border-2 border-brand-blue rounded-[4px] pointer-events-none" />
+              )}
+
               {/* Hover tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[var(--ink)] text-white text-[10px] px-2 py-1.5 rounded-[6px] whitespace-nowrap opacity-0 group-hover:opacity-100 z-50 pointer-events-none leading-[1.6]">
-                <div className="font-semibold">{m.month}</div>
+                <div className="font-semibold">{m.month} {isSel ? '· selected' : ''}</div>
                 <div className="text-green-300">FTE ₹{m.fteRevenue.toFixed(2)} Cr</div>
                 <div className="text-blue-300">Txn ₹{m.txnRevenue.toFixed(2)} Cr</div>
+                <div className="text-[#9AA4B5] mt-0.5">click to {isSel ? 'clear' : 'filter'}</div>
               </div>
 
               {/* Stacked bar: Txn on top, FTE on bottom */}
@@ -178,18 +230,21 @@ function MonthlyChart({ monthly, max }) {
                 <div className="bg-brand-blue rounded-t-[2px]" style={{ height: txnH }} />
                 <div className="bg-brand-green" style={{ height: fteH }} />
               </div>
-            </div>
+            </button>
           )
         })}
       </div>
 
       {/* Month labels */}
       <div className="flex gap-[3px] mt-1.5">
-        {monthly.map((m) => (
-          <div key={m.month} className="flex-1 text-center font-mono text-[9px] text-[var(--muted)]">
-            {m.month}
-          </div>
-        ))}
+        {monthly.map((m) => {
+          const isSel = selectedMonth === m.month
+          return (
+            <div key={m.month} className={`flex-1 text-center font-mono text-[9px] ${isSel ? 'text-brand-blue font-bold' : 'text-[var(--muted)]'}`}>
+              {m.month}
+            </div>
+          )
+        })}
       </div>
     </div>
   )

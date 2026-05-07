@@ -36,14 +36,19 @@ export function derivePeriodKPIs(monthly, activeMonths) {
   const totalCost      = r2(rows.reduce((s, m) => s + m.costAct,  0))
   const costFc1        = r2(rows.reduce((s, m) => s + m.costFc1,  0))
   const costFc2        = r2(rows.reduce((s, m) => s + m.costFc2,  0))
+  const ebit           = r2(rows.reduce((s, m) => s + (m.ebitAct ?? 0), 0))
+  const ebitFc1        = r2(rows.reduce((s, m) => s + (m.ebitFc1 ?? 0), 0))
+  const ebitFc2        = r2(rows.reduce((s, m) => s + (m.ebitFc2 ?? 0), 0))
   const netProfit      = r2(rows.reduce((s, m) => s + m.npAct,    0))
   const netProfitFc1   = r2(rows.reduce((s, m) => s + m.npFc1,   0))
   const netProfitFc2   = r2(rows.reduce((s, m) => s + m.npFc2,   0))
   const margin         = totalRevenue > 0 ? r2((netProfit / totalRevenue) * 100) : 0
+  const ebitMargin     = totalRevenue > 0 ? r2((ebit / totalRevenue) * 100) : 0
 
   return {
     totalRevenue, revFc1, revFc2,
     totalCost, costFc1, costFc2,
+    ebit, ebitFc1, ebitFc2, ebitMargin,
     netProfit, netProfitFc1, netProfitFc2,
     margin,
     yoyGrowth: null,  // not meaningful for sub-periods
