@@ -354,18 +354,18 @@ export default function DriverWaterfall() {
       {/* three waterfalls */}
       <div className="space-y-5">
         <WaterfallChart
-          title={`Salary Bridge · ${scLabel} → Actual`}
-          unit="kEUR"
-          fcTotal={fteFcTotal}
-          actTotal={fteActTotal}
-          drivers={fteDrivers}
-        />
-        <WaterfallChart
           title={`PEX (Personnel) · ${scLabel} → Actual`}
           unit="kEUR"
           fcTotal={pexFcTotal}
           actTotal={pexActTotal}
           drivers={pexDrivers}
+        />
+        <WaterfallChart
+          title={`Salary Bridge · ${scLabel} → Actual`}
+          unit="kEUR"
+          fcTotal={fteFcTotal}
+          actTotal={fteActTotal}
+          drivers={fteDrivers}
         />
         <WaterfallChart
           title={`OPEX (Operating) · ${scLabel} → Actual`}

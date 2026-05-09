@@ -107,7 +107,7 @@ export default function ServiceRevenuePanel() {
         className="bg-[var(--card)] border border-[var(--line)] rounded-[18px] overflow-hidden"
       >
         {/* Department tabs */}
-        <div className="flex gap-2 px-4 pt-4 pb-3.5 border-b border-[var(--line)] flex-wrap">
+        <div className="flex gap-2 px-4 pt-4 pb-3.5 border-b border-[var(--line)] flex-wrap bg-[var(--card)]">
           {['All', ...depts].map((d) => {
             const active = activeDept === d
             return (
@@ -127,7 +127,7 @@ export default function ServiceRevenuePanel() {
         </div>
 
         {/* Summary KPI strip - reflects selected month if any, otherwise the period */}
-        <div className="grid grid-cols-3 divide-x divide-[var(--line)] border-b border-[var(--line)]">
+        <div className="grid grid-cols-3 divide-x divide-[var(--line)] border-b border-[var(--line)] bg-[var(--card)]">
           <KPICard label="Total Revenue"        value={sumTotal} sub={scopeLabel} />
           <KPICard label="FTE Revenue"          value={sumFte}   pct={ftePct}        color="green" sub={scopeLabel} />
           <KPICard label="Transaction Revenue"  value={sumTxn}   pct={100 - ftePct}  color="blue"  sub={scopeLabel} />
@@ -267,7 +267,7 @@ function DeptTable({ depts }) {
   return (
     <div>
       {/* Table header */}
-      <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1.8fr] bg-[var(--bg)] border-b border-[var(--line)] text-[10.5px] tracking-[.14em] uppercase font-semibold text-[var(--ink-soft)] px-4 py-2.5">
+      <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1.8fr] bg-[var(--card)] border-b border-[var(--line)] text-[10.5px] tracking-[.14em] uppercase font-semibold text-[var(--ink-soft)] px-4 py-2.5">
         <div>Department</div>
         <div className="text-right text-brand-green">FTE Rev</div>
         <div className="text-right text-brand-blue">Txn Rev</div>
@@ -282,7 +282,7 @@ function DeptTable({ depts }) {
         return (
           <div
             key={d.dept}
-            className="grid grid-cols-[2fr_1fr_1fr_1fr_1.8fr] px-4 py-3 border-b border-[var(--line)] last:border-b-0 hover:bg-[var(--bg)] transition items-center"
+            className="grid grid-cols-[2fr_1fr_1fr_1fr_1.8fr] px-4 py-3 border-b border-[var(--line)] last:border-b-0 bg-[var(--card)] hover:bg-[var(--bg)]/35 transition items-center"
           >
             <div className="text-[13px] font-semibold text-[var(--ink)]">{d.dept}</div>
             <div className="text-right font-mono text-[12px] font-semibold text-brand-green">

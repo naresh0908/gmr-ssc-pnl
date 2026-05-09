@@ -174,7 +174,7 @@ function YoYTypeTable({ data, years }) {
 
   return (
     <div className="bg-[var(--card)] border border-[var(--line)] rounded-[18px] overflow-hidden">
-      <div className="px-5 py-3 border-b border-[var(--line)] bg-[var(--bg)] flex items-center justify-between">
+      <div className="px-5 py-3 border-b border-[var(--line)] bg-[var(--card)] flex items-center justify-between">
         <span className="text-[11px] font-bold uppercase tracking-[.16em] text-[var(--ink-soft)]">
           Year-on-Year Cost Comparison
         </span>
@@ -183,7 +183,7 @@ function YoYTypeTable({ data, years }) {
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-[12px]">
           <thead>
-            <tr className="border-b border-[var(--line)] bg-[var(--bg)] text-[10.5px] uppercase tracking-[.12em] font-semibold text-[var(--ink-soft)]">
+            <tr className="border-b border-[var(--line)] bg-[var(--card)] text-[10.5px] uppercase tracking-[.12em] font-semibold text-[var(--ink-soft)]">
               <th className="text-left px-5 py-2 min-w-[180px]">Cost Type</th>
               {years.map((y) => (
                 <th key={y} className="text-right px-4 py-2 min-w-[100px]">FY {y}</th>
@@ -201,7 +201,7 @@ function YoYTypeTable({ data, years }) {
               return (
                 <tr
                   key={row.type}
-                  className={`border-b border-[var(--line)] last:border-b-0 ${isTotal ? 'bg-[var(--bg)] font-bold' : 'hover:bg-[var(--bg)] transition-colors'}`}
+                  className={`border-b border-[var(--line)] last:border-b-0 ${isTotal ? 'bg-[var(--card)] font-bold' : 'bg-[var(--card)] hover:bg-[var(--bg)]/35 transition-colors'}`}
                 >
                   <td className={`px-5 py-2.5 ${isTotal ? 'text-[13px] uppercase tracking-[.04em] text-[var(--ink)]' : ''}`}>
                     {isTotal ? (

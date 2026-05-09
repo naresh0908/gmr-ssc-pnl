@@ -58,7 +58,7 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
 
   return (
     <div className="mt-7">
-      <SectionHead num={num} title={`EBIT Matrix · ${type === 'customer' ? 'Customer' : 'Department'} · ${periodLabel}`}>
+      <SectionHead num={num} title={`${type === 'customer' ? 'Customer' : 'Department wise'} EBIT Matrix · ${periodLabel}`}>
         Per-month EBIT contribution (₹ Cr) by {type === 'customer' ? 'customer' : 'service line'}. Hover any cell to see contribution share.
       </SectionHead>
 
@@ -88,8 +88,8 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-[var(--bg)] border-b border-[var(--line)]">
-                <th className="text-left p-3.5 px-4 text-[11px] tracking-[.16em] uppercase text-[var(--ink-soft)] font-semibold sticky left-0 bg-[var(--bg)] border-r border-[var(--line)] min-w-[180px]">
+              <tr className="bg-[var(--card)] border-b border-[var(--line)]">
+                <th className="text-left p-3.5 px-4 text-[11px] tracking-[.16em] uppercase text-[var(--ink-soft)] font-semibold sticky left-0 bg-[var(--card)] border-r border-[var(--line)] min-w-[180px]">
                   {type === 'customer' ? 'Customer' : 'Department'}
                 </th>
                 {months.map((m) => (
@@ -97,7 +97,7 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
                     {m}
                   </th>
                 ))}
-                <th className="p-3.5 px-3 text-[11px] tracking-[.16em] uppercase text-[var(--ink-soft)] font-semibold text-right bg-[var(--bg)] min-w-[90px]">
+                <th className="p-3.5 px-3 text-[11px] tracking-[.16em] uppercase text-[var(--ink-soft)] font-semibold text-right bg-[var(--card)] min-w-[90px]">
                   FY Total
                 </th>
               </tr>
@@ -120,14 +120,14 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
                       </div>
                     </td>
                   ))}
-                  <td className="p-3 px-3 text-right font-mono text-[13px] font-bold text-[var(--ink)] bg-[var(--bg)]">
+                  <td className="p-3 px-3 text-right font-mono text-[13px] font-bold text-[var(--ink)] bg-[var(--card)]">
                     ₹{row.total.toFixed(1)}
                   </td>
                 </tr>
               ))}
               {/* Column totals row */}
-              <tr className="border-t-2 border-[var(--line)] bg-[var(--bg)]">
-                <td className="p-3 px-4 text-[12px] font-bold uppercase tracking-[.08em] text-[var(--ink)] sticky left-0 bg-[var(--bg)] border-r border-[var(--line)]">
+              <tr className="border-t-2 border-[var(--line)] bg-[var(--card)]">
+                <td className="p-3 px-4 text-[12px] font-bold uppercase tracking-[.08em] text-[var(--ink)] sticky left-0 bg-[var(--card)] border-r border-[var(--line)]">
                   Total · All {type === 'customer' ? 'Customers' : 'Departments'}
                 </td>
                 {monthTotals.map((c) => (

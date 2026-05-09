@@ -56,8 +56,7 @@ export default function App() {
       <EBITMatrix type="customer" num="07" />
 
       <footer className="mt-8 pt-5 border-t border-[var(--line)] flex justify-between items-center text-[11.5px] text-[var(--muted)]">
-        <span className="font-mono">GMR SSC · Financial Decision Intelligence · v0.1</span>
-        <span className="font-mono">Re-upload Excel anytime to refresh</span>
+        <span className="font-mono">GMR SSC · Financial Decision Intelligence · v0.1</span><span className="font-mono">Re-upload Excel anytime to refresh</span>
       </footer>
     </div>
     </div>

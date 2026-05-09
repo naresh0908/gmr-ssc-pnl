@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { sampleData } from '../data/sampleData'
-import { generate2026 } from '../data/generate2026'
 import { transactionFteData } from '../data/transactionFteData'
 import { computeDerived } from '../utils/computeDerived'
 import { computeServiceRevenue } from '../utils/computeServiceRevenue'
@@ -98,9 +97,8 @@ function patchSampleData(revenue, cost) {
 }
 
 const { revenue: patched2025Rev, cost: patched2025Cost } = patchSampleData(sampleData.revenue, sampleData.cost)
-const data2026 = generate2026({ revenue: sampleData.revenue, cost: sampleData.cost })
-const patchedRevenue = [...patched2025Rev, ...data2026.revenue]
-const patchedCost    = [...patched2025Cost, ...data2026.cost]
+const patchedRevenue = patched2025Rev
+const patchedCost    = patched2025Cost
 const serviceRevenue = computeServiceRevenue(transactionFteData.transactions, transactionFteData.fte, patchedRevenue)
 const initialDerived = computeDerived(patchedRevenue, patchedCost)
 const defaultYear = initialDerived.years.at(-1) ?? new Date().getFullYear() - 1

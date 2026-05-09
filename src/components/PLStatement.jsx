@@ -219,7 +219,7 @@ export default function PLStatement() {
         className="bg-[var(--card)] border border-[var(--line)] rounded-[18px] overflow-hidden"
       >
         {/* View-mode toggle */}
-        <div className="flex items-center gap-3 px-5 py-3 border-b border-[var(--line)] bg-[var(--bg)] flex-wrap">
+        <div className="flex items-center gap-3 px-5 py-3 border-b border-[var(--line)] bg-[var(--card)] flex-wrap">
           <span className="text-[10.5px] uppercase tracking-[.14em] font-semibold text-[var(--ink-soft)]">View</span>
           <div className="flex gap-1 bg-[var(--card)] border border-[var(--line)] rounded-full p-0.5">
             {[
@@ -245,7 +245,7 @@ export default function PLStatement() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-[var(--bg)] border-b-2 border-[var(--line)]">
+              <tr className="bg-[var(--card)] border-b-2 border-[var(--line)]">
                 <th className="py-2.5 px-5 text-left text-[10.5px] font-semibold tracking-[.12em] uppercase text-[var(--ink-soft)] min-w-[260px]">P&L Line</th>
                 {viewMode === 'variance' ? (
                   <>
@@ -301,7 +301,7 @@ export default function PLStatement() {
           </table>
         </div>
 
-        <div className="px-5 py-3 border-t border-[var(--line)] bg-[var(--bg)] text-[11px] text-[var(--muted)] font-mono flex gap-6 flex-wrap items-center">
+        <div className="px-5 py-3 border-t border-[var(--line)] bg-[var(--card)] text-[11px] text-[var(--muted)] font-mono flex gap-6 flex-wrap items-center">
           <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-brand-green inline-block" /> Revenue</span>
           <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-brand-red inline-block" /> Cost</span>
           {viewMode === 'variance' && (
@@ -345,21 +345,21 @@ function Row({ row, months, viewMode, expanded, onToggle }) {
 
   let rowCls
   if (isSubtotal) {
-    rowCls = 'bg-[var(--bg)] border-y-2 border-[var(--line)]'
+    rowCls = 'bg-[var(--card)] border-y-2 border-[var(--line)]'
   } else if (isMidSubtotal) {
     rowCls = kind === 'cost-total'
       ? 'bg-brand-red/[.10] border-y border-[var(--line)] font-semibold'
       : 'bg-brand-green/[.10] border-y border-[var(--line)] font-semibold'
   } else if (isSubSubtotal) {
-    rowCls = 'bg-[var(--bg)]/60 border-y border-[var(--line)]'
+    rowCls = 'bg-[var(--card)]/85 border-y border-[var(--line)]'
   } else if (kind === 'cost' && costType) {
     rowCls = `${COST_ROW_BG[costType]} border-b border-[var(--line)]`
   } else if (kind === 'subcat-cost' && costType) {
     rowCls = `${COST_SUB_BG[costType]} border-b border-[var(--line)]`
   } else if (isSubcat) {
-    rowCls = 'border-b border-[var(--line)] bg-[var(--bg)]/40'
+    rowCls = 'border-b border-[var(--line)] bg-[var(--card)]/70'
   } else {
-    rowCls = 'border-b border-[var(--line)] hover:bg-[var(--bg)]/60 transition-colors'
+    rowCls = 'border-b border-[var(--line)] bg-[var(--card)] hover:bg-[var(--bg)]/35 transition-colors'
   }
 
   const labelPad = isSubcat ? 'py-2 pl-12 pr-5' : 'py-2.5 px-5'

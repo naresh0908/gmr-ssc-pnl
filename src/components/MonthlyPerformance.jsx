@@ -46,7 +46,7 @@ export default function MonthlyPerformance() {
         className="bg-[var(--card)] border border-[var(--line)] rounded-[18px] overflow-hidden"
       >
         {/* Legend - top right */}
-        <div className="flex items-center justify-end gap-4 px-5 py-2.5 border-b border-[var(--line)] bg-[var(--bg)] flex-wrap">
+        <div className="flex items-center justify-end gap-4 px-5 py-2.5 border-b border-[var(--line)] bg-[var(--card)] flex-wrap">
           <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-3 h-2 rounded-sm bg-brand-blue inline-block" /> Positive</span>
           <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-3 h-2 rounded-sm bg-brand-blue-soft inline-block" /> Below target</span>
           <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-soft)]"><span className="w-3 h-2 rounded-sm bg-brand-red inline-block" /> Negative</span>
@@ -72,7 +72,7 @@ export default function MonthlyPerformance() {
         </div>
 
         {/* Header */}
-        <div className="grid grid-cols-[80px_1.5fr_1fr_1fr_1fr] bg-[var(--bg)] border-b border-[var(--line)] text-[11px] tracking-[.16em] uppercase font-semibold text-[var(--ink-soft)]">
+        <div className="grid grid-cols-[80px_1.5fr_1fr_1fr_1fr] bg-[var(--card)] border-b border-[var(--line)] text-[11px] tracking-[.16em] uppercase font-semibold text-[var(--ink-soft)]">
           <div className="p-3.5 px-4 border-r border-[var(--line)]">Month</div>
           <div className="p-3.5 px-4 border-r border-[var(--line)]">Revenue (₹ Cr)</div>
           <div className="p-3.5 px-4 text-center border-r border-[var(--line)]">YoY Growth</div>
@@ -92,8 +92,8 @@ export default function MonthlyPerformance() {
           const npTarget = targetView === 'fc1' ? d.npFc1 : d.npFc2
 
           return (
-            <div key={d.month} className="grid grid-cols-[80px_1.5fr_1fr_1fr_1fr] border-b border-[var(--line)] last:border-b-0 hover:bg-[var(--bg)] transition">
-              <div className="p-3.5 px-4 font-mono text-[13px] font-semibold tracking-wider bg-[var(--bg)] border-r border-[var(--line)] flex items-center">
+            <div key={d.month} className="grid grid-cols-[80px_1.5fr_1fr_1fr_1fr] border-b border-[var(--line)] last:border-b-0 bg-[var(--card)] hover:bg-[var(--bg)]/35 transition">
+              <div className="p-3.5 px-4 font-mono text-[13px] font-semibold tracking-wider bg-[var(--card)] border-r border-[var(--line)] flex items-center">
                 {d.month.toUpperCase()}
               </div>
 
