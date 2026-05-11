@@ -70,7 +70,7 @@ export function derivePeriodCostByType(rawCost, year, months) {
 }
 
 // Derive department EBIT/margin for a period from raw data.
-// Uses SF + OtherIncome as operating revenue; PEX + OPEX as operating cost.
+// Uses SF + OtherIncome as operating revenue; PEX + OPEX + CAPEX as operating cost.
 export function derivePeriodByDept(rawRevenue, rawCost, departments, year, months) {
   const revRows = rawRevenue.filter((r) => r.year === year && months.includes(r.month))
   const cstRows = rawCost.filter((c) => c.year === year && months.includes(c.month))
@@ -85,9 +85,7 @@ export function derivePeriodByDept(rawRevenue, rawCost, departments, year, month
     const totalRev = r2(
       rR.reduce((s, r) => s + (r.actServiceFees || 0) + (r.actOtherIncome || 0) + (r.actInterest || 0), 0) / CR
     )
-    const opsCost = r2(
-      cR.filter((c) => c.costType !== 'CAPEX').reduce((s, c) => s + c.actual, 0) / CR
-    )
+    const opsCost = r2(cR.reduce((s, c) => s + c.actual, 0) / CR)
     const totalCost = r2(cR.reduce((s, c) => s + c.actual, 0) / CR)
     const costFc1   = r2(cR.reduce((s, c) => s + c.fc1, 0) / CR)
     const costFc2   = r2(cR.reduce((s, c) => s + c.fc2, 0) / CR)

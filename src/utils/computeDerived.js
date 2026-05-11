@@ -14,18 +14,18 @@ const sumRev = (rows, type) => rows.reduce(
 const sumInt  = (rows, type) => rows.reduce((a, r) => a + (r[`${type}Interest`] || 0), 0)
 const sumTax  = (rows, type) => rows.reduce((a, r) => a + (r[`${type}Tax`]      || 0), 0)
 
-// Operating costs only (PEX + OPEX) - CAPEX is a capital item, excluded from EBIT / Net Result
-const opsFilter = (c) => c.costType !== 'CAPEX'
+// Operating costs for EBIT / Net Result now include CAPEX as well.
+const opsFilter = () => true
 
 /**
  * Compute everything the dashboard needs from the raw sheets.
  * All money values returned in CRORES for display.
  *
  * P&L formula (matches PLStatement):
- *   EBIT        = ServiceFees + OtherIncome − PEX − OPEX
+ *   EBIT        = ServiceFees + OtherIncome − PEX − OPEX − CAPEX
  *   FinResult   = Interest − Tax
  *   Net Result  = EBIT + FinResult
- *   CAPEX shown below-the-line (not in Net Result)
+ *   CAPEX is included in EBIT / Net Result
  */
 export function computeDerived(revenue, cost) {
   const years = [...new Set(revenue.map((r) => r.year))].sort()
@@ -62,7 +62,7 @@ export function computeDerived(revenue, cost) {
     const costFc1 = cst.reduce((a, c) => a + c.fc1, 0) / CR
     const costFc2 = cst.reduce((a, c) => a + c.fc2, 0) / CR
 
-    // Operating costs (PEX + OPEX) - for EBIT
+    // Operating costs (PEX + OPEX + CAPEX) - for EBIT
     const opsCostAct = cst.filter(opsFilter).reduce((a, c) => a + c.actual, 0) / CR
     const opsCostFc1 = cst.filter(opsFilter).reduce((a, c) => a + c.fc1, 0) / CR
     const opsCostFc2 = cst.filter(opsFilter).reduce((a, c) => a + c.fc2, 0) / CR
@@ -106,7 +106,7 @@ export function computeDerived(revenue, cost) {
       const cOpsFc1 = cRows.filter(opsFilter).reduce((a, c) => a + c.fc1, 0) / CR
       const cOpsFc2 = cRows.filter(opsFilter).reduce((a, c) => a + c.fc2, 0) / CR
 
-      // EBIT per month = Operating Revenue − Operating Cost (no Interest, no Tax, no CAPEX)
+      // EBIT per month = Operating Revenue − Operating Cost (no Interest, no Tax)
       const ebitMAct = round(rOpsAct - cOpsAct)
       const ebitMFc1 = round(rOpsFc1 - cOpsFc1)
       const ebitMFc2 = round(rOpsFc2 - cOpsFc2)
@@ -164,7 +164,7 @@ export function computeDerived(revenue, cost) {
     })
 
     // ── Monthly EBIT matrix (dept × month) ───────────────────────────────────
-    // EBIT = Operating Revenue − Operating Costs (no Interest, no CAPEX, no Tax)
+    // EBIT = Operating Revenue − Operating Costs (no Interest, no Tax)
     const ebitMatrix = departments.map((d) => {
       const allCells = MONTHS.map((m) => {
         const rRows = rev.filter((r) => r.department === d && r.month === m)
@@ -197,7 +197,7 @@ export function computeDerived(revenue, cost) {
         totalRevenue: round(revAct),           // SF + OtherInc + Interest
         totalCost:    round(costAct),           // PEX + OPEX + CAPEX (total spend)
         netProfit:    round(netProfitAct),      // EBIT + Interest − Tax  ← matches PLStatement Net Result
-        ebit:         round(ebitAct),           // SF + OtherInc − PEX − OPEX ← matches PLStatement EBIT
+        ebit:         round(ebitAct),           // SF + OtherInc − PEX − OPEX − CAPEX ← matches PLStatement EBIT
         margin: revAct > 0 ? round(netProfitAct / revAct * 100) : 0,
         revFc1: round(revFc1), revFc2: round(revFc2),
         costFc1: round(costFc1), costFc2: round(costFc2),

@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "export-data": "node --import ./scripts/loader.mjs scripts/exportData.js"
+    "sync-data": "node scripts/sync-data-from-workbook.mjs",
+    "export-data": "node scripts/sync-data-from-workbook.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

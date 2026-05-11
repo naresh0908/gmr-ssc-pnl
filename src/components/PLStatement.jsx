@@ -134,8 +134,8 @@ function buildPL(revenue, cost, year, months) {
   const costsTotal   = sumLines(pex, opex, capex)             // PEX + OPEX + CAPEX (incl. CAPEX for completeness)
   const revenueTotal = sumLines(sfTotal, otherInc)            // SF + OI (operating revenue)
 
-  // EBIT excludes CAPEX (standard); the displayed net result carries the tax adjustment.
-  const ebit      = sumLines(sfTotal, otherInc, pex, opex)
+  // EBIT includes CAPEX in this dashboard model; net result then adds the tax adjustment.
+  const ebit      = sumLines(sfTotal, otherInc, pex, opex, capex)
   const netResult = sumLines(ebit, tax)
 
   return {
