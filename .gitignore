@@ -5,3 +5,5 @@ dist
 .vite
 .env
 .env.local
+.webhook-subscription.json
+.webhook-last-sync.json

@@ -20,62 +20,46 @@ export function useRealtimeWebhookSync({
   verbose = false,
   onDataRefresh = null
 } = {}) {
-  const lastSyncTimeRef = useRef(null)
+  const lastTimestampRef = useRef(null)
   const pollTimeoutRef = useRef(null)
-  const lastDataRef = useRef(null)
 
   useEffect(() => {
     const checkForSync = async () => {
       try {
-        // Check if webhook endpoint is responding
-        // (indicates Vercel/API is running)
-        const healthCheck = await fetch('/api/webhooks/sharepoint', {
-          method: 'GET',
-          cache: 'no-store'
-        }).catch(() => null)
+        // Fetch current data from API endpoint
+        const response = await fetch('/api/data', {
+          cache: 'no-store',
+          headers: { 'pragma': 'no-cache' }
+        })
 
-        if (!healthCheck?.ok && verbose) {
-          console.log('⏳ Webhook endpoint not ready')
+        if (!response.ok) {
+          if (verbose) console.log('⏳ Data API not ready')
+          // Schedule next check and return
+          pollTimeoutRef.current = setTimeout(checkForSync, pollInterval)
+          return
         }
 
-        // Try to load fresh data modules with cache buster
-        const now = Date.now()
-        const cacheBuster = `?t=${now}`
+        const { sampleData, transactionFteData, timestamp } = await response.json()
 
-        try {
-          const sampleDataModule = await import(
-            /* @vite-ignore */
-            `/src/data/sampleData.js${cacheBuster}`
-          )
-          const txnFteModule = await import(
-            /* @vite-ignore */
-            `/src/data/transactionFteData.js${cacheBuster}`
-          )
-
-          const newData = {
-            revenue: sampleDataModule.sampleData.revenue,
-            cost: sampleDataModule.sampleData.cost,
-            transactions: txnFteModule.transactionFteData.transactions,
-            fte: txnFteModule.transactionFteData.fte,
+        // Check if data has changed
+        if (lastTimestampRef.current === null) {
+          // First load
+          lastTimestampRef.current = timestamp
+          if (verbose) console.log('📡 Monitoring SharePoint file for changes...')
+        } else if (lastTimestampRef.current !== timestamp) {
+          // Data has changed!
+          console.log('✅ Real-time data update detected!')
+          
+          // Update store with new data
+          useDashStore.getState().setData(sampleData.revenue, sampleData.cost)
+          
+          lastTimestampRef.current = timestamp
+          
+          if (onDataRefresh) {
+            onDataRefresh({ sampleData, transactionFteData })
           }
-
-          // Check if data has changed
-          const hasChanged = !lastDataRef.current || 
-            JSON.stringify(lastDataRef.current) !== JSON.stringify(newData)
-
-          if (hasChanged) {
-            console.log('✅ Real-time data update detected!')
-            
-            // Update store with new data
-            useDashStore.getState().setData(newData.revenue, newData.cost)
-            lastDataRef.current = newData
-
-            if (onDataRefresh) {
-              onDataRefresh(newData)
-            }
-          }
-        } catch (e) {
-          if (verbose) console.debug('Data check:', e.message)
+        } else if (verbose) {
+          console.log('✓ No data changes')
         }
       } catch (error) {
         if (verbose) console.error('Sync check error:', error)
@@ -87,7 +71,7 @@ export function useRealtimeWebhookSync({
 
     // Start checking
     if (verbose) {
-      console.log(`📡 Real-time webhook monitoring active (poll every ${pollInterval}ms)`)
+      console.log(`📡 Real-time monitoring active (poll every ${pollInterval}ms)`)
     }
     checkForSync()
 
