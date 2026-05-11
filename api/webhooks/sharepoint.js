@@ -79,19 +79,19 @@ export default async function handler(req, res) {
 
   // Microsoft Graph sends a POST with validationToken during subscription setup
   if (req.method === 'POST') {
-    const { value } = req.body
+    const { value, validationToken } = req.body
 
-    // Handle subscription validation
+    // Handle subscription validation (initial handshake)
+    if (validationToken) {
+      console.log('[Webhook] Validating subscription...')
+      // Echo back the validation token as plain text
+      return res.status(200).set('Content-Type', 'text/plain').send(validationToken)
+    }
+
+    // Handle file change notifications
     if (Array.isArray(value) && value.length > 0) {
       const notification = value[0]
-      
-      // Check for validation token (during subscription setup)
-      if (notification.clientNotificationUrl) {
-        console.log('[Webhook] Validating subscription...')
-        return res.status(200).set('Content-Type', 'text/plain').send(notification.clientNotificationUrl)
-      }
 
-      // File change notification
       if (notification.resourceData) {
         console.log('[Webhook] 📢 File change detected!')
         console.log(`        Resource: ${notification.resource}`)
@@ -105,7 +105,7 @@ export default async function handler(req, res) {
       }
     }
 
-    // Return success
+    // Return success for other POST requests
     return res.status(202).json({ status: 'notification received' })
   }
 
