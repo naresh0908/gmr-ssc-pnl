@@ -1,4 +1,4 @@
-// Auto-generated from data/real-data-workbook.xlsx. Do not edit by hand.
+// Auto-generated from /Users/rohith/gmr-ssc-pnl/data/real-data-workbook.xlsx. Do not edit by hand.
 export const sampleData = {
   "revenue": [
     {

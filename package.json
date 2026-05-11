@@ -5,10 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:auto": "vite & node scripts/poll-and-sync.mjs",
     "build": "vite build",
     "preview": "vite preview",
-    "sync-data": "node scripts/sync-data-from-workbook.mjs",
-    "export-data": "node scripts/sync-data-from-workbook.mjs"
+    "sync-data": "node scripts/sharepoint-sync.mjs",
+    "sync-local": "node scripts/sync-data-from-workbook.mjs",
+    "export-data": "node scripts/sharepoint-sync.mjs",
+    "poll": "node scripts/poll-and-sync.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -17,7 +20,10 @@
     "xlsx": "^0.18.5",
     "zustand": "^4.5.5",
     "framer-motion": "^11.3.19",
-    "lucide-react": "^0.439.0"
+    "lucide-react": "^0.439.0",
+    "@azure/identity": "^3.4.2",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
