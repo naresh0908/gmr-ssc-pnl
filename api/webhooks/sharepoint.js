@@ -71,23 +71,21 @@ export default async function handler(req, res) {
   console.log(`[Webhook] ${req.method} request received`)
 
   if (req.method === 'POST') {
-    const body = req.body || {}
-    
-    // Check for validation token (Microsoft Graph subscription validation)
-    // Can come as query param, body property, or in value array
-    let validationToken = body.validationToken
-    
-    if (!validationToken && body.value && Array.isArray(body.value)) {
-      // Check if it's in the first item (shouldn't be for validation, but check anyway)
-      validationToken = body.value[0]?.validationToken
-    }
-
-    // Handle subscription validation
-    if (validationToken) {
-      console.log('[Webhook] 🔐 Validating subscription with token:', validationToken.substring(0, 20) + '...')
+    // Check for validation token in query parameters (Microsoft Graph sends it there)
+    if (req.query?.validationToken) {
+      console.log('[Webhook] 🔐 Validating subscription with token from query param')
       // Echo back the validation token as plain text (REQUIRED by Microsoft Graph)
       res.setHeader('Content-Type', 'text/plain')
-      return res.status(200).send(validationToken)
+      return res.status(200).send(req.query.validationToken)
+    }
+
+    const body = req.body || {}
+    
+    // Also check body in case validation token is there
+    if (body.validationToken) {
+      console.log('[Webhook] 🔐 Validating subscription with token from body')
+      res.setHeader('Content-Type', 'text/plain')
+      return res.status(200).send(body.validationToken)
     }
 
     // Handle file change notifications
