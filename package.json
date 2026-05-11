@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:auto": "vite & node scripts/poll-and-sync.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "sync-data": "node scripts/sharepoint-sync.mjs",
     "sync-local": "node scripts/sync-data-from-workbook.mjs",
-    "export-data": "node scripts/sharepoint-sync.mjs"
+    "export-data": "node scripts/sharepoint-sync.mjs",
+    "poll": "node scripts/poll-and-sync.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

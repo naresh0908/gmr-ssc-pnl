@@ -8,11 +8,32 @@ const repoRoot = process.cwd()
 const sampleDataOut = path.join(repoRoot, 'src', 'data', 'sampleData.js')
 const txnFteOut = path.join(repoRoot, 'src', 'data', 'transactionFteData.js')
 const localWorkbookPath = path.join(repoRoot, process.env.LOCAL_WORKBOOK_PATH || 'data/real-data-workbook.xlsx')
-const syncMethod = process.env.SYNC_METHOD || 'sharepoint'
+const syncMethod = process.env.SYNC_METHOD || 'onedrive'
+const lastModifiedFile = path.join(repoRoot, '.last-sync-check.json')
 
 function writeModule(filePath, exportName, data, sourceLabel) {
   const content = `// Auto-generated from ${sourceLabel}. Do not edit by hand.\nexport const ${exportName} = ${JSON.stringify(data, null, 2)};\n`
   fs.writeFileSync(filePath, content, 'utf8')
+}
+
+function recordLastModified(fileId, lastModifiedDateTime) {
+  const data = {
+    fileId,
+    lastModifiedDateTime,
+    syncedAt: new Date().toISOString(),
+  }
+  fs.writeFileSync(lastModifiedFile, JSON.stringify(data, null, 2), 'utf8')
+}
+
+function getLastModifiedRecord() {
+  try {
+    if (fs.existsSync(lastModifiedFile)) {
+      return JSON.parse(fs.readFileSync(lastModifiedFile, 'utf8'))
+    }
+  } catch (e) {
+    return null
+  }
+  return null
 }
 
 function assertSheet(workbook, sheetName) {
@@ -52,19 +73,19 @@ async function syncFromLocal() {
   console.log(`   FTE rows: ${fte.length}`)
 }
 
-async function findExcelFileInDrive(accessToken, driveId) {
+async function findFileInOneDrive(accessToken) {
   try {
-    console.log(`🔍 Searching for Excel files...`)
+    console.log(`🔍 Searching for Excel files in OneDrive...`)
     
     const response = await makeGraphRequest(
       accessToken,
-      `/drives/${driveId}/root/children?$filter=name endswith '.xlsx' or name endswith '.xls'`
+      `/me/drive/root/children?$filter=name endswith '.xlsx' or name endswith '.xls'`
     )
 
     const excelFiles = response.value || []
 
     if (excelFiles.length === 0) {
-      throw new Error('No Excel files found in the SharePoint site')
+      throw new Error('No Excel files found in OneDrive')
     }
 
     // Return the first Excel file
@@ -77,11 +98,37 @@ async function findExcelFileInDrive(accessToken, driveId) {
   }
 }
 
+async function checkForChanges(accessToken, fileId, fileName) {
+  const lastRecord = getLastModifiedRecord()
+  
+  try {
+    const fileInfo = await makeGraphRequest(accessToken, `/me/drive/items/${fileId}`)
+    const currentModified = fileInfo.lastModifiedDateTime
+    
+    if (!lastRecord || lastRecord.fileId !== fileId) {
+      console.log('📝 First sync or different file')
+      return { hasChanged: true, fileInfo }
+    }
+    
+    if (lastRecord.lastModifiedDateTime !== currentModified) {
+      console.log(`📝 File updated since last sync`)
+      console.log(`   Last sync: ${lastRecord.syncedAt}`)
+      console.log(`   File modified: ${currentModified}`)
+      return { hasChanged: true, fileInfo }
+    }
+    
+    console.log(`✓ No changes since last sync (${lastRecord.syncedAt})`)
+    return { hasChanged: false, fileInfo }
+  } catch (error) {
+    console.error(`Error checking for changes: ${error.message}`)
+    return { hasChanged: true, fileInfo: null }
+  }
+}
+
 async function downloadAndParseExcel(accessToken, fileId, fileName) {
   try {
     console.log(`📥 Downloading: ${fileName}`)
     
-    // Get download URL
     const fileInfo = await makeGraphRequest(accessToken, `/me/drive/items/${fileId}`)
     const downloadUrl = fileInfo['@microsoft.graph.downloadUrl']
 
@@ -89,12 +136,12 @@ async function downloadAndParseExcel(accessToken, fileId, fileName) {
       throw new Error('Could not get download URL for file')
     }
 
-    // Download the file
     const response = await fetch(downloadUrl)
     const buffer = await response.arrayBuffer()
-
-    // Parse Excel
     const workbook = XLSX.read(buffer, { type: 'buffer' })
+    
+    recordLastModified(fileId, fileInfo.lastModifiedDateTime)
+    
     return workbook
   } catch (error) {
     console.error(`Error downloading file: ${error.message}`)
@@ -103,7 +150,7 @@ async function downloadAndParseExcel(accessToken, fileId, fileName) {
 }
 
 async function syncFromSharePoint() {
-  console.log('☁️  Syncing from SharePoint...')
+  console.log('☁️  Syncing from SharePoint site...')
   
   try {
     const accessToken = await getAccessToken()
@@ -118,17 +165,80 @@ async function syncFromSharePoint() {
     )
     
     const siteId = siteResponse.id
-    const driveId = siteResponse.drive?.id || siteResponse.parentReference?.driveId
-
-    if (!driveId) {
-      throw new Error('Could not get SharePoint drive ID')
-    }
-
     console.log(`✅ Connected to site: ${siteName}`)
 
-    // Find and download Excel file
-    const excelFile = await findExcelFileInDrive(accessToken, driveId)
-    const workbook = await downloadAndParseExcel(accessToken, excelFile.id, excelFile.name)
+    // Navigate to folder: General > 2026_May_HARTS_GMR_PNL_Dashboard
+    console.log(`🔍 Navigating to General/2026_May_HARTS_GMR_PNL_Dashboard folder...`)
+    
+    // Get root children to find "General" folder
+    const rootResponse = await makeGraphRequest(
+      accessToken,
+      `/sites/${siteId}/drive/root/children`
+    )
+    
+    const generalFolder = (rootResponse.value || []).find(
+      (item) => item.folder && item.name === 'General'
+    )
+    
+    if (!generalFolder) {
+      throw new Error('Could not find "General" folder in SharePoint root')
+    }
+    
+    console.log(`✓ Found General folder`)
+    
+    // Get children of General folder
+    const generalChildren = await makeGraphRequest(
+      accessToken,
+      `/sites/${siteId}/drive/items/${generalFolder.id}/children`
+    )
+    
+    const targetFolder = (generalChildren.value || []).find(
+      (item) => item.folder && item.name.includes('2026_May_HARTS_GMR_PNL_Dashboard')
+    )
+    
+    if (!targetFolder) {
+      console.log(`⚠️  Folder "2026_May_HARTS_GMR_PNL_Dashboard" not found in General`)
+      const availableFolders = (generalChildren.value || [])
+        .filter(item => item.folder)
+        .map(f => f.name)
+      console.log(`Available folders: ${availableFolders.join(', ')}`)
+      throw new Error('Target folder not found')
+    }
+    
+    console.log(`✓ Found 2026_May_HARTS_GMR_PNL_Dashboard folder`)
+    
+    // Get Excel files from target folder
+    const targetFolderChildren = await makeGraphRequest(
+      accessToken,
+      `/sites/${siteId}/drive/items/${targetFolder.id}/children`
+    )
+    
+    const excelFiles = (targetFolderChildren.value || []).filter(
+      (item) => item.name.endsWith('.xlsx') || item.name.endsWith('.xls')
+    )
+
+    if (excelFiles.length === 0) {
+      throw new Error('No Excel files found in target folder')
+    }
+
+    console.log(`Found ${excelFiles.length} Excel file(s):`)
+    excelFiles.forEach(f => console.log(`   - ${f.name}`))
+    
+    const excelFile = excelFiles[0]
+    console.log(`📄 Using: ${excelFile.name}`)
+
+    // Download and parse
+    const fileInfo = await makeGraphRequest(accessToken, `/sites/${siteId}/drive/items/${excelFile.id}`)
+    const downloadUrl = fileInfo['@microsoft.graph.downloadUrl']
+
+    if (!downloadUrl) {
+      throw new Error('Could not get download URL for file')
+    }
+
+    console.log(`📥 Downloading: ${excelFile.name}`)
+    const response2 = await fetch(downloadUrl)
+    const buffer = await response2.arrayBuffer()
+    const workbook = XLSX.read(buffer, { type: 'buffer' })
 
     // Read sheets
     const revenueRows = readRows(workbook, 'Revenue')
@@ -145,16 +255,24 @@ async function syncFromSharePoint() {
     console.log(`   Cost rows: ${costRows.length}`)
     console.log(`   Transaction rows: ${transactions.length}`)
     console.log(`   FTE rows: ${fte.length}`)
+    
+    return { synced: true }
   } catch (error) {
     console.error(`❌ SharePoint sync failed: ${error.message}`)
     console.log(`\n⚠️  Falling back to local workbook...`)
     await syncFromLocal()
+    return { synced: false, reason: 'fallback_to_local' }
   }
 }
 
 async function main() {
   try {
-    if (syncMethod === 'sharepoint') {
+    if (syncMethod === 'onedrive') {
+      const result = await syncFromOneDrive()
+      if (!result.synced && result.reason === 'no_changes') {
+        process.exit(0)
+      }
+    } else if (syncMethod === 'sharepoint') {
       await syncFromSharePoint()
     } else {
       await syncFromLocal()

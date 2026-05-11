@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useDashStore } from './store/useDashStore'
+import { useRealtimeWebhookSync } from './utils/useRealtimeWebhookSync'
 import TopBar from './components/TopBar'
 import PeriodBar from './components/PeriodBar'
 import HeroSummary from './components/HeroSummary'
@@ -14,7 +15,13 @@ import CostAnalysisPanel from './components/CostAnalysisPanel'
 
 export default function App() {
   const { initInsights } = useDashStore()
+  
+  // Initialize insights on first load
   useEffect(() => { initInsights() }, [initInsights])
+  
+  // Real-time webhook sync: Dashboard updates instantly when SharePoint file changes
+  // Polls for sync completion every 5 seconds
+  useRealtimeWebhookSync({ pollInterval: 5000, verbose: false })
 
   return (
     <div>
