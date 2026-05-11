@@ -7,16 +7,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 33212500,
       "fc2ServiceFees": 32770606,
-      "actServiceFees": 31170370,
+      "actServiceFees": 32417185,
       "fc1OtherIncome": 1003199,
       "fc2OtherIncome": 953039,
-      "actOtherIncome": 1001298,
+      "actOtherIncome": 1041350,
       "fc1Interest": 167199,
       "fc2Interest": 167199,
       "actInterest": 163478,
-      "fc1Tax": 4981875,
-      "fc2Tax": 5230968,
-      "actTax": 5754064,
+      "fc1Tax": 562972,
+      "fc2Tax": 629003,
+      "actTax": 824352,
       "comments": ""
     },
     {
@@ -25,16 +25,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 47056312,
       "fc2ServiceFees": 45655513,
-      "actServiceFees": 44477360,
+      "actServiceFees": 46256454,
       "fc1OtherIncome": 1410750,
       "fc2OtherIncome": 1340212,
-      "actOtherIncome": 1425801,
+      "actOtherIncome": 1482833,
       "fc1Interest": 235125,
       "fc2Interest": 235125,
       "actInterest": 248610,
-      "fc1Tax": 7058446,
-      "fc2Tax": 7411368,
-      "actTax": 8152504,
+      "fc1Tax": 872462,
+      "fc2Tax": 858208,
+      "actTax": 1364291,
       "comments": ""
     },
     {
@@ -43,16 +43,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 22755324,
       "fc2ServiceFees": 22373823,
-      "actServiceFees": 21822024,
+      "actServiceFees": 22694905,
       "fc1OtherIncome": 689700,
       "fc2OtherIncome": 655215,
-      "actOtherIncome": 714202,
+      "actOtherIncome": 742770,
       "fc1Interest": 114950,
       "fc2Interest": 114950,
       "actInterest": 112853,
-      "fc1Tax": 3413298,
-      "fc2Tax": 3583962,
-      "actTax": 3942358,
+      "fc1Tax": 369041,
+      "fc2Tax": 417832,
+      "actTax": 689500,
       "comments": ""
     },
     {
@@ -61,16 +61,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 31364564,
       "fc2ServiceFees": 30711101,
-      "actServiceFees": 29224626,
+      "actServiceFees": 30393611,
       "fc1OtherIncome": 940499,
       "fc2OtherIncome": 893474,
-      "actOtherIncome": 923434,
+      "actOtherIncome": 960371,
       "fc1Interest": 156749,
       "fc2Interest": 156749,
       "actInterest": 164353,
-      "fc1Tax": 4704684,
-      "fc2Tax": 4939918,
-      "actTax": 5433909,
+      "fc1Tax": 580191,
+      "fc2Tax": 613887,
+      "actTax": 746461,
       "comments": ""
     },
     {
@@ -79,16 +79,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 39068367,
       "fc2ServiceFees": 38109352,
-      "actServiceFees": 36459952,
+      "actServiceFees": 37918350,
       "fc1OtherIncome": 1191300,
       "fc2OtherIncome": 1131735,
-      "actOtherIncome": 1171045,
+      "actOtherIncome": 1217887,
       "fc1Interest": 198550,
       "fc2Interest": 198550,
       "actInterest": 216921,
-      "fc1Tax": 5860255,
-      "fc2Tax": 6153267,
-      "actTax": 6768593,
+      "fc1Tax": 583088,
+      "fc2Tax": 558562,
+      "actTax": 810829,
       "comments": ""
     },
     {
@@ -97,16 +97,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 35436254,
       "fc2ServiceFees": 34519422,
-      "actServiceFees": 33354742,
+      "actServiceFees": 34688932,
       "fc1OtherIncome": 1060800,
       "fc2OtherIncome": 1007760,
-      "actOtherIncome": 959507,
+      "actOtherIncome": 997887,
       "fc1Interest": 176800,
       "fc2Interest": 176800,
       "actInterest": 181234,
-      "fc1Tax": 5315438,
-      "fc2Tax": 5581209,
-      "actTax": 6139329,
+      "fc1Tax": 668163,
+      "fc2Tax": 632424,
+      "actTax": 912853,
       "comments": ""
     },
     {
@@ -115,16 +115,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 50273451,
       "fc2ServiceFees": 48828169,
-      "actServiceFees": 47646185,
+      "actServiceFees": 49552032,
       "fc1OtherIncome": 1491750,
       "fc2OtherIncome": 1417162,
-      "actOtherIncome": 1458310,
+      "actOtherIncome": 1516642,
       "fc1Interest": 248625,
       "fc2Interest": 248625,
       "actInterest": 251270,
-      "fc1Tax": 7541017,
-      "fc2Tax": 7918067,
-      "actTax": 8709873,
+      "fc1Tax": 1041084,
+      "fc2Tax": 951358,
+      "actTax": 1538369,
       "comments": ""
     },
     {
@@ -133,16 +133,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 24452651,
       "fc2ServiceFees": 23789503,
-      "actServiceFees": 22825674,
+      "actServiceFees": 23738701,
       "fc1OtherIncome": 729300,
       "fc2OtherIncome": 692835,
-      "actOtherIncome": 704076,
+      "actOtherIncome": 732239,
       "fc1Interest": 121550,
       "fc2Interest": 121550,
       "actInterest": 129689,
-      "fc1Tax": 3667897,
-      "fc2Tax": 3851291,
-      "actTax": 4236420,
+      "fc1Tax": 480114,
+      "fc2Tax": 479559,
+      "actTax": 646972,
       "comments": ""
     },
     {
@@ -151,16 +151,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 33936605,
       "fc2ServiceFees": 33320193,
-      "actServiceFees": 32438349,
+      "actServiceFees": 33735883,
       "fc1OtherIncome": 994500,
       "fc2OtherIncome": 944775,
-      "actOtherIncome": 950014,
+      "actOtherIncome": 988015,
       "fc1Interest": 165750,
       "fc2Interest": 165750,
       "actInterest": 179133,
-      "fc1Tax": 5090490,
-      "fc2Tax": 5345014,
-      "actTax": 5879515,
+      "fc1Tax": 790879,
+      "fc2Tax": 858911,
+      "actTax": 1147409,
       "comments": ""
     },
     {
@@ -169,16 +169,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 41687667,
       "fc2ServiceFees": 41077200,
-      "actServiceFees": 39200462,
+      "actServiceFees": 40768480,
       "fc1OtherIncome": 1259700,
       "fc2OtherIncome": 1196715,
-      "actOtherIncome": 1223974,
+      "actOtherIncome": 1272933,
       "fc1Interest": 209950,
       "fc2Interest": 209950,
       "actInterest": 204391,
-      "fc1Tax": 6253150,
-      "fc2Tax": 6565807,
-      "actTax": 7222387,
+      "fc1Tax": 703079,
+      "fc2Tax": 746309,
+      "actTax": 964130,
       "comments": ""
     },
     {
@@ -187,16 +187,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 37327451,
       "fc2ServiceFees": 36443211,
-      "actServiceFees": 34875287,
+      "actServiceFees": 36270298,
       "fc1OtherIncome": 1118400,
       "fc2OtherIncome": 1062480,
-      "actOtherIncome": 1095377,
+      "actOtherIncome": 1139192,
       "fc1Interest": 186400,
       "fc2Interest": 186400,
       "actInterest": 183543,
-      "fc1Tax": 5599117,
-      "fc2Tax": 5879072,
-      "actTax": 6466979,
+      "fc1Tax": 696866,
+      "fc2Tax": 661910,
+      "actTax": 896669,
       "comments": ""
     },
     {
@@ -205,16 +205,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 53130350,
       "fc2ServiceFees": 52319447,
-      "actServiceFees": 50142883,
+      "actServiceFees": 52148598,
       "fc1OtherIncome": 1572750,
       "fc2OtherIncome": 1494112,
-      "actOtherIncome": 1623684,
+      "actOtherIncome": 1688631,
       "fc1Interest": 262125,
       "fc2Interest": 262125,
       "actInterest": 254771,
-      "fc1Tax": 7969552,
-      "fc2Tax": 8368029,
-      "actTax": 9204831,
+      "fc1Tax": 1126851,
+      "fc2Tax": 1226682,
+      "actTax": 1719249,
       "comments": ""
     },
     {
@@ -223,16 +223,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 25700387,
       "fc2ServiceFees": 25320769,
-      "actServiceFees": 24761380,
+      "actServiceFees": 25751835,
       "fc1OtherIncome": 768900,
       "fc2OtherIncome": 730455,
-      "actOtherIncome": 750095,
+      "actOtherIncome": 780099,
       "fc1Interest": 128150,
       "fc2Interest": 128150,
       "actInterest": 130737,
-      "fc1Tax": 3855058,
-      "fc2Tax": 4047810,
-      "actTax": 4452591,
+      "fc1Tax": 487781,
+      "fc2Tax": 573166,
+      "actTax": 862432,
       "comments": ""
     },
     {
@@ -241,16 +241,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 34301382,
       "fc2ServiceFees": 33411351,
-      "actServiceFees": 32132411,
+      "actServiceFees": 33417707,
       "fc1OtherIncome": 1048500,
       "fc2OtherIncome": 996075,
-      "actOtherIncome": 1027727,
+      "actOtherIncome": 1068836,
       "fc1Interest": 174750,
       "fc2Interest": 174750,
       "actInterest": 164649,
-      "fc1Tax": 5145207,
-      "fc2Tax": 5402467,
-      "actTax": 5942713,
+      "fc1Tax": 493898,
+      "fc2Tax": 441666,
+      "actTax": 685806,
       "comments": ""
     },
     {
@@ -259,16 +259,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 44722733,
       "fc2ServiceFees": 43819467,
-      "actServiceFees": 42168657,
+      "actServiceFees": 43855403,
       "fc1OtherIncome": 1328100,
       "fc2OtherIncome": 1261695,
-      "actOtherIncome": 1236824,
+      "actOtherIncome": 1286297,
       "fc1Interest": 221350,
       "fc2Interest": 221350,
       "actInterest": 221949,
-      "fc1Tax": 6708409,
-      "fc2Tax": 7043829,
-      "actTax": 7748211,
+      "fc1Tax": 918697,
+      "fc2Tax": 930014,
+      "actTax": 1196929,
       "comments": ""
     },
     {
@@ -277,16 +277,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 33275680,
       "fc2ServiceFees": 32308292,
-      "actServiceFees": 30875055,
+      "actServiceFees": 32110057,
       "fc1OtherIncome": 974399,
       "fc2OtherIncome": 925679,
-      "actOtherIncome": 899888,
+      "actOtherIncome": 935884,
       "fc1Interest": 162399,
       "fc2Interest": 162399,
       "actInterest": 157170,
-      "fc1Tax": 4991352,
-      "fc2Tax": 5240919,
-      "actTax": 5765010,
+      "fc1Tax": 780640,
+      "fc2Tax": 695713,
+      "actTax": 919404,
       "comments": ""
     },
     {
@@ -295,16 +295,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 46240753,
       "fc2ServiceFees": 45626598,
-      "actServiceFees": 44321202,
+      "actServiceFees": 46094050,
       "fc1OtherIncome": 1370249,
       "fc2OtherIncome": 1301736,
-      "actOtherIncome": 1383865,
+      "actOtherIncome": 1439220,
       "fc1Interest": 228374,
       "fc2Interest": 228374,
       "actInterest": 247671,
-      "fc1Tax": 6936112,
-      "fc2Tax": 7282917,
-      "actTax": 8011208,
+      "fc1Tax": 970545,
+      "fc2Tax": 1035557,
+      "actTax": 1513990,
       "comments": ""
     },
     {
@@ -313,16 +313,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 23031541,
       "fc2ServiceFees": 22797275,
-      "actServiceFees": 22184675,
+      "actServiceFees": 23072062,
       "fc1OtherIncome": 669899,
       "fc2OtherIncome": 636404,
-      "actOtherIncome": 644738,
+      "actOtherIncome": 670528,
       "fc1Interest": 111649,
       "fc2Interest": 111649,
       "actInterest": 121234,
-      "fc1Tax": 3454731,
-      "fc2Tax": 3627467,
-      "actTax": 3990213,
+      "fc1Tax": 572228,
+      "fc2Tax": 641150,
+      "actTax": 917846,
       "comments": ""
     },
     {
@@ -331,16 +331,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 30181938,
       "fc2ServiceFees": 29600660,
-      "actServiceFees": 28757596,
+      "actServiceFees": 29907900,
       "fc1OtherIncome": 913499,
       "fc2OtherIncome": 867824,
-      "actOtherIncome": 869896,
+      "actOtherIncome": 904692,
       "fc1Interest": 152249,
       "fc2Interest": 152249,
       "actInterest": 158562,
-      "fc1Tax": 4527290,
-      "fc2Tax": 4753654,
-      "actTax": 5229019,
+      "fc1Tax": 498627,
+      "fc2Tax": 520270,
+      "actTax": 820078,
       "comments": ""
     },
     {
@@ -349,16 +349,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 38156518,
       "fc2ServiceFees": 37324613,
-      "actServiceFees": 36300945,
+      "actServiceFees": 37752983,
       "fc1OtherIncome": 1157100,
       "fc2OtherIncome": 1099245,
-      "actOtherIncome": 1156993,
+      "actOtherIncome": 1203273,
       "fc1Interest": 192850,
       "fc2Interest": 192850,
       "actInterest": 189034,
-      "fc1Tax": 5723477,
-      "fc2Tax": 6009650,
-      "actTax": 6610615,
+      "fc1Tax": 614587,
+      "fc2Tax": 597440,
+      "actTax": 1077137,
       "comments": ""
     },
     {
@@ -367,16 +367,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 32384796,
       "fc2ServiceFees": 31667937,
-      "actServiceFees": 30246524,
+      "actServiceFees": 31456385,
       "fc1OtherIncome": 960000,
       "fc2OtherIncome": 912000,
-      "actOtherIncome": 901909,
+      "actOtherIncome": 937985,
       "fc1Interest": 160000,
       "fc2Interest": 160000,
       "actInterest": 157016,
-      "fc1Tax": 4857719,
-      "fc2Tax": 5100604,
-      "actTax": 5610664,
+      "fc1Tax": 677303,
+      "fc2Tax": 661366,
+      "actTax": 819199,
       "comments": ""
     },
     {
@@ -385,16 +385,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 45434580,
       "fc2ServiceFees": 44360170,
-      "actServiceFees": 42883947,
+      "actServiceFees": 44599305,
       "fc1OtherIncome": 1350000,
       "fc2OtherIncome": 1282500,
-      "actOtherIncome": 1386212,
+      "actOtherIncome": 1441660,
       "fc1Interest": 225000,
       "fc2Interest": 225000,
       "actInterest": 226279,
-      "fc1Tax": 6815187,
-      "fc2Tax": 7155946,
-      "actTax": 7871540,
+      "fc1Tax": 927953,
+      "fc2Tax": 917631,
+      "actTax": 1375388,
       "comments": ""
     },
     {
@@ -403,16 +403,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 22330097,
       "fc2ServiceFees": 21840624,
-      "actServiceFees": 20783757,
+      "actServiceFees": 21615107,
       "fc1OtherIncome": 660000,
       "fc2OtherIncome": 627000,
-      "actOtherIncome": 603326,
+      "actOtherIncome": 627459,
       "fc1Interest": 110000,
       "fc2Interest": 110000,
       "actInterest": 119665,
-      "fc1Tax": 3349514,
-      "fc2Tax": 3516989,
-      "actTax": 3868687,
+      "fc1Tax": 480722,
+      "fc2Tax": 474237,
+      "actTax": 566646,
       "comments": ""
     },
     {
@@ -421,16 +421,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 29327226,
       "fc2ServiceFees": 28976953,
-      "actServiceFees": 28322520,
+      "actServiceFees": 29455421,
       "fc1OtherIncome": 900000,
       "fc2OtherIncome": 855000,
-      "actOtherIncome": 890590,
+      "actOtherIncome": 926214,
       "fc1Interest": 150000,
       "fc2Interest": 150000,
       "actInterest": 154784,
-      "fc1Tax": 4399083,
-      "fc2Tax": 4619037,
-      "actTax": 5080940,
+      "fc1Tax": 397262,
+      "fc2Tax": 456219,
+      "actTax": 780702,
       "comments": ""
     },
     {
@@ -439,16 +439,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 38038460,
       "fc2ServiceFees": 37429170,
-      "actServiceFees": 36592548,
+      "actServiceFees": 38056250,
       "fc1OtherIncome": 1140000,
       "fc2OtherIncome": 1083000,
-      "actOtherIncome": 1071170,
+      "actOtherIncome": 1114017,
       "fc1Interest": 190000,
       "fc2Interest": 190000,
       "actInterest": 208025,
-      "fc1Tax": 5705769,
-      "fc2Tax": 5991057,
-      "actTax": 6590162,
+      "fc1Tax": 708046,
+      "fc2Tax": 819247,
+      "actTax": 1228544,
       "comments": ""
     },
     {
@@ -457,16 +457,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 34182493,
       "fc2ServiceFees": 33834813,
-      "actServiceFees": 32914900,
+      "actServiceFees": 34231496,
       "fc1OtherIncome": 1046400,
       "fc2OtherIncome": 994080,
-      "actOtherIncome": 981977,
+      "actOtherIncome": 1021256,
       "fc1Interest": 174400,
       "fc2Interest": 174400,
       "actInterest": 184279,
-      "fc1Tax": 5127373,
-      "fc2Tax": 5383741,
-      "actTax": 5922115,
+      "fc1Tax": 481366,
+      "fc2Tax": 600070,
+      "actTax": 989165,
       "comments": ""
     },
     {
@@ -475,16 +475,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 48859384,
       "fc2ServiceFees": 47523077,
-      "actServiceFees": 46102433,
+      "actServiceFees": 47946530,
       "fc1OtherIncome": 1471500,
       "fc2OtherIncome": 1397925,
-      "actOtherIncome": 1444424,
+      "actOtherIncome": 1502201,
       "fc1Interest": 245250,
       "fc2Interest": 245250,
       "actInterest": 261218,
-      "fc1Tax": 7328907,
-      "fc2Tax": 7695352,
-      "actTax": 8464887,
+      "fc1Tax": 858678,
+      "fc2Tax": 816446,
+      "actTax": 1257025,
       "comments": ""
     },
     {
@@ -493,16 +493,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 24219542,
       "fc2ServiceFees": 23797343,
-      "actServiceFees": 23229730,
+      "actServiceFees": 24158919,
       "fc1OtherIncome": 719400,
       "fc2OtherIncome": 683430,
-      "actOtherIncome": 680224,
+      "actOtherIncome": 707433,
       "fc1Interest": 119900,
       "fc2Interest": 119900,
       "actInterest": 127495,
-      "fc1Tax": 3632931,
-      "fc2Tax": 3814577,
-      "actTax": 4196034,
+      "fc1Tax": 496327,
+      "fc2Tax": 506809,
+      "actTax": 762137,
       "comments": ""
     },
     {
@@ -511,16 +511,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 32807120,
       "fc2ServiceFees": 32070904,
-      "actServiceFees": 31402740,
+      "actServiceFees": 32658850,
       "fc1OtherIncome": 981000,
       "fc2OtherIncome": 931950,
-      "actOtherIncome": 895927,
+      "actOtherIncome": 931764,
       "fc1Interest": 163500,
       "fc2Interest": 163500,
       "actInterest": 166367,
-      "fc1Tax": 4921068,
-      "fc2Tax": 5167121,
-      "actTax": 5683833,
+      "fc1Tax": 626318,
+      "fc2Tax": 662149,
+      "actTax": 1092088,
       "comments": ""
     },
     {
@@ -529,16 +529,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 41583492,
       "fc2ServiceFees": 40710597,
-      "actServiceFees": 39075505,
+      "actServiceFees": 40638525,
       "fc1OtherIncome": 1242600,
       "fc2OtherIncome": 1180470,
-      "actOtherIncome": 1297058,
+      "actOtherIncome": 1348940,
       "fc1Interest": 207100,
       "fc2Interest": 207100,
       "actInterest": 225799,
-      "fc1Tax": 6237523,
-      "fc2Tax": 6549399,
-      "actTax": 7204338,
+      "fc1Tax": 799731,
+      "fc2Tax": 806962,
+      "actTax": 1140167,
       "comments": ""
     },
     {
@@ -547,16 +547,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 34071058,
       "fc2ServiceFees": 33462764,
-      "actServiceFees": 32335943,
+      "actServiceFees": 33629381,
       "fc1OtherIncome": 1032000,
       "fc2OtherIncome": 980400,
-      "actOtherIncome": 948875,
+      "actOtherIncome": 986830,
       "fc1Interest": 172000,
       "fc2Interest": 172000,
       "actInterest": 185505,
-      "fc1Tax": 5110658,
-      "fc2Tax": 5366190,
-      "actTax": 5902809,
+      "fc1Tax": 557304,
+      "fc2Tax": 583605,
+      "actTax": 883701,
       "comments": ""
     },
     {
@@ -565,16 +565,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 47720198,
       "fc2ServiceFees": 47132691,
-      "actServiceFees": 45400025,
+      "actServiceFees": 47216026,
       "fc1OtherIncome": 1451250,
       "fc2OtherIncome": 1378687,
-      "actOtherIncome": 1327450,
+      "actOtherIncome": 1380548,
       "fc1Interest": 241875,
       "fc2Interest": 241875,
       "actInterest": 240469,
-      "fc1Tax": 7158029,
-      "fc2Tax": 7515930,
-      "actTax": 8267523,
+      "fc1Tax": 739496,
+      "fc2Tax": 847150,
+      "actTax": 1252333,
       "comments": ""
     },
     {
@@ -583,16 +583,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 24216577,
       "fc2ServiceFees": 23748715,
-      "actServiceFees": 23216552,
+      "actServiceFees": 24145214,
       "fc1OtherIncome": 709500,
       "fc2OtherIncome": 674025,
-      "actOtherIncome": 702750,
+      "actOtherIncome": 730860,
       "fc1Interest": 118250,
       "fc2Interest": 118250,
       "actInterest": 107217,
-      "fc1Tax": 3632486,
-      "fc2Tax": 3814110,
-      "actTax": 4195521,
+      "fc1Tax": 565473,
+      "fc2Tax": 554269,
+      "actTax": 875621,
       "comments": ""
     },
     {
@@ -601,16 +601,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 32956788,
       "fc2ServiceFees": 32407477,
-      "actServiceFees": 30934402,
+      "actServiceFees": 32171778,
       "fc1OtherIncome": 967500,
       "fc2OtherIncome": 919125,
-      "actOtherIncome": 876176,
+      "actOtherIncome": 911223,
       "fc1Interest": 161250,
       "fc2Interest": 161250,
       "actInterest": 169373,
-      "fc1Tax": 4943518,
-      "fc2Tax": 5190693,
-      "actTax": 5709762,
+      "fc1Tax": 755961,
+      "fc2Tax": 822604,
+      "actTax": 993605,
       "comments": ""
     },
     {
@@ -619,16 +619,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 41319689,
       "fc2ServiceFees": 40121392,
-      "actServiceFees": 38710144,
+      "actServiceFees": 40258550,
       "fc1OtherIncome": 1225500,
       "fc2OtherIncome": 1164225,
-      "actOtherIncome": 1226417,
+      "actOtherIncome": 1275474,
       "fc1Interest": 204250,
       "fc2Interest": 204250,
       "actInterest": 201638,
-      "fc1Tax": 6197953,
-      "fc2Tax": 6507850,
-      "actTax": 7158635,
+      "fc1Tax": 859668,
+      "fc2Tax": 780899,
+      "actTax": 1196287,
       "comments": ""
     },
     {
@@ -637,16 +637,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 33687530,
       "fc2ServiceFees": 32931210,
-      "actServiceFees": 31544341,
+      "actServiceFees": 32806115,
       "fc1OtherIncome": 988800,
       "fc2OtherIncome": 939360,
-      "actOtherIncome": 956898,
+      "actOtherIncome": 995174,
       "fc1Interest": 164800,
       "fc2Interest": 164800,
       "actInterest": 170231,
-      "fc1Tax": 5053129,
-      "fc2Tax": 5305785,
-      "actTax": 5836363,
+      "fc1Tax": 773796,
+      "fc2Tax": 773602,
+      "actTax": 958391,
       "comments": ""
     },
     {
@@ -655,16 +655,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 47015919,
       "fc2ServiceFees": 45934986,
-      "actServiceFees": 44705319,
+      "actServiceFees": 46493532,
       "fc1OtherIncome": 1390500,
       "fc2OtherIncome": 1320975,
-      "actOtherIncome": 1269056,
+      "actOtherIncome": 1319818,
       "fc1Interest": 231750,
       "fc2Interest": 231750,
       "actInterest": 250638,
-      "fc1Tax": 7052387,
-      "fc2Tax": 7405006,
-      "actTax": 8145506,
+      "fc1Tax": 1006001,
+      "fc2Tax": 958080,
+      "actTax": 1417956,
       "comments": ""
     },
     {
@@ -673,16 +673,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 22281870,
       "fc2ServiceFees": 22034032,
-      "actServiceFees": 21537522,
+      "actServiceFees": 22399023,
       "fc1OtherIncome": 679800,
       "fc2OtherIncome": 645810,
-      "actOtherIncome": 689499,
+      "actOtherIncome": 717079,
       "fc1Interest": 113300,
       "fc2Interest": 113300,
       "actInterest": 113925,
-      "fc1Tax": 3342280,
-      "fc2Tax": 3509394,
-      "actTax": 3860333,
+      "fc1Tax": 329974,
+      "fc2Tax": 386427,
+      "actTax": 692645,
       "comments": ""
     },
     {
@@ -691,16 +691,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 30777979,
       "fc2ServiceFees": 30000167,
-      "actServiceFees": 28816224,
+      "actServiceFees": 29968873,
       "fc1OtherIncome": 927000,
       "fc2OtherIncome": 880650,
-      "actOtherIncome": 898140,
+      "actOtherIncome": 934066,
       "fc1Interest": 154500,
       "fc2Interest": 154500,
       "actInterest": 149290,
-      "fc1Tax": 4616696,
-      "fc2Tax": 4847530,
-      "actTax": 5332283,
+      "fc1Tax": 540495,
+      "fc2Tax": 536732,
+      "actTax": 795538,
       "comments": ""
     },
     {
@@ -709,16 +709,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 39088809,
       "fc2ServiceFees": 38195132,
-      "actServiceFees": 37383425,
+      "actServiceFees": 38878762,
       "fc1OtherIncome": 1174200,
       "fc2OtherIncome": 1115490,
-      "actOtherIncome": 1075176,
+      "actOtherIncome": 1118183,
       "fc1Interest": 195700,
       "fc2Interest": 195700,
       "actInterest": 196304,
-      "fc1Tax": 5863321,
-      "fc2Tax": 6156487,
-      "actTax": 6772135,
+      "fc1Tax": 708402,
+      "fc2Tax": 738510,
+      "actTax": 1200580,
       "comments": ""
     },
     {
@@ -727,16 +727,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 34087838,
       "fc2ServiceFees": 33720785,
-      "actServiceFees": 32997380,
+      "actServiceFees": 34317275,
       "fc1OtherIncome": 1017600,
       "fc2OtherIncome": 966720,
-      "actOtherIncome": 1038083,
+      "actOtherIncome": 1079606,
       "fc1Interest": 169600,
       "fc2Interest": 169600,
       "actInterest": 166647,
-      "fc1Tax": 5113175,
-      "fc2Tax": 5368833,
-      "actTax": 5905716,
+      "fc1Tax": 662731,
+      "fc2Tax": 798457,
+      "actTax": 1202456,
       "comments": ""
     },
     {
@@ -745,16 +745,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 48371391,
       "fc2ServiceFees": 47125804,
-      "actServiceFees": 45557282,
+      "actServiceFees": 47379573,
       "fc1OtherIncome": 1431000,
       "fc2OtherIncome": 1359450,
-      "actOtherIncome": 1453702,
+      "actOtherIncome": 1511850,
       "fc1Interest": 238500,
       "fc2Interest": 238500,
       "actInterest": 224191,
-      "fc1Tax": 7255708,
-      "fc2Tax": 7618493,
-      "actTax": 8380342,
+      "fc1Tax": 1032100,
+      "fc2Tax": 1042477,
+      "actTax": 1479639,
       "comments": ""
     },
     {
@@ -763,16 +763,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 23640434,
       "fc2ServiceFees": 23158925,
-      "actServiceFees": 22358554,
+      "actServiceFees": 23252896,
       "fc1OtherIncome": 699600,
       "fc2OtherIncome": 664620,
-      "actOtherIncome": 667187,
+      "actOtherIncome": 693874,
       "fc1Interest": 116600,
       "fc2Interest": 116600,
       "actInterest": 128083,
-      "fc1Tax": 3546065,
-      "fc2Tax": 3723368,
-      "actTax": 4095704,
+      "fc1Tax": 502788,
+      "fc2Tax": 530381,
+      "actTax": 724649,
       "comments": ""
     },
     {
@@ -781,16 +781,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 32200385,
       "fc2ServiceFees": 31584502,
-      "actServiceFees": 30034890,
+      "actServiceFees": 31236286,
       "fc1OtherIncome": 954000,
       "fc2OtherIncome": 906300,
-      "actOtherIncome": 904925,
+      "actOtherIncome": 941122,
       "fc1Interest": 159000,
       "fc2Interest": 159000,
       "actInterest": 170453,
-      "fc1Tax": 4830057,
-      "fc2Tax": 5071559,
-      "actTax": 5578714,
+      "fc1Tax": 677209,
+      "fc2Tax": 668875,
+      "actTax": 795229,
       "comments": ""
     },
     {
@@ -799,16 +799,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 39926295,
       "fc2ServiceFees": 39061596,
-      "actServiceFees": 37905652,
+      "actServiceFees": 39421878,
       "fc1OtherIncome": 1208400,
       "fc2OtherIncome": 1147980,
-      "actOtherIncome": 1236571,
+      "actOtherIncome": 1286034,
       "fc1Interest": 201400,
       "fc2Interest": 201400,
       "actInterest": 193036,
-      "fc1Tax": 5988944,
-      "fc2Tax": 6288391,
-      "actTax": 6917230,
+      "fc1Tax": 659800,
+      "fc2Tax": 668017,
+      "actTax": 1099328,
       "comments": ""
     },
     {
@@ -817,16 +817,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 36292404,
       "fc2ServiceFees": 35927690,
-      "actServiceFees": 34441670,
+      "actServiceFees": 35819337,
       "fc1OtherIncome": 1104000,
       "fc2OtherIncome": 1048800,
-      "actOtherIncome": 1051383,
+      "actOtherIncome": 1093438,
       "fc1Interest": 184000,
       "fc2Interest": 184000,
       "actInterest": 174518,
-      "fc1Tax": 5443860,
-      "fc2Tax": 5716053,
-      "actTax": 6287658,
+      "fc1Tax": 560373,
+      "fc2Tax": 663201,
+      "actTax": 1002417,
       "comments": ""
     },
     {
@@ -835,16 +835,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 51526531,
       "fc2ServiceFees": 50946121,
-      "actServiceFees": 49566581,
+      "actServiceFees": 51549244,
       "fc1OtherIncome": 1552499,
       "fc2OtherIncome": 1474874,
-      "actOtherIncome": 1438435,
+      "actOtherIncome": 1495972,
       "fc1Interest": 258749,
       "fc2Interest": 258749,
       "actInterest": 279069,
-      "fc1Tax": 7728979,
-      "fc2Tax": 8115427,
-      "actTax": 8926969,
+      "fc1Tax": 900804,
+      "fc2Tax": 1072533,
+      "actTax": 1653451,
       "comments": ""
     },
     {
@@ -853,16 +853,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 25627376,
       "fc2ServiceFees": 25233475,
-      "actServiceFees": 24144992,
+      "actServiceFees": 25110792,
       "fc1OtherIncome": 758999,
       "fc2OtherIncome": 721049,
-      "actOtherIncome": 708548,
+      "actOtherIncome": 736890,
       "fc1Interest": 126499,
       "fc2Interest": 126499,
       "actInterest": 139015,
-      "fc1Tax": 3844106,
-      "fc2Tax": 4036311,
-      "actTax": 4439942,
+      "fc1Tax": 540818,
+      "fc2Tax": 608526,
+      "actTax": 772926,
       "comments": ""
     },
     {
@@ -871,16 +871,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 34990102,
       "fc2ServiceFees": 34128525,
-      "actServiceFees": 33253897,
+      "actServiceFees": 34584053,
       "fc1OtherIncome": 1035000,
       "fc2OtherIncome": 983250,
-      "actOtherIncome": 1037814,
+      "actOtherIncome": 1079327,
       "fc1Interest": 172500,
       "fc2Interest": 172500,
       "actInterest": 170093,
-      "fc1Tax": 5248515,
-      "fc2Tax": 5510940,
-      "actTax": 6062034,
+      "fc1Tax": 747524,
+      "fc2Tax": 708216,
+      "actTax": 1156528,
       "comments": ""
     },
     {
@@ -889,16 +889,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 44437388,
       "fc2ServiceFees": 43956894,
-      "actServiceFees": 42418126,
+      "actServiceFees": 44114851,
       "fc1OtherIncome": 1311000,
       "fc2OtherIncome": 1245450,
-      "actOtherIncome": 1303695,
+      "actOtherIncome": 1355843,
       "fc1Interest": 218500,
       "fc2Interest": 218500,
       "actInterest": 236292,
-      "fc1Tax": 6665608,
-      "fc2Tax": 6998888,
-      "actTax": 7698776,
+      "fc1Tax": 973679,
+      "fc2Tax": 1106846,
+      "actTax": 1528908,
       "comments": ""
     },
     {
@@ -907,16 +907,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 35869363,
       "fc2ServiceFees": 35265957,
-      "actServiceFees": 34349944,
+      "actServiceFees": 35723942,
       "fc1OtherIncome": 1089600,
       "fc2OtherIncome": 1035120,
-      "actOtherIncome": 1021168,
+      "actOtherIncome": 1062015,
       "fc1Interest": 181600,
       "fc2Interest": 181600,
       "actInterest": 195831,
-      "fc1Tax": 5380404,
-      "fc2Tax": 5649424,
-      "actTax": 6214366,
+      "fc1Tax": 564642,
+      "fc2Tax": 590867,
+      "actTax": 1014452,
       "comments": ""
     },
     {
@@ -925,16 +925,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 50952972,
       "fc2ServiceFees": 50208306,
-      "actServiceFees": 47700126,
+      "actServiceFees": 49608131,
       "fc1OtherIncome": 1532250,
       "fc2OtherIncome": 1455637,
-      "actOtherIncome": 1509761,
+      "actOtherIncome": 1570151,
       "fc1Interest": 255375,
       "fc2Interest": 255375,
       "actInterest": 277328,
-      "fc1Tax": 7642945,
-      "fc2Tax": 8025092,
-      "actTax": 8827601,
+      "fc1Tax": 911714,
+      "fc2Tax": 990331,
+      "actTax": 1215872,
       "comments": ""
     },
     {
@@ -943,16 +943,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 25108696,
       "fc2ServiceFees": 24564009,
-      "actServiceFees": 23615465,
+      "actServiceFees": 24560084,
       "fc1OtherIncome": 749100,
       "fc2OtherIncome": 711645,
-      "actOtherIncome": 694324,
+      "actOtherIncome": 722097,
       "fc1Interest": 124850,
       "fc2Interest": 124850,
       "actInterest": 133199,
-      "fc1Tax": 3766304,
-      "fc2Tax": 3954619,
-      "actTax": 4350080,
+      "fc1Tax": 491348,
+      "fc2Tax": 493823,
+      "actTax": 678613,
       "comments": ""
     },
     {
@@ -961,16 +961,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 34557599,
       "fc2ServiceFees": 33664488,
-      "actServiceFees": 32039231,
+      "actServiceFees": 33320800,
       "fc1OtherIncome": 1021500,
       "fc2OtherIncome": 970425,
-      "actOtherIncome": 943352,
+      "actOtherIncome": 981086,
       "fc1Interest": 170250,
       "fc2Interest": 170250,
       "actInterest": 166607,
-      "fc1Tax": 5183639,
-      "fc2Tax": 5442820,
-      "actTax": 5987102,
+      "fc1Tax": 743268,
+      "fc2Tax": 694634,
+      "actTax": 828753,
       "comments": ""
     },
     {
@@ -979,16 +979,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 42615787,
       "fc2ServiceFees": 41339007,
-      "actServiceFees": 39292855,
+      "actServiceFees": 40864569,
       "fc1OtherIncome": 1293900,
       "fc2OtherIncome": 1229205,
-      "actOtherIncome": 1235206,
+      "actOtherIncome": 1284614,
       "fc1Interest": 215650,
       "fc2Interest": 215650,
       "actInterest": 229596,
-      "fc1Tax": 6392368,
-      "fc2Tax": 6711986,
-      "actTax": 7383184,
+      "fc1Tax": 675323,
+      "fc2Tax": 602267,
+      "actTax": 838218,
       "comments": ""
     },
     {
@@ -997,16 +997,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 35193765,
       "fc2ServiceFees": 34158541,
-      "actServiceFees": 32689833,
+      "actServiceFees": 33997426,
       "fc1OtherIncome": 1075200,
       "fc2OtherIncome": 1021440,
-      "actOtherIncome": 1069367,
+      "actOtherIncome": 1112142,
       "fc1Interest": 179200,
       "fc2Interest": 179200,
       "actInterest": 169883,
-      "fc1Tax": 5279064,
-      "fc2Tax": 5543017,
-      "actTax": 6097318,
+      "fc1Tax": 510822,
+      "fc2Tax": 454204,
+      "actTax": 728260,
       "comments": ""
     },
     {
@@ -1015,16 +1015,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 51114751,
       "fc2ServiceFees": 50596645,
-      "actServiceFees": 49004700,
+      "actServiceFees": 50964888,
       "fc1OtherIncome": 1512000,
       "fc2OtherIncome": 1436400,
-      "actOtherIncome": 1382649,
+      "actOtherIncome": 1437955,
       "fc1Interest": 252000,
       "fc2Interest": 252000,
       "actInterest": 237672,
-      "fc1Tax": 7667212,
-      "fc2Tax": 8050572,
-      "actTax": 8855629,
+      "fc1Tax": 1091753,
+      "fc2Tax": 1250070,
+      "actTax": 1753185,
       "comments": ""
     },
     {
@@ -1033,16 +1033,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 25324871,
       "fc2ServiceFees": 24833057,
-      "actServiceFees": 24000413,
+      "actServiceFees": 24960430,
       "fc1OtherIncome": 739200,
       "fc2OtherIncome": 702240,
-      "actOtherIncome": 720859,
+      "actOtherIncome": 749693,
       "fc1Interest": 123200,
       "fc2Interest": 123200,
       "actInterest": 112395,
-      "fc1Tax": 3798730,
-      "fc2Tax": 3988666,
-      "actTax": 4387532,
+      "fc1Tax": 610896,
+      "fc2Tax": 601946,
+      "actTax": 812972,
       "comments": ""
     },
     {
@@ -1051,16 +1051,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 33819528,
       "fc2ServiceFees": 33201600,
-      "actServiceFees": 32248210,
+      "actServiceFees": 33538138,
       "fc1OtherIncome": 1008000,
       "fc2OtherIncome": 957600,
-      "actOtherIncome": 957668,
+      "actOtherIncome": 995975,
       "fc1Interest": 168000,
       "fc2Interest": 168000,
       "actInterest": 181059,
-      "fc1Tax": 5072929,
-      "fc2Tax": 5326575,
-      "actTax": 5859232,
+      "fc1Tax": 668732,
+      "fc2Tax": 712304,
+      "actTax": 1105363,
       "comments": ""
     },
     {
@@ -1069,16 +1069,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 42116577,
       "fc2ServiceFees": 41366578,
-      "actServiceFees": 39729443,
+      "actServiceFees": 41318621,
       "fc1OtherIncome": 1276800,
       "fc2OtherIncome": 1212960,
-      "actOtherIncome": 1231147,
+      "actOtherIncome": 1280393,
       "fc1Interest": 212800,
       "fc2Interest": 212800,
       "actInterest": 224089,
-      "fc1Tax": 6317486,
-      "fc2Tax": 6633360,
-      "actTax": 7296696,
+      "fc1Tax": 681117,
+      "fc2Tax": 784168,
+      "actTax": 1051026,
       "comments": ""
     },
     {
@@ -1094,9 +1094,9 @@ export const sampleData = {
       "fc1Interest": 175200,
       "fc2Interest": 175200,
       "actInterest": 187450,
-      "fc1Tax": 5363474,
-      "fc2Tax": 5631647,
-      "actTax": 6194811,
+      "fc1Tax": 809531,
+      "fc2Tax": 841726,
+      "actTax": 888125,
       "comments": ""
     },
     {
@@ -1112,9 +1112,9 @@ export const sampleData = {
       "fc1Interest": 246375,
       "fc2Interest": 246375,
       "actInterest": 244739,
-      "fc1Tax": 7445422,
-      "fc2Tax": 7817693,
-      "actTax": 8599462,
+      "fc1Tax": 989725,
+      "fc2Tax": 1114541,
+      "actTax": 1241628,
       "comments": ""
     },
     {
@@ -1130,9 +1130,9 @@ export const sampleData = {
       "fc1Interest": 120450,
       "fc2Interest": 120450,
       "actInterest": 112708,
-      "fc1Tax": 3538809,
-      "fc2Tax": 3715749,
-      "actTax": 4087323,
+      "fc1Tax": 328730,
+      "fc2Tax": 312690,
+      "actTax": 218247,
       "comments": ""
     },
     {
@@ -1148,9 +1148,9 @@ export const sampleData = {
       "fc1Interest": 164250,
       "fc2Interest": 164250,
       "actInterest": 152924,
-      "fc1Tax": 4926880,
-      "fc2Tax": 5173224,
-      "actTax": 5690546,
+      "fc1Tax": 603491,
+      "fc2Tax": 692989,
+      "actTax": 699082,
       "comments": ""
     },
     {
@@ -1166,9 +1166,9 @@ export const sampleData = {
       "fc1Interest": 208050,
       "fc2Interest": 208050,
       "actInterest": 226943,
-      "fc1Tax": 6237405,
-      "fc2Tax": 6549275,
-      "actTax": 7204202,
+      "fc1Tax": 759346,
+      "fc2Tax": 721486,
+      "actTax": 805382,
       "comments": ""
     },
     {
@@ -1177,16 +1177,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 37609721,
       "fc2ServiceFees": 37048867,
-      "actServiceFees": 36081714,
+      "actServiceFees": 25978834,
       "fc1OtherIncome": 1108800,
       "fc2OtherIncome": 1053360,
-      "actOtherIncome": 1049135,
+      "actOtherIncome": 755377,
       "fc1Interest": 184800,
       "fc2Interest": 184800,
-      "actInterest": 189642,
-      "fc1Tax": 5641458,
-      "fc2Tax": 5923530,
-      "actTax": 6515883,
+      "actInterest": 136542,
+      "fc1Tax": 829500,
+      "fc2Tax": 881689,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1195,16 +1195,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 51908856,
       "fc2ServiceFees": 50836440,
-      "actServiceFees": 48949369,
+      "actServiceFees": 45522913,
       "fc1OtherIncome": 1559250,
       "fc2OtherIncome": 1481287,
-      "actOtherIncome": 1497386,
+      "actOtherIncome": 1392569,
       "fc1Interest": 259875,
       "fc2Interest": 259875,
-      "actInterest": 239279,
-      "fc1Tax": 7786328,
-      "fc2Tax": 8175644,
-      "actTax": 8993208,
+      "actInterest": 222529,
+      "fc1Tax": 941127,
+      "fc2Tax": 976896,
+      "actTax": 56479,
       "comments": ""
     },
     {
@@ -1213,16 +1213,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 24832121,
       "fc2ServiceFees": 24242580,
-      "actServiceFees": 23256918,
+      "actServiceFees": 15814704,
       "fc1OtherIncome": 762300,
       "fc2OtherIncome": 724185,
-      "actOtherIncome": 751740,
+      "actOtherIncome": 511183,
       "fc1Interest": 127050,
       "fc2Interest": 127050,
-      "actInterest": 139395,
-      "fc1Tax": 3724818,
-      "fc2Tax": 3911058,
-      "actTax": 4302163,
+      "actInterest": 94789,
+      "fc1Tax": 334632,
+      "fc2Tax": 364010,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1231,16 +1231,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 33906979,
       "fc2ServiceFees": 33023137,
-      "actServiceFees": 31832213,
+      "actServiceFees": 29603958,
       "fc1OtherIncome": 1039500,
       "fc2OtherIncome": 987525,
-      "actOtherIncome": 1045326,
+      "actOtherIncome": 972153,
       "fc1Interest": 173250,
       "fc2Interest": 173250,
-      "actInterest": 185047,
-      "fc1Tax": 5086046,
-      "fc2Tax": 5340348,
-      "actTax": 5874382,
+      "actInterest": 172094,
+      "fc1Tax": 466665,
+      "fc2Tax": 413798,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1249,16 +1249,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 43545827,
       "fc2ServiceFees": 42439883,
-      "actServiceFees": 40452195,
+      "actServiceFees": 37620541,
       "fc1OtherIncome": 1316700,
       "fc2OtherIncome": 1250865,
-      "actOtherIncome": 1268909,
+      "actOtherIncome": 1180085,
       "fc1Interest": 219450,
       "fc2Interest": 219450,
-      "actInterest": 226663,
-      "fc1Tax": 6531874,
-      "fc2Tax": 6858467,
-      "actTax": 7544313,
+      "actInterest": 210797,
+      "fc1Tax": 728416,
+      "fc2Tax": 719082,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1274,9 +1274,9 @@ export const sampleData = {
       "fc1Interest": 194400,
       "fc2Interest": 194400,
       "actInterest": 182257,
-      "fc1Tax": 5724159,
-      "fc2Tax": 6010366,
-      "actTax": 6611402,
+      "fc1Tax": 550036,
+      "fc2Tax": 476329,
+      "actTax": 599009,
       "comments": ""
     },
     {
@@ -1292,9 +1292,9 @@ export const sampleData = {
       "fc1Interest": 273375,
       "fc2Interest": 273375,
       "actInterest": 279159,
-      "fc1Tax": 8232722,
-      "fc2Tax": 8644358,
-      "actTax": 9508793,
+      "fc1Tax": 1054277,
+      "fc2Tax": 1188773,
+      "actTax": 1188274,
       "comments": ""
     },
     {
@@ -1310,9 +1310,9 @@ export const sampleData = {
       "fc1Interest": 133650,
       "fc2Interest": 133650,
       "actInterest": 144475,
-      "fc1Tax": 4090835,
-      "fc2Tax": 4295376,
-      "actTax": 4724913,
+      "fc1Tax": 616546,
+      "fc2Tax": 532478,
+      "actTax": 473462,
       "comments": ""
     },
     {
@@ -1328,9 +1328,9 @@ export const sampleData = {
       "fc1Interest": 182250,
       "fc2Interest": 182250,
       "actInterest": 195175,
-      "fc1Tax": 5374517,
-      "fc2Tax": 5643242,
-      "actTax": 6207566,
+      "fc1Tax": 528107,
+      "fc2Tax": 511615,
+      "actTax": 592970,
       "comments": ""
     },
     {
@@ -1346,9 +1346,9 @@ export const sampleData = {
       "fc1Interest": 230850,
       "fc2Interest": 230850,
       "actInterest": 243058,
-      "fc1Tax": 6992212,
-      "fc2Tax": 7341822,
-      "actTax": 8076004,
+      "fc1Tax": 951821,
+      "fc2Tax": 1066736,
+      "actTax": 1206268,
       "comments": ""
     },
     {
@@ -1364,9 +1364,9 @@ export const sampleData = {
       "fc1Interest": 170400,
       "fc2Interest": 170400,
       "actInterest": 173194,
-      "fc1Tax": 5201492,
-      "fc2Tax": 5461566,
-      "actTax": 6007722,
+      "fc1Tax": 764294,
+      "fc2Tax": 822491,
+      "actTax": 908601,
       "comments": ""
     },
     {
@@ -1382,9 +1382,9 @@ export const sampleData = {
       "fc1Interest": 239625,
       "fc2Interest": 239625,
       "actInterest": 225454,
-      "fc1Tax": 7076809,
-      "fc2Tax": 7430649,
-      "actTax": 8173713,
+      "fc1Tax": 710179,
+      "fc2Tax": 776320,
+      "actTax": 772679,
       "comments": ""
     },
     {
@@ -1400,9 +1400,9 @@ export const sampleData = {
       "fc1Interest": 117150,
       "fc2Interest": 117150,
       "actInterest": 110760,
-      "fc1Tax": 3502839,
-      "fc2Tax": 3677980,
-      "actTax": 4045778,
+      "fc1Tax": 413233,
+      "fc2Tax": 457712,
+      "actTax": 434436,
       "comments": ""
     },
     {
@@ -1418,9 +1418,9 @@ export const sampleData = {
       "fc1Interest": 159750,
       "fc2Interest": 159750,
       "actInterest": 169310,
-      "fc1Tax": 4767143,
-      "fc2Tax": 5005500,
-      "actTax": 5506050,
+      "fc1Tax": 549000,
+      "fc2Tax": 628767,
+      "actTax": 572553,
       "comments": ""
     },
     {
@@ -1436,9 +1436,9 @@ export const sampleData = {
       "fc1Interest": 202350,
       "fc2Interest": 202350,
       "actInterest": 217491,
-      "fc1Tax": 6018998,
-      "fc2Tax": 6319947,
-      "actTax": 6951941,
+      "fc1Tax": 665680,
+      "fc2Tax": 658028,
+      "actTax": 517041,
       "comments": ""
     },
     {
@@ -1454,9 +1454,9 @@ export const sampleData = {
       "fc1Interest": 168000,
       "fc2Interest": 168000,
       "actInterest": 180680,
-      "fc1Tax": 4990549,
-      "fc2Tax": 5240076,
-      "actTax": 5764083,
+      "fc1Tax": 542416,
+      "fc2Tax": 613990,
+      "actTax": 612941,
       "comments": ""
     },
     {
@@ -1472,9 +1472,9 @@ export const sampleData = {
       "fc1Interest": 236250,
       "fc2Interest": 236250,
       "actInterest": 241131,
-      "fc1Tax": 7093630,
-      "fc2Tax": 7448311,
-      "actTax": 8193142,
+      "fc1Tax": 878800,
+      "fc2Tax": 914071,
+      "actTax": 945020,
       "comments": ""
     },
     {
@@ -1490,9 +1490,9 @@ export const sampleData = {
       "fc1Interest": 115500,
       "fc2Interest": 115500,
       "actInterest": 123701,
-      "fc1Tax": 3446206,
-      "fc2Tax": 3618516,
-      "actTax": 3980367,
+      "fc1Tax": 396223,
+      "fc2Tax": 447850,
+      "actTax": 425651,
       "comments": ""
     },
     {
@@ -1508,9 +1508,9 @@ export const sampleData = {
       "fc1Interest": 157500,
       "fc2Interest": 157500,
       "actInterest": 149812,
-      "fc1Tax": 4625511,
-      "fc2Tax": 4856786,
-      "actTax": 5342464,
+      "fc1Tax": 427051,
+      "fc2Tax": 481150,
+      "actTax": 559742,
       "comments": ""
     },
     {
@@ -1526,9 +1526,9 @@ export const sampleData = {
       "fc1Interest": 199500,
       "fc2Interest": 199500,
       "actInterest": 206600,
-      "fc1Tax": 6045565,
-      "fc2Tax": 6347843,
-      "actTax": 6982627,
+      "fc1Tax": 827027,
+      "fc2Tax": 930120,
+      "actTax": 800580,
       "comments": ""
     },
     {
@@ -1544,9 +1544,9 @@ export const sampleData = {
       "fc1Interest": 182400,
       "fc2Interest": 182400,
       "actInterest": 198544,
-      "fc1Tax": 5458836,
-      "fc2Tax": 5731777,
-      "actTax": 6304954,
+      "fc1Tax": 651048,
+      "fc2Tax": 604927,
+      "actTax": 746353,
       "comments": ""
     },
     {
@@ -1562,9 +1562,9 @@ export const sampleData = {
       "fc1Interest": 256500,
       "fc2Interest": 256500,
       "actInterest": 265344,
-      "fc1Tax": 7619896,
-      "fc2Tax": 8000890,
-      "actTax": 8800979,
+      "fc1Tax": 828762,
+      "fc2Tax": 900761,
+      "actTax": 797330,
       "comments": ""
     },
     {
@@ -1580,9 +1580,9 @@ export const sampleData = {
       "fc1Interest": 125400,
       "fc2Interest": 125400,
       "actInterest": 128151,
-      "fc1Tax": 3679738,
-      "fc2Tax": 3863724,
-      "actTax": 4250096,
+      "fc1Tax": 335338,
+      "fc2Tax": 313707,
+      "actTax": 338846,
       "comments": ""
     },
     {
@@ -1598,9 +1598,9 @@ export const sampleData = {
       "fc1Interest": 171000,
       "fc2Interest": 171000,
       "actInterest": 170224,
-      "fc1Tax": 5164432,
-      "fc2Tax": 5422653,
-      "actTax": 5964918,
+      "fc1Tax": 682076,
+      "fc2Tax": 629524,
+      "actTax": 533896,
       "comments": ""
     },
     {
@@ -1616,9 +1616,9 @@ export const sampleData = {
       "fc1Interest": 216600,
       "fc2Interest": 216600,
       "actInterest": 209672,
-      "fc1Tax": 6570751,
-      "fc2Tax": 6899288,
-      "actTax": 7589216,
+      "fc1Tax": 908640,
+      "fc2Tax": 993310,
+      "actTax": 986166,
       "comments": ""
     },
     {
@@ -1634,9 +1634,9 @@ export const sampleData = {
       "fc1Interest": 180000,
       "fc2Interest": 180000,
       "actInterest": 170636,
-      "fc1Tax": 5410490,
-      "fc2Tax": 5681014,
-      "actTax": 6249115,
+      "fc1Tax": 678485,
+      "fc2Tax": 649228,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1652,9 +1652,9 @@ export const sampleData = {
       "fc1Interest": 253125,
       "fc2Interest": 253125,
       "actInterest": 251152,
-      "fc1Tax": 7510715,
-      "fc2Tax": 7886250,
-      "actTax": 8674875,
+      "fc1Tax": 804181,
+      "fc2Tax": 874354,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1670,9 +1670,9 @@ export const sampleData = {
       "fc1Interest": 123750,
       "fc2Interest": 123750,
       "actInterest": 135552,
-      "fc1Tax": 3819607,
-      "fc2Tax": 4010587,
-      "actTax": 4411645,
+      "fc1Tax": 619631,
+      "fc2Tax": 641606,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1688,9 +1688,9 @@ export const sampleData = {
       "fc1Interest": 168750,
       "fc2Interest": 168750,
       "actInterest": 166221,
-      "fc1Tax": 5175993,
-      "fc2Tax": 5434792,
-      "actTax": 5978271,
+      "fc1Tax": 795024,
+      "fc2Tax": 817065,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1706,9 +1706,9 @@ export const sampleData = {
       "fc1Interest": 213750,
       "fc2Interest": 213750,
       "actInterest": 201681,
-      "fc1Tax": 6375266,
-      "fc2Tax": 6694029,
-      "actTax": 7363431,
+      "fc1Tax": 729509,
+      "fc2Tax": 809887,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1717,16 +1717,16 @@ export const sampleData = {
       "department": "Facility Management Services",
       "fc1ServiceFees": 35145651,
       "fc2ServiceFees": 34315149,
-      "actServiceFees": 32812333,
+      "actServiceFees": 25593620,
       "fc1OtherIncome": 1036800,
       "fc2OtherIncome": 984960,
-      "actOtherIncome": 992787,
+      "actOtherIncome": 774374,
       "fc1Interest": 172800,
       "fc2Interest": 172800,
-      "actInterest": 169341,
-      "fc1Tax": 5271847,
-      "fc2Tax": 5535439,
-      "actTax": 6088982,
+      "actInterest": 132086,
+      "fc1Tax": 770604,
+      "fc2Tax": 760367,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1735,16 +1735,16 @@ export const sampleData = {
       "department": "Finance & Accounts (F&A)",
       "fc1ServiceFees": 48890014,
       "fc2ServiceFees": 48068149,
-      "actServiceFees": 45861378,
+      "actServiceFees": 42192468,
       "fc1OtherIncome": 1458000,
       "fc2OtherIncome": 1385100,
-      "actOtherIncome": 1388892,
+      "actOtherIncome": 1277781,
       "fc1Interest": 243000,
       "fc2Interest": 243000,
-      "actInterest": 225691,
-      "fc1Tax": 7333502,
-      "fc2Tax": 7700177,
-      "actTax": 8470194,
+      "actInterest": 207636,
+      "fc1Tax": 960943,
+      "fc2Tax": 1069009,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1753,16 +1753,16 @@ export const sampleData = {
       "department": "Human Resources",
       "fc1ServiceFees": 23776425,
       "fc2ServiceFees": 23106013,
-      "actServiceFees": 22392594,
+      "actServiceFees": 18361927,
       "fc1OtherIncome": 712800,
       "fc2OtherIncome": 677160,
-      "actOtherIncome": 741525,
+      "actOtherIncome": 608051,
       "fc1Interest": 118800,
       "fc2Interest": 118800,
-      "actInterest": 109594,
-      "fc1Tax": 3566463,
-      "fc2Tax": 3744786,
-      "actTax": 4119264,
+      "actInterest": 89867,
+      "fc1Tax": 440962,
+      "fc2Tax": 397840,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1771,16 +1771,16 @@ export const sampleData = {
       "department": "IT Management",
       "fc1ServiceFees": 32899548,
       "fc2ServiceFees": 32162631,
-      "actServiceFees": 30662342,
+      "actServiceFees": 27596108,
       "fc1OtherIncome": 972000,
       "fc2OtherIncome": 923400,
-      "actOtherIncome": 984059,
+      "actOtherIncome": 885653,
       "fc1Interest": 162000,
       "fc2Interest": 162000,
-      "actInterest": 177182,
-      "fc1Tax": 4934932,
-      "fc2Tax": 5181678,
-      "actTax": 5699845,
+      "actInterest": 159464,
+      "fc1Tax": 711056,
+      "fc2Tax": 671291,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1789,16 +1789,16 @@ export const sampleData = {
       "department": "Procurement & Contracts",
       "fc1ServiceFees": 41041054,
       "fc2ServiceFees": 40176729,
-      "actServiceFees": 38648926,
+      "actServiceFees": 21256909,
       "fc1OtherIncome": 1231200,
       "fc2OtherIncome": 1169640,
-      "actOtherIncome": 1283749,
+      "actOtherIncome": 706062,
       "fc1Interest": 205200,
       "fc2Interest": 205200,
-      "actInterest": 201781,
-      "fc1Tax": 6156158,
-      "fc2Tax": 6463965,
-      "actTax": 7110361,
+      "actInterest": 110980,
+      "fc1Tax": 755378,
+      "fc2Tax": 782685,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1814,9 +1814,9 @@ export const sampleData = {
       "fc1Interest": 177600,
       "fc2Interest": 177600,
       "actInterest": 175772,
-      "fc1Tax": 5330069,
-      "fc2Tax": 5596572,
-      "actTax": 6156229,
+      "fc1Tax": 656741,
+      "fc2Tax": 714475,
+      "actTax": 826791,
       "comments": ""
     },
     {
@@ -1832,9 +1832,9 @@ export const sampleData = {
       "fc1Interest": 249750,
       "fc2Interest": 249750,
       "actInterest": 225971,
-      "fc1Tax": 7374935,
-      "fc2Tax": 7743681,
-      "actTax": 8518049,
+      "fc1Tax": 738815,
+      "fc2Tax": 718331,
+      "actTax": 763083,
       "comments": ""
     },
     {
@@ -1850,9 +1850,9 @@ export const sampleData = {
       "fc1Interest": 122100,
       "fc2Interest": 122100,
       "actInterest": 117893,
-      "fc1Tax": 3593749,
-      "fc2Tax": 3773436,
-      "actTax": 4150779,
+      "fc1Tax": 343144,
+      "fc2Tax": 341890,
+      "actTax": 273190,
       "comments": ""
     },
     {
@@ -1868,9 +1868,9 @@ export const sampleData = {
       "fc1Interest": 166500,
       "fc2Interest": 166500,
       "actInterest": 155086,
-      "fc1Tax": 4960545,
-      "fc2Tax": 5208572,
-      "actTax": 5729429,
+      "fc1Tax": 559890,
+      "fc2Tax": 541966,
+      "actTax": 450470,
       "comments": ""
     },
     {
@@ -1886,9 +1886,9 @@ export const sampleData = {
       "fc1Interest": 210900,
       "fc2Interest": 210900,
       "actInterest": 202394,
-      "fc1Tax": 6276459,
-      "fc2Tax": 6590281,
-      "actTax": 7249309,
+      "fc1Tax": 698616,
+      "fc2Tax": 809973,
+      "actTax": 761622,
       "comments": ""
     },
     {
@@ -1904,9 +1904,9 @@ export const sampleData = {
       "fc1Interest": 192000,
       "fc2Interest": 192000,
       "actInterest": 193168,
-      "fc1Tax": 5809590,
-      "fc2Tax": 6100069,
-      "actTax": 6710075,
+      "fc1Tax": 782599,
+      "fc2Tax": 913551,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1922,9 +1922,9 @@ export const sampleData = {
       "fc1Interest": 270000,
       "fc2Interest": 270000,
       "actInterest": 246567,
-      "fc1Tax": 8069133,
-      "fc2Tax": 8472589,
-      "actTax": 9319847,
+      "fc1Tax": 946271,
+      "fc2Tax": 949857,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1940,9 +1940,9 @@ export const sampleData = {
       "fc1Interest": 132000,
       "fc2Interest": 132000,
       "actInterest": 126349,
-      "fc1Tax": 4058303,
-      "fc2Tax": 4261218,
-      "actTax": 4687339,
+      "fc1Tax": 636491,
+      "fc2Tax": 624251,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1958,9 +1958,9 @@ export const sampleData = {
       "fc1Interest": 180000,
       "fc2Interest": 180000,
       "actInterest": 187884,
-      "fc1Tax": 5413269,
-      "fc2Tax": 5683932,
-      "actTax": 6252325,
+      "fc1Tax": 682747,
+      "fc2Tax": 695878,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1976,9 +1976,9 @@ export const sampleData = {
       "fc1Interest": 228000,
       "fc2Interest": 228000,
       "actInterest": 247299,
-      "fc1Tax": 6782307,
-      "fc2Tax": 7121422,
-      "actTax": 7833564,
+      "fc1Tax": 750577,
+      "fc2Tax": 751974,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -1994,9 +1994,9 @@ export const sampleData = {
       "fc1Interest": 189600,
       "fc2Interest": 189600,
       "actInterest": 207400,
-      "fc1Tax": 5578688,
-      "fc2Tax": 5857622,
-      "actTax": 6443384,
+      "fc1Tax": 530116,
+      "fc2Tax": 538702,
+      "actTax": 532168,
       "comments": ""
     },
     {
@@ -2012,9 +2012,9 @@ export const sampleData = {
       "fc1Interest": 266625,
       "fc2Interest": 266625,
       "actInterest": 279488,
-      "fc1Tax": 8118204,
-      "fc2Tax": 8524114,
-      "actTax": 9376525,
+      "fc1Tax": 1164344,
+      "fc2Tax": 1284069,
+      "actTax": 1240948,
       "comments": ""
     },
     {
@@ -2030,9 +2030,9 @@ export const sampleData = {
       "fc1Interest": 130350,
       "fc2Interest": 130350,
       "actInterest": 125999,
-      "fc1Tax": 3927804,
-      "fc2Tax": 4124194,
-      "actTax": 4536613,
+      "fc1Tax": 506221,
+      "fc2Tax": 583484,
+      "actTax": 540184,
       "comments": ""
     },
     {
@@ -2048,9 +2048,9 @@ export const sampleData = {
       "fc1Interest": 177750,
       "fc2Interest": 177750,
       "actInterest": 194570,
-      "fc1Tax": 5300207,
-      "fc2Tax": 5565217,
-      "actTax": 6121738,
+      "fc1Tax": 604604,
+      "fc2Tax": 585903,
+      "actTax": 604077,
       "comments": ""
     },
     {
@@ -2066,9 +2066,9 @@ export const sampleData = {
       "fc1Interest": 225150,
       "fc2Interest": 225150,
       "actInterest": 208599,
-      "fc1Tax": 6641947,
-      "fc2Tax": 6974044,
-      "actTax": 7671448,
+      "fc1Tax": 655972,
+      "fc2Tax": 732151,
+      "actTax": 706845,
       "comments": ""
     },
     {
@@ -2084,9 +2084,9 @@ export const sampleData = {
       "fc1Interest": 187200,
       "fc2Interest": 187200,
       "actInterest": 199944,
-      "fc1Tax": 5578413,
-      "fc2Tax": 5857333,
-      "actTax": 6443066,
+      "fc1Tax": 631263,
+      "fc2Tax": 732965,
+      "actTax": 800153,
       "comments": ""
     },
     {
@@ -2102,9 +2102,9 @@ export const sampleData = {
       "fc1Interest": 263250,
       "fc2Interest": 263250,
       "actInterest": 259379,
-      "fc1Tax": 7830945,
-      "fc2Tax": 8222492,
-      "actTax": 9044741,
+      "fc1Tax": 866710,
+      "fc2Tax": 783195,
+      "actTax": 954490,
       "comments": ""
     },
     {
@@ -2120,9 +2120,9 @@ export const sampleData = {
       "fc1Interest": 128700,
       "fc2Interest": 128700,
       "actInterest": 129882,
-      "fc1Tax": 3780225,
-      "fc2Tax": 3969236,
-      "actTax": 4366159,
+      "fc1Tax": 349761,
+      "fc2Tax": 351444,
+      "actTax": 342433,
       "comments": ""
     },
     {
@@ -2138,9 +2138,9 @@ export const sampleData = {
       "fc1Interest": 175500,
       "fc2Interest": 175500,
       "actInterest": 192104,
-      "fc1Tax": 5171274,
-      "fc2Tax": 5429837,
-      "actTax": 5972820,
+      "fc1Tax": 502128,
+      "fc2Tax": 591733,
+      "actTax": 631916,
       "comments": ""
     },
     {
@@ -2156,9 +2156,9 @@ export const sampleData = {
       "fc1Interest": 222300,
       "fc2Interest": 222300,
       "actInterest": 216727,
-      "fc1Tax": 6609556,
-      "fc2Tax": 6940033,
-      "actTax": 7634036,
+      "fc1Tax": 726918,
+      "fc2Tax": 691072,
+      "actTax": 672372,
       "comments": ""
     },
     {
@@ -2174,9 +2174,9 @@ export const sampleData = {
       "fc1Interest": 187464,
       "fc2Interest": 185712,
       "actInterest": 189426,
-      "fc1Tax": 6138495,
-      "fc2Tax": 6082179,
-      "actTax": 5955670,
+      "fc1Tax": 1066298,
+      "fc2Tax": 1057881,
+      "actTax": 557135,
       "comments": ""
     },
     {
@@ -2192,9 +2192,9 @@ export const sampleData = {
       "fc1Interest": 263621,
       "fc2Interest": 261158,
       "actInterest": 266381,
-      "fc1Tax": 8521285,
-      "fc2Tax": 8443108,
-      "actTax": 8753814,
+      "fc1Tax": 1424152,
+      "fc2Tax": 1413006,
+      "actTax": 1458806,
       "comments": ""
     },
     {
@@ -2210,9 +2210,9 @@ export const sampleData = {
       "fc1Interest": 128882,
       "fc2Interest": 127677,
       "actInterest": 130231,
-      "fc1Tax": 4050166,
-      "fc2Tax": 4013009,
-      "actTax": 3775439,
+      "fc1Tax": 443137,
+      "fc2Tax": 440010,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -2228,9 +2228,9 @@ export const sampleData = {
       "fc1Interest": 175748,
       "fc2Interest": 174105,
       "actInterest": 177587,
-      "fc1Tax": 5638814,
-      "fc2Tax": 5587082,
-      "actTax": 5685415,
+      "fc1Tax": 894608,
+      "fc2Tax": 887678,
+      "actTax": 748555,
       "comments": ""
     },
     {
@@ -2246,9 +2246,9 @@ export const sampleData = {
       "fc1Interest": 222614,
       "fc2Interest": 220533,
       "actInterest": 224944,
-      "fc1Tax": 7138710,
-      "fc2Tax": 7073217,
-      "actTax": 6926094,
+      "fc1Tax": 963301,
+      "fc2Tax": 956085,
+      "actTax": 353721,
       "comments": ""
     },
     {
@@ -2264,8 +2264,8 @@ export const sampleData = {
       "fc1Interest": 197736,
       "fc2Interest": 195888,
       "actInterest": 0,
-      "fc1Tax": 6456648,
-      "fc2Tax": 6397412,
+      "fc1Tax": 1118677,
+      "fc2Tax": 1109860,
       "actTax": 0,
       "comments": ""
     },
@@ -2282,8 +2282,8 @@ export const sampleData = {
       "fc1Interest": 278066,
       "fc2Interest": 275468,
       "actInterest": 0,
-      "fc1Tax": 8911452,
-      "fc2Tax": 8829696,
+      "fc1Tax": 1285940,
+      "fc2Tax": 1276171,
       "actTax": 0,
       "comments": ""
     },
@@ -2300,8 +2300,8 @@ export const sampleData = {
       "fc1Interest": 135944,
       "fc2Interest": 134673,
       "actInterest": 0,
-      "fc1Tax": 4263053,
-      "fc2Tax": 4223943,
+      "fc1Tax": 504338,
+      "fc2Tax": 500698,
       "actTax": 0,
       "comments": ""
     },
@@ -2318,8 +2318,8 @@ export const sampleData = {
       "fc1Interest": 185378,
       "fc2Interest": 183645,
       "actInterest": 0,
-      "fc1Tax": 5820979,
-      "fc2Tax": 5767576,
+      "fc1Tax": 599212,
+      "fc2Tax": 595074,
       "actTax": 0,
       "comments": ""
     },
@@ -2336,8 +2336,8 @@ export const sampleData = {
       "fc1Interest": 234812,
       "fc2Interest": 232617,
       "actInterest": 0,
-      "fc1Tax": 7475729,
-      "fc2Tax": 7407144,
+      "fc1Tax": 970395,
+      "fc2Tax": 963204,
       "actTax": 0,
       "comments": ""
     },
@@ -2354,8 +2354,8 @@ export const sampleData = {
       "fc1Interest": 208008,
       "fc2Interest": 206064,
       "actInterest": 0,
-      "fc1Tax": 6551299,
-      "fc2Tax": 6491195,
+      "fc1Tax": 685313,
+      "fc2Tax": 680549,
       "actTax": 0,
       "comments": ""
     },
@@ -2372,8 +2372,8 @@ export const sampleData = {
       "fc1Interest": 292511,
       "fc2Interest": 289778,
       "actInterest": 0,
-      "fc1Tax": 9422350,
-      "fc2Tax": 9335907,
+      "fc1Tax": 1528901,
+      "fc2Tax": 1517013,
       "actTax": 0,
       "comments": ""
     },
@@ -2390,8 +2390,8 @@ export const sampleData = {
       "fc1Interest": 143006,
       "fc2Interest": 141669,
       "actInterest": 0,
-      "fc1Tax": 4681960,
-      "fc2Tax": 4639006,
+      "fc1Tax": 694956,
+      "fc2Tax": 689632,
       "actTax": 0,
       "comments": ""
     },
@@ -2408,8 +2408,8 @@ export const sampleData = {
       "fc1Interest": 195008,
       "fc2Interest": 193185,
       "actInterest": 0,
-      "fc1Tax": 6151134,
-      "fc2Tax": 6094701,
+      "fc1Tax": 713314,
+      "fc2Tax": 708198,
       "actTax": 0,
       "comments": ""
     },
@@ -2426,8 +2426,8 @@ export const sampleData = {
       "fc1Interest": 247010,
       "fc2Interest": 244701,
       "actInterest": 0,
-      "fc1Tax": 8002586,
-      "fc2Tax": 7929168,
+      "fc1Tax": 1358315,
+      "fc2Tax": 1347649,
       "actTax": 0,
       "comments": ""
     },
@@ -2444,9 +2444,9 @@ export const sampleData = {
       "fc1Interest": 182328,
       "fc2Interest": 180624,
       "actInterest": 184236,
-      "fc1Tax": 5953107,
-      "fc2Tax": 5898491,
-      "actTax": 5719177,
+      "fc1Tax": 1040983,
+      "fc2Tax": 1032759,
+      "actTax": 887374,
       "comments": ""
     },
     {
@@ -2462,9 +2462,9 @@ export const sampleData = {
       "fc1Interest": 256399,
       "fc2Interest": 254003,
       "actInterest": 259083,
-      "fc1Tax": 8099407,
-      "fc2Tax": 8025101,
-      "actTax": 7781138,
+      "fc1Tax": 1049167,
+      "fc2Tax": 1041404,
+      "actTax": 828980,
       "comments": ""
     },
     {
@@ -2480,9 +2480,9 @@ export const sampleData = {
       "fc1Interest": 125351,
       "fc2Interest": 124179,
       "actInterest": 126663,
-      "fc1Tax": 4008998,
-      "fc2Tax": 3972218,
-      "actTax": 3851463,
+      "fc1Tax": 598468,
+      "fc2Tax": 593892,
+      "actTax": 492225,
       "comments": ""
     },
     {
@@ -2498,9 +2498,9 @@ export const sampleData = {
       "fc1Interest": 170933,
       "fc2Interest": 169335,
       "actInterest": 172722,
-      "fc1Tax": 5455995,
-      "fc2Tax": 5405940,
-      "actTax": 5241599,
+      "fc1Tax": 820953,
+      "fc2Tax": 814665,
+      "actTax": 675115,
       "comments": ""
     },
     {
@@ -2516,9 +2516,9 @@ export const sampleData = {
       "fc1Interest": 216515,
       "fc2Interest": 214491,
       "actInterest": 218781,
-      "fc1Tax": 6888742,
-      "fc2Tax": 6825543,
-      "actTax": 5962794,
+      "fc1Tax": 889298,
+      "fc2Tax": 882718,
+      "actTax": 0,
       "comments": ""
     },
     {
@@ -2534,9 +2534,9 @@ export const sampleData = {
       "fc1Interest": 179760,
       "fc2Interest": 178080,
       "actInterest": 181642,
-      "fc1Tax": 5711683,
-      "fc2Tax": 5659282,
-      "actTax": 5650227,
+      "fc1Tax": 812262,
+      "fc2Tax": 806122,
+      "actTax": 1331045,
       "comments": ""
     },
     {
@@ -2552,9 +2552,9 @@ export const sampleData = {
       "fc1Interest": 252788,
       "fc2Interest": 250425,
       "actInterest": 255434,
-      "fc1Tax": 8118659,
-      "fc2Tax": 8044176,
-      "actTax": 8031305,
+      "fc1Tax": 1198506,
+      "fc2Tax": 1189365,
+      "actTax": 1933410,
       "comments": ""
     },
     {
@@ -2570,9 +2570,9 @@ export const sampleData = {
       "fc1Interest": 123585,
       "fc2Interest": 122430,
       "actInterest": 124879,
-      "fc1Tax": 3944182,
-      "fc2Tax": 3907997,
-      "actTax": 3901744,
+      "fc1Tax": 586424,
+      "fc2Tax": 581944,
+      "actTax": 943748,
       "comments": ""
     },
     {
@@ -2588,9 +2588,9 @@ export const sampleData = {
       "fc1Interest": 168525,
       "fc2Interest": 166950,
       "actInterest": 170289,
-      "fc1Tax": 5293897,
-      "fc2Tax": 5245329,
-      "actTax": 5236936,
+      "fc1Tax": 658489,
+      "fc2Tax": 653678,
+      "actTax": 1141578,
       "comments": ""
     },
     {
@@ -2606,9 +2606,9 @@ export const sampleData = {
       "fc1Interest": 213465,
       "fc2Interest": 211470,
       "actInterest": 215699,
-      "fc1Tax": 6919149,
-      "fc2Tax": 6855670,
-      "actTax": 6844701,
+      "fc1Tax": 1182668,
+      "fc2Tax": 1173367,
+      "actTax": 1801946,
       "comments": ""
     },
     {
@@ -2624,8 +2624,8 @@ export const sampleData = {
       "fc1Interest": 195168,
       "fc2Interest": 193344,
       "actInterest": 0,
-      "fc1Tax": 6247637,
-      "fc2Tax": 6190319,
+      "fc1Tax": 814700,
+      "fc2Tax": 808651,
       "actTax": 0,
       "comments": ""
     },
@@ -2642,8 +2642,8 @@ export const sampleData = {
       "fc1Interest": 274455,
       "fc2Interest": 271890,
       "actInterest": 0,
-      "fc1Tax": 8720970,
-      "fc2Tax": 8640961,
+      "fc1Tax": 1199828,
+      "fc2Tax": 1190819,
       "actTax": 0,
       "comments": ""
     },
@@ -2660,8 +2660,8 @@ export const sampleData = {
       "fc1Interest": 134178,
       "fc2Interest": 132924,
       "actInterest": 0,
-      "fc1Tax": 4211459,
-      "fc2Tax": 4172822,
+      "fc1Tax": 448534,
+      "fc2Tax": 445397,
       "actTax": 0,
       "comments": ""
     },
@@ -2678,8 +2678,8 @@ export const sampleData = {
       "fc1Interest": 182970,
       "fc2Interest": 181260,
       "actInterest": 0,
-      "fc1Tax": 5910692,
-      "fc2Tax": 5856465,
+      "fc1Tax": 831834,
+      "fc2Tax": 825539,
       "actTax": 0,
       "comments": ""
     },
@@ -2696,8 +2696,8 @@ export const sampleData = {
       "fc1Interest": 231762,
       "fc2Interest": 229596,
       "actInterest": 0,
-      "fc1Tax": 7520224,
-      "fc2Tax": 7451231,
+      "fc1Tax": 1266791,
+      "fc2Tax": 1256858,
       "actTax": 0,
       "comments": ""
     },
@@ -2714,8 +2714,8 @@ export const sampleData = {
       "fc1Interest": 192600,
       "fc2Interest": 190800,
       "actInterest": 0,
-      "fc1Tax": 6192305,
-      "fc2Tax": 6135495,
+      "fc1Tax": 861139,
+      "fc2Tax": 854647,
       "actTax": 0,
       "comments": ""
     },
@@ -2732,8 +2732,8 @@ export const sampleData = {
       "fc1Interest": 270844,
       "fc2Interest": 268313,
       "actInterest": 0,
-      "fc1Tax": 8596013,
-      "fc2Tax": 8517150,
+      "fc1Tax": 1169740,
+      "fc2Tax": 1160996,
       "actTax": 0,
       "comments": ""
     },
@@ -2750,8 +2750,8 @@ export const sampleData = {
       "fc1Interest": 132413,
       "fc2Interest": 131175,
       "actInterest": 0,
-      "fc1Tax": 4371540,
-      "fc2Tax": 4331434,
+      "fc1Tax": 804637,
+      "fc2Tax": 798221,
       "actTax": 0,
       "comments": ""
     },
@@ -2768,8 +2768,8 @@ export const sampleData = {
       "fc1Interest": 180563,
       "fc2Interest": 178875,
       "actInterest": 0,
-      "fc1Tax": 5923923,
-      "fc2Tax": 5869575,
+      "fc1Tax": 1034214,
+      "fc2Tax": 1026043,
       "actTax": 0,
       "comments": ""
     },
@@ -2786,8 +2786,8 @@ export const sampleData = {
       "fc1Interest": 228713,
       "fc2Interest": 226575,
       "actInterest": 0,
-      "fc1Tax": 7296492,
-      "fc2Tax": 7229551,
+      "fc1Tax": 1065622,
+      "fc2Tax": 1057523,
       "actTax": 0,
       "comments": ""
     },
@@ -2804,9 +2804,9 @@ export const sampleData = {
       "fc1Interest": 184896,
       "fc2Interest": 183168,
       "actInterest": 186831,
-      "fc1Tax": 6033629,
-      "fc2Tax": 5978274,
-      "actTax": 5796534,
+      "fc1Tax": 975973,
+      "fc2Tax": 968369,
+      "actTax": 621188,
       "comments": ""
     },
     {
@@ -2822,9 +2822,9 @@ export const sampleData = {
       "fc1Interest": 260010,
       "fc2Interest": 257580,
       "actInterest": 262732,
-      "fc1Tax": 8393193,
-      "fc2Tax": 8316191,
-      "actTax": 8063379,
+      "fc1Tax": 1371325,
+      "fc2Tax": 1360635,
+      "actTax": 868011,
       "comments": ""
     },
     {
@@ -2840,9 +2840,9 @@ export const sampleData = {
       "fc1Interest": 127116,
       "fc2Interest": 125928,
       "actInterest": 128447,
-      "fc1Tax": 4081817,
-      "fc2Tax": 4044369,
-      "actTax": 3921420,
+      "fc1Tax": 535091,
+      "fc2Tax": 531113,
+      "actTax": 289142,
       "comments": ""
     },
     {
@@ -2858,9 +2858,9 @@ export const sampleData = {
       "fc1Interest": 173340,
       "fc2Interest": 171720,
       "actInterest": 175154,
-      "fc1Tax": 5648029,
-      "fc2Tax": 5596212,
-      "actTax": 5614120,
+      "fc1Tax": 870477,
+      "fc2Tax": 863764,
+      "actTax": 821405,
       "comments": ""
     },
     {
@@ -2876,9 +2876,9 @@ export const sampleData = {
       "fc1Interest": 219564,
       "fc2Interest": 217512,
       "actInterest": 221862,
-      "fc1Tax": 7045722,
-      "fc2Tax": 6981082,
-      "actTax": 6768857,
+      "fc1Tax": 1027667,
+      "fc2Tax": 1019839,
+      "actTax": 600800,
       "comments": ""
     },
     {
@@ -2894,8 +2894,8 @@ export const sampleData = {
       "fc1Interest": 190032,
       "fc2Interest": 188256,
       "actInterest": 0,
-      "fc1Tax": 6100263,
-      "fc2Tax": 6044298,
+      "fc1Tax": 930295,
+      "fc2Tax": 923151,
       "actTax": 0,
       "comments": ""
     },
@@ -2912,8 +2912,8 @@ export const sampleData = {
       "fc1Interest": 267233,
       "fc2Interest": 264735,
       "actInterest": 0,
-      "fc1Tax": 8440612,
-      "fc2Tax": 8363175,
+      "fc1Tax": 995933,
+      "fc2Tax": 988750,
       "actTax": 0,
       "comments": ""
     },
@@ -2930,8 +2930,8 @@ export const sampleData = {
       "fc1Interest": 130647,
       "fc2Interest": 129426,
       "actInterest": 0,
-      "fc1Tax": 4113045,
-      "fc2Tax": 4075311,
+      "fc1Tax": 476354,
+      "fc2Tax": 472935,
       "actTax": 0,
       "comments": ""
     },
@@ -2948,8 +2948,8 @@ export const sampleData = {
       "fc1Interest": 178155,
       "fc2Interest": 176490,
       "actInterest": 0,
-      "fc1Tax": 5677343,
-      "fc2Tax": 5625258,
+      "fc1Tax": 732995,
+      "fc2Tax": 727575,
       "actTax": 0,
       "comments": ""
     },
@@ -2966,8 +2966,8 @@ export const sampleData = {
       "fc1Interest": 225663,
       "fc2Interest": 223554,
       "actInterest": 0,
-      "fc1Tax": 7183406,
-      "fc2Tax": 7117503,
+      "fc1Tax": 1062358,
+      "fc2Tax": 1054258,
       "actTax": 0,
       "comments": ""
     },
@@ -2984,8 +2984,8 @@ export const sampleData = {
       "fc1Interest": 205440,
       "fc2Interest": 203520,
       "actInterest": 0,
-      "fc1Tax": 6649075,
-      "fc2Tax": 6588075,
+      "fc1Tax": 1158438,
+      "fc2Tax": 1149303,
       "actTax": 0,
       "comments": ""
     },
@@ -3002,8 +3002,8 @@ export const sampleData = {
       "fc1Interest": 288900,
       "fc2Interest": 286200,
       "actInterest": 0,
-      "fc1Tax": 9235122,
-      "fc2Tax": 9150396,
+      "fc1Tax": 1264708,
+      "fc2Tax": 1255209,
       "actTax": 0,
       "comments": ""
     },
@@ -3020,8 +3020,8 @@ export const sampleData = {
       "fc1Interest": 141240,
       "fc2Interest": 139920,
       "actInterest": 0,
-      "fc1Tax": 4644728,
-      "fc2Tax": 4602115,
+      "fc1Tax": 792626,
+      "fc2Tax": 786383,
       "actTax": 0,
       "comments": ""
     },
@@ -3038,8 +3038,8 @@ export const sampleData = {
       "fc1Interest": 192600,
       "fc2Interest": 190800,
       "actInterest": 0,
-      "fc1Tax": 6195486,
-      "fc2Tax": 6138647,
+      "fc1Tax": 911085,
+      "fc2Tax": 904127,
       "actTax": 0,
       "comments": ""
     },
@@ -3056,8 +3056,8 @@ export const sampleData = {
       "fc1Interest": 243960,
       "fc2Interest": 241680,
       "actInterest": 0,
-      "fc1Tax": 7762350,
-      "fc2Tax": 7691136,
+      "fc1Tax": 1013559,
+      "fc2Tax": 1006038,
       "actTax": 0,
       "comments": ""
     },
@@ -3074,8 +3074,8 @@ export const sampleData = {
       "fc1Interest": 202872,
       "fc2Interest": 200976,
       "actInterest": 0,
-      "fc1Tax": 6384808,
-      "fc2Tax": 6326232,
+      "fc1Tax": 749171,
+      "fc2Tax": 743784,
       "actTax": 0,
       "comments": ""
     },
@@ -3092,8 +3092,8 @@ export const sampleData = {
       "fc1Interest": 285289,
       "fc2Interest": 282623,
       "actInterest": 0,
-      "fc1Tax": 9291284,
-      "fc2Tax": 9206043,
+      "fc1Tax": 1625368,
+      "fc2Tax": 1612527,
       "actTax": 0,
       "comments": ""
     },
@@ -3110,8 +3110,8 @@ export const sampleData = {
       "fc1Interest": 139475,
       "fc2Interest": 138171,
       "actInterest": 0,
-      "fc1Tax": 4495371,
-      "fc2Tax": 4454130,
+      "fc1Tax": 746805,
+      "fc2Tax": 740970,
       "actTax": 0,
       "comments": ""
     },
@@ -3128,8 +3128,8 @@ export const sampleData = {
       "fc1Interest": 190193,
       "fc2Interest": 188415,
       "actInterest": 0,
-      "fc1Tax": 6066087,
-      "fc2Tax": 6010434,
+      "fc1Tax": 789351,
+      "fc2Tax": 783492,
       "actTax": 0,
       "comments": ""
     },
@@ -3146,8 +3146,8 @@ export const sampleData = {
       "fc1Interest": 240911,
       "fc2Interest": 238659,
       "actInterest": 0,
-      "fc1Tax": 7601708,
-      "fc2Tax": 7531968,
+      "fc1Tax": 989729,
+      "fc2Tax": 982408,
       "actTax": 0,
       "comments": ""
     },
@@ -3164,8 +3164,8 @@ export const sampleData = {
       "fc1Interest": 200304,
       "fc2Interest": 198432,
       "actInterest": 0,
-      "fc1Tax": 6384493,
-      "fc2Tax": 6325920,
+      "fc1Tax": 958223,
+      "fc2Tax": 950892,
       "actTax": 0,
       "comments": ""
     },
@@ -3182,8 +3182,8 @@ export const sampleData = {
       "fc1Interest": 281678,
       "fc2Interest": 279045,
       "actInterest": 0,
-      "fc1Tax": 8962516,
-      "fc2Tax": 8880291,
+      "fc1Tax": 1077882,
+      "fc2Tax": 1070050,
       "actTax": 0,
       "comments": ""
     },
@@ -3200,8 +3200,8 @@ export const sampleData = {
       "fc1Interest": 137709,
       "fc2Interest": 136422,
       "actInterest": 0,
-      "fc1Tax": 4326467,
-      "fc2Tax": 4286775,
+      "fc1Tax": 492401,
+      "fc2Tax": 488887,
       "actTax": 0,
       "comments": ""
     },
@@ -3218,8 +3218,8 @@ export const sampleData = {
       "fc1Interest": 187785,
       "fc2Interest": 186030,
       "actInterest": 0,
-      "fc1Tax": 5918522,
-      "fc2Tax": 5864224,
+      "fc1Tax": 794693,
+      "fc2Tax": 788776,
       "actTax": 0,
       "comments": ""
     },
@@ -3236,8 +3236,8 @@ export const sampleData = {
       "fc1Interest": 237861,
       "fc2Interest": 235638,
       "actInterest": 0,
-      "fc1Tax": 7564636,
-      "fc2Tax": 7495236,
+      "fc1Tax": 942456,
+      "fc2Tax": 935545,
       "actTax": 0,
       "comments": ""
     }
@@ -18101,7 +18101,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 864000,
       "fc2": 826836,
-      "actual": 795890,
+      "actual": 1910136,
       "comments": ""
     },
     {
@@ -18112,7 +18112,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 864000,
       "fc2": 828697,
-      "actual": 752386,
+      "actual": 827625,
       "comments": ""
     },
     {
@@ -18123,7 +18123,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 576000,
       "fc2": 546235,
-      "actual": 565006,
+      "actual": 621507,
       "comments": ""
     },
     {
@@ -18134,7 +18134,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 576000,
       "fc2": 558880,
-      "actual": 536305,
+      "actual": 589936,
       "comments": ""
     },
     {
@@ -18145,7 +18145,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1188000,
       "fc2": 1135251,
-      "actual": 1086691,
+      "actual": 1195360,
       "comments": ""
     },
     {
@@ -18156,7 +18156,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 792000,
       "fc2": 758174,
-      "actual": 726889,
+      "actual": 799578,
       "comments": ""
     },
     {
@@ -18167,7 +18167,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1584000,
       "fc2": 1545306,
-      "actual": 1492414,
+      "actual": 4178759,
       "comments": ""
     },
     {
@@ -18178,7 +18178,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1584000,
       "fc2": 1520715,
-      "actual": 1417002,
+      "actual": 1983803,
       "comments": ""
     },
     {
@@ -18189,7 +18189,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 792000,
       "fc2": 755440,
-      "actual": 732689,
+      "actual": 805958,
       "comments": ""
     },
     {
@@ -18200,7 +18200,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 1980000,
       "fc2": 1900746,
-      "actual": 1775302,
+      "actual": 1952832,
       "comments": ""
     },
     {
@@ -18211,7 +18211,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 2340000,
       "fc2": 2308645,
-      "actual": 2255925,
+      "actual": 2481518,
       "comments": ""
     },
     {
@@ -18222,7 +18222,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 2340000,
       "fc2": 2300876,
-      "actual": 2214578,
+      "actual": 2436036,
       "comments": ""
     },
     {
@@ -18233,7 +18233,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1170000,
       "fc2": 1152342,
-      "actual": 1107627,
+      "actual": 1218390,
       "comments": ""
     },
     {
@@ -18244,7 +18244,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 16379999,
       "fc2": 16081022,
-      "actual": 15569936,
+      "actual": 17126930,
       "comments": ""
     },
     {
@@ -18255,7 +18255,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1170000,
       "fc2": 1146119,
-      "actual": 1089038,
+      "actual": 1197942,
       "comments": ""
     },
     {
@@ -18266,7 +18266,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 1215000,
       "fc2": 1194482,
-      "actual": 1099988,
+      "actual": 2639971,
       "comments": ""
     },
     {
@@ -18277,7 +18277,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 1215000,
       "fc2": 1189439,
-      "actual": 1291215,
+      "actual": 1420337,
       "comments": ""
     },
     {
@@ -18288,7 +18288,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 810000,
       "fc2": 780128,
-      "actual": 705457,
+      "actual": 776003,
       "comments": ""
     },
     {
@@ -18299,7 +18299,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 810000,
       "fc2": 803712,
-      "actual": 811866,
+      "actual": 893053,
       "comments": ""
     },
     {
@@ -18310,7 +18310,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1670625,
       "fc2": 1625764,
-      "actual": 1572978,
+      "actual": 1730276,
       "comments": ""
     },
     {
@@ -18321,7 +18321,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 1113750,
       "fc2": 1072745,
-      "actual": 1039333,
+      "actual": 1143266,
       "comments": ""
     },
     {
@@ -18332,7 +18332,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 2227500,
       "fc2": 2177133,
-      "actual": 2041555,
+      "actual": 5716354,
       "comments": ""
     },
     {
@@ -18343,7 +18343,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 2227500,
       "fc2": 2167341,
-      "actual": 2072050,
+      "actual": 2900870,
       "comments": ""
     },
     {
@@ -18354,7 +18354,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 1113750,
       "fc2": 1058636,
-      "actual": 1018890,
+      "actual": 1120779,
       "comments": ""
     },
     {
@@ -18365,7 +18365,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 2784375,
       "fc2": 2693467,
-      "actual": 2514154,
+      "actual": 2765569,
       "comments": ""
     },
     {
@@ -18376,7 +18376,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 3290625,
       "fc2": 3211419,
-      "actual": 3106245,
+      "actual": 3416870,
       "comments": ""
     },
     {
@@ -18387,7 +18387,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 3290625,
       "fc2": 3200679,
-      "actual": 3089546,
+      "actual": 3398501,
       "comments": ""
     },
     {
@@ -18398,7 +18398,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1645312,
       "fc2": 1619981,
-      "actual": 1555204,
+      "actual": 1710724,
       "comments": ""
     },
     {
@@ -18409,7 +18409,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 23034375,
       "fc2": 22687387,
-      "actual": 21964284,
+      "actual": 24160712,
       "comments": ""
     },
     {
@@ -18420,7 +18420,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1645312,
       "fc2": 1625177,
-      "actual": 1578611,
+      "actual": 1736472,
       "comments": ""
     },
     {
@@ -18431,7 +18431,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 594000,
       "fc2": 589702,
-      "actual": 568205,
+      "actual": 1363692,
       "comments": ""
     },
     {
@@ -18442,7 +18442,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 594000,
       "fc2": 590084,
-      "actual": 587355,
+      "actual": 646091,
       "comments": ""
     },
     {
@@ -18453,7 +18453,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 396000,
       "fc2": 388849,
-      "actual": 390230,
+      "actual": 429253,
       "comments": ""
     },
     {
@@ -18464,7 +18464,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 396000,
       "fc2": 365192,
-      "actual": 395281,
+      "actual": 434809,
       "comments": ""
     },
     {
@@ -18475,7 +18475,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 816750,
       "fc2": 794696,
-      "actual": 750910,
+      "actual": 826001,
       "comments": ""
     },
     {
@@ -18486,7 +18486,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 544500,
       "fc2": 526259,
-      "actual": 501541,
+      "actual": 551695,
       "comments": ""
     },
     {
@@ -18497,7 +18497,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1089000,
       "fc2": 1065424,
-      "actual": 1032133,
+      "actual": 2889972,
       "comments": ""
     },
     {
@@ -18508,7 +18508,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1089000,
       "fc2": 1037266,
-      "actual": 985236,
+      "actual": 1379330,
       "comments": ""
     },
     {
@@ -18519,7 +18519,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 544500,
       "fc2": 526111,
-      "actual": 501868,
+      "actual": 552055,
       "comments": ""
     },
     {
@@ -18530,7 +18530,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 1361250,
       "fc2": 1303859,
-      "actual": 1243816,
+      "actual": 1368198,
       "comments": ""
     },
     {
@@ -18541,7 +18541,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 1608750,
       "fc2": 1568360,
-      "actual": 1529581,
+      "actual": 1682539,
       "comments": ""
     },
     {
@@ -18552,7 +18552,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 1608750,
       "fc2": 1576605,
-      "actual": 1515603,
+      "actual": 1667163,
       "comments": ""
     },
     {
@@ -18563,7 +18563,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 804375,
       "fc2": 785766,
-      "actual": 753750,
+      "actual": 829125,
       "comments": ""
     },
     {
@@ -18574,7 +18574,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 11261250,
       "fc2": 10980795,
-      "actual": 10523155,
+      "actual": 11575471,
       "comments": ""
     },
     {
@@ -18585,7 +18585,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 804375,
       "fc2": 789428,
-      "actual": 763606,
+      "actual": 839967,
       "comments": ""
     },
     {
@@ -18596,7 +18596,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 810000,
       "fc2": 730304,
-      "actual": 725342,
+      "actual": 1740821,
       "comments": ""
     },
     {
@@ -18607,7 +18607,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 810000,
       "fc2": 739086,
-      "actual": 751402,
+      "actual": 826542,
       "comments": ""
     },
     {
@@ -18618,7 +18618,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 540000,
       "fc2": 533403,
-      "actual": 538275,
+      "actual": 592103,
       "comments": ""
     },
     {
@@ -18629,7 +18629,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 540000,
       "fc2": 493553,
-      "actual": 445470,
+      "actual": 490017,
       "comments": ""
     },
     {
@@ -18640,7 +18640,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1113750,
       "fc2": 1068611,
-      "actual": 1001466,
+      "actual": 1101613,
       "comments": ""
     },
     {
@@ -18651,7 +18651,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 742500,
       "fc2": 710528,
-      "actual": 672682,
+      "actual": 739950,
       "comments": ""
     },
     {
@@ -18662,7 +18662,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1485000,
       "fc2": 1425498,
-      "actual": 1373738,
+      "actual": 3846466,
       "comments": ""
     },
     {
@@ -18673,7 +18673,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1485000,
       "fc2": 1419126,
-      "actual": 1345872,
+      "actual": 1884221,
       "comments": ""
     },
     {
@@ -18684,7 +18684,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 742500,
       "fc2": 716223,
-      "actual": 680673,
+      "actual": 748740,
       "comments": ""
     },
     {
@@ -18695,7 +18695,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 1856250,
       "fc2": 1765199,
-      "actual": 1686536,
+      "actual": 1855190,
       "comments": ""
     },
     {
@@ -18706,7 +18706,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 2193750,
       "fc2": 2135464,
-      "actual": 2085909,
+      "actual": 2294500,
       "comments": ""
     },
     {
@@ -18717,7 +18717,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 2193750,
       "fc2": 2151644,
-      "actual": 2077097,
+      "actual": 2284807,
       "comments": ""
     },
     {
@@ -18728,7 +18728,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1096875,
       "fc2": 1077905,
-      "actual": 1048614,
+      "actual": 1153475,
       "comments": ""
     },
     {
@@ -18739,7 +18739,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 15356249,
       "fc2": 15176891,
-      "actual": 14579675,
+      "actual": 16037643,
       "comments": ""
     },
     {
@@ -18750,7 +18750,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1096875,
       "fc2": 1076838,
-      "actual": 1029664,
+      "actual": 1132630,
       "comments": ""
     },
     {
@@ -18761,7 +18761,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 1026000,
       "fc2": 1020759,
-      "actual": 948801,
+      "actual": 2277122,
       "comments": ""
     },
     {
@@ -18772,7 +18772,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 1026000,
       "fc2": 971342,
-      "actual": 969763,
+      "actual": 1066739,
       "comments": ""
     },
     {
@@ -18783,7 +18783,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 684000,
       "fc2": 676356,
-      "actual": 671548,
+      "actual": 738703,
       "comments": ""
     },
     {
@@ -18794,7 +18794,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 684000,
       "fc2": 668897,
-      "actual": 694976,
+      "actual": 764474,
       "comments": ""
     },
     {
@@ -18805,7 +18805,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1410750,
       "fc2": 1342349,
-      "actual": 1260924,
+      "actual": 1387016,
       "comments": ""
     },
     {
@@ -18816,7 +18816,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 940500,
       "fc2": 905376,
-      "actual": 850478,
+      "actual": 935526,
       "comments": ""
     },
     {
@@ -18827,7 +18827,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1881000,
       "fc2": 1820630,
-      "actual": 1708945,
+      "actual": 4785046,
       "comments": ""
     },
     {
@@ -18838,7 +18838,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1881000,
       "fc2": 1824222,
-      "actual": 1719051,
+      "actual": 2406671,
       "comments": ""
     },
     {
@@ -18849,7 +18849,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 940500,
       "fc2": 897459,
-      "actual": 834812,
+      "actual": 918293,
       "comments": ""
     },
     {
@@ -18860,7 +18860,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 2351250,
       "fc2": 2259039,
-      "actual": 2160776,
+      "actual": 2376854,
       "comments": ""
     },
     {
@@ -18871,7 +18871,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 2778750,
       "fc2": 2740933,
-      "actual": 2605777,
+      "actual": 2866355,
       "comments": ""
     },
     {
@@ -18882,7 +18882,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 2778750,
       "fc2": 2709930,
-      "actual": 2648899,
+      "actual": 2913789,
       "comments": ""
     },
     {
@@ -18893,7 +18893,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1389375,
       "fc2": 1352946,
-      "actual": 1292318,
+      "actual": 1421550,
       "comments": ""
     },
     {
@@ -18904,7 +18904,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 19451250,
       "fc2": 19185469,
-      "actual": 18570233,
+      "actual": 20427256,
       "comments": ""
     },
     {
@@ -18915,7 +18915,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1389375,
       "fc2": 1373217,
-      "actual": 1309535,
+      "actual": 1440489,
       "comments": ""
     },
     {
@@ -18926,7 +18926,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 829440,
       "fc2": 772378,
-      "actual": 827616,
+      "actual": 868997,
       "comments": ""
     },
     {
@@ -18937,7 +18937,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 829440,
       "fc2": 787812,
-      "actual": 727976,
+      "actual": 764375,
       "comments": ""
     },
     {
@@ -18948,7 +18948,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 552960,
       "fc2": 530941,
-      "actual": 562634,
+      "actual": 590766,
       "comments": ""
     },
     {
@@ -18959,7 +18959,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 552960,
       "fc2": 516782,
-      "actual": 486994,
+      "actual": 511344,
       "comments": ""
     },
     {
@@ -18970,7 +18970,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1140480,
       "fc2": 1097290,
-      "actual": 1051997,
+      "actual": 2314393,
       "comments": ""
     },
     {
@@ -18981,7 +18981,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 760320,
       "fc2": 741793,
-      "actual": 695273,
+      "actual": 730037,
       "comments": ""
     },
     {
@@ -18992,7 +18992,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1520640,
       "fc2": 1468064,
-      "actual": 1412807,
+      "actual": 1483447,
       "comments": ""
     },
     {
@@ -19003,7 +19003,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1520640,
       "fc2": 1455894,
-      "actual": 1366146,
+      "actual": 2254141,
       "comments": ""
     },
     {
@@ -19014,7 +19014,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 760320,
       "fc2": 723309,
-      "actual": 673729,
+      "actual": 707415,
       "comments": ""
     },
     {
@@ -19025,7 +19025,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 1900800,
       "fc2": 1833879,
-      "actual": 1777361,
+      "actual": 1866229,
       "comments": ""
     },
     {
@@ -19036,7 +19036,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 2246400,
       "fc2": 2218858,
-      "actual": 2150131,
+      "actual": 2257638,
       "comments": ""
     },
     {
@@ -19047,7 +19047,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 2246400,
       "fc2": 2223725,
-      "actual": 2134247,
+      "actual": 2240959,
       "comments": ""
     },
     {
@@ -19058,7 +19058,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1123200,
       "fc2": 1105380,
-      "actual": 1083270,
+      "actual": 1137434,
       "comments": ""
     },
     {
@@ -19069,7 +19069,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 15724799,
       "fc2": 15424684,
-      "actual": 14936625,
+      "actual": 15683456,
       "comments": ""
     },
     {
@@ -19080,7 +19080,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1123200,
       "fc2": 1093376,
-      "actual": 1065040,
+      "actual": 1118292,
       "comments": ""
     },
     {
@@ -19091,7 +19091,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 1166400,
       "fc2": 1058490,
-      "actual": 1125893,
+      "actual": 1182188,
       "comments": ""
     },
     {
@@ -19102,7 +19102,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 1166400,
       "fc2": 1067125,
-      "actual": 1110586,
+      "actual": 1166115,
       "comments": ""
     },
     {
@@ -19113,7 +19113,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 777600,
       "fc2": 753573,
-      "actual": 695588,
+      "actual": 730367,
       "comments": ""
     },
     {
@@ -19124,7 +19124,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 777600,
       "fc2": 723551,
-      "actual": 652733,
+      "actual": 685370,
       "comments": ""
     },
     {
@@ -19135,7 +19135,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1603800,
       "fc2": 1531668,
-      "actual": 1434956,
+      "actual": 3156903,
       "comments": ""
     },
     {
@@ -19146,7 +19146,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 1069200,
       "fc2": 1047485,
-      "actual": 996903,
+      "actual": 1046748,
       "comments": ""
     },
     {
@@ -19157,7 +19157,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 2138400,
       "fc2": 2056961,
-      "actual": 1932054,
+      "actual": 2028657,
       "comments": ""
     },
     {
@@ -19168,7 +19168,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 2138400,
       "fc2": 2095206,
-      "actual": 1973848,
+      "actual": 3256849,
       "comments": ""
     },
     {
@@ -19179,7 +19179,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 1069200,
       "fc2": 1023567,
-      "actual": 960829,
+      "actual": 1008870,
       "comments": ""
     },
     {
@@ -19190,7 +19190,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 2673000,
       "fc2": 2586993,
-      "actual": 2504743,
+      "actual": 2629980,
       "comments": ""
     },
     {
@@ -19201,7 +19201,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 3159000,
       "fc2": 3081949,
-      "actual": 2978843,
+      "actual": 3127785,
       "comments": ""
     },
     {
@@ -19212,7 +19212,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 3159000,
       "fc2": 3100453,
-      "actual": 2972096,
+      "actual": 3120701,
       "comments": ""
     },
     {
@@ -19223,7 +19223,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1579500,
       "fc2": 1562174,
-      "actual": 1525799,
+      "actual": 1602089,
       "comments": ""
     },
     {
@@ -19234,7 +19234,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 22113000,
       "fc2": 21578982,
-      "actual": 20881032,
+      "actual": 21925084,
       "comments": ""
     },
     {
@@ -19245,7 +19245,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1579500,
       "fc2": 1537206,
-      "actual": 1484618,
+      "actual": 1558849,
       "comments": ""
     },
     {
@@ -19256,7 +19256,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 570240,
       "fc2": 567008,
-      "actual": 600684,
+      "actual": 630718,
       "comments": ""
     },
     {
@@ -19267,7 +19267,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 570240,
       "fc2": 516541,
-      "actual": 506667,
+      "actual": 532000,
       "comments": ""
     },
     {
@@ -19278,7 +19278,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 380160,
       "fc2": 357388,
-      "actual": 343423,
+      "actual": 360594,
       "comments": ""
     },
     {
@@ -19289,7 +19289,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 380160,
       "fc2": 349569,
-      "actual": 357529,
+      "actual": 375405,
       "comments": ""
     },
     {
@@ -19300,7 +19300,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 784080,
       "fc2": 764613,
-      "actual": 729503,
+      "actual": 1604907,
       "comments": ""
     },
     {
@@ -19311,7 +19311,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 522720,
       "fc2": 506742,
-      "actual": 486469,
+      "actual": 510792,
       "comments": ""
     },
     {
@@ -19322,7 +19322,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1045440,
       "fc2": 1014724,
-      "actual": 979687,
+      "actual": 1028671,
       "comments": ""
     },
     {
@@ -19333,7 +19333,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1045440,
       "fc2": 1005603,
-      "actual": 973605,
+      "actual": 1606448,
       "comments": ""
     },
     {
@@ -19344,7 +19344,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 522720,
       "fc2": 509301,
-      "actual": 490955,
+      "actual": 515503,
       "comments": ""
     },
     {
@@ -19355,7 +19355,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 1306800,
       "fc2": 1249683,
-      "actual": 1162823,
+      "actual": 1220964,
       "comments": ""
     },
     {
@@ -19366,7 +19366,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 1544400,
       "fc2": 1520868,
-      "actual": 1461357,
+      "actual": 1534425,
       "comments": ""
     },
     {
@@ -19377,7 +19377,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 1544400,
       "fc2": 1506680,
-      "actual": 1470533,
+      "actual": 1544060,
       "comments": ""
     },
     {
@@ -19388,7 +19388,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 772200,
       "fc2": 749605,
-      "actual": 716918,
+      "actual": 752764,
       "comments": ""
     },
     {
@@ -19399,7 +19399,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 10810800,
       "fc2": 10683397,
-      "actual": 10201193,
+      "actual": 10711253,
       "comments": ""
     },
     {
@@ -19410,7 +19410,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 772200,
       "fc2": 751711,
-      "actual": 728686,
+      "actual": 765120,
       "comments": ""
     },
     {
@@ -19421,7 +19421,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 777600,
       "fc2": 764709,
-      "actual": 831363,
+      "actual": 872931,
       "comments": ""
     },
     {
@@ -19432,7 +19432,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 777600,
       "fc2": 774685,
-      "actual": 699664,
+      "actual": 734647,
       "comments": ""
     },
     {
@@ -19443,7 +19443,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 518400,
       "fc2": 479431,
-      "actual": 470297,
+      "actual": 493812,
       "comments": ""
     },
     {
@@ -19454,7 +19454,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 518400,
       "fc2": 509902,
-      "actual": 520845,
+      "actual": 546887,
       "comments": ""
     },
     {
@@ -19465,7 +19465,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1069200,
       "fc2": 1040907,
-      "actual": 994240,
+      "actual": 2187328,
       "comments": ""
     },
     {
@@ -19476,7 +19476,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 712800,
       "fc2": 684243,
-      "actual": 646888,
+      "actual": 679232,
       "comments": ""
     },
     {
@@ -19487,7 +19487,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1425600,
       "fc2": 1386994,
-      "actual": 1328841,
+      "actual": 1395283,
       "comments": ""
     },
     {
@@ -19498,7 +19498,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1425600,
       "fc2": 1383583,
-      "actual": 1294432,
+      "actual": 2135813,
       "comments": ""
     },
     {
@@ -19509,7 +19509,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 712800,
       "fc2": 677531,
-      "actual": 642785,
+      "actual": 674924,
       "comments": ""
     },
     {
@@ -19520,7 +19520,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 1782000,
       "fc2": 1732746,
-      "actual": 1675009,
+      "actual": 1758759,
       "comments": ""
     },
     {
@@ -19531,7 +19531,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 2106000,
       "fc2": 2059823,
-      "actual": 1990522,
+      "actual": 2090048,
       "comments": ""
     },
     {
@@ -19542,7 +19542,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 2106000,
       "fc2": 2044453,
-      "actual": 1970311,
+      "actual": 2068827,
       "comments": ""
     },
     {
@@ -19553,7 +19553,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1053000,
       "fc2": 1038960,
-      "actual": 1011546,
+      "actual": 1062123,
       "comments": ""
     },
     {
@@ -19564,7 +19564,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 14742000,
       "fc2": 14550544,
-      "actual": 13835912,
+      "actual": 14527708,
       "comments": ""
     },
     {
@@ -19575,7 +19575,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1053000,
       "fc2": 1038864,
-      "actual": 1005569,
+      "actual": 1055847,
       "comments": ""
     },
     {
@@ -19586,7 +19586,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 984960,
       "fc2": 943996,
-      "actual": 947480,
+      "actual": 994854,
       "comments": ""
     },
     {
@@ -19597,7 +19597,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 984960,
       "fc2": 899339,
-      "actual": 905138,
+      "actual": 950395,
       "comments": ""
     },
     {
@@ -19608,7 +19608,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 656640,
       "fc2": 626823,
-      "actual": 585960,
+      "actual": 615258,
       "comments": ""
     },
     {
@@ -19619,7 +19619,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 656640,
       "fc2": 593228,
-      "actual": 637598,
+      "actual": 669478,
       "comments": ""
     },
     {
@@ -19630,7 +19630,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1354320,
       "fc2": 1309494,
-      "actual": 1232570,
+      "actual": 2711654,
       "comments": ""
     },
     {
@@ -19641,7 +19641,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 902880,
       "fc2": 874978,
-      "actual": 831683,
+      "actual": 873267,
       "comments": ""
     },
     {
@@ -19652,7 +19652,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1805760,
       "fc2": 1738114,
-      "actual": 1648463,
+      "actual": 1730886,
       "comments": ""
     },
     {
@@ -19663,7 +19663,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1805760,
       "fc2": 1768271,
-      "actual": 1681530,
+      "actual": 2774525,
       "comments": ""
     },
     {
@@ -19674,7 +19674,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 902880,
       "fc2": 879645,
-      "actual": 849781,
+      "actual": 892270,
       "comments": ""
     },
     {
@@ -19685,7 +19685,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 2257200,
       "fc2": 2187489,
-      "actual": 2054072,
+      "actual": 2156776,
       "comments": ""
     },
     {
@@ -19696,7 +19696,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 2667600,
       "fc2": 2619721,
-      "actual": 2499092,
+      "actual": 2624047,
       "comments": ""
     },
     {
@@ -19707,7 +19707,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 2667600,
       "fc2": 2633250,
-      "actual": 2506035,
+      "actual": 2631337,
       "comments": ""
     },
     {
@@ -19718,7 +19718,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1333800,
       "fc2": 1304318,
-      "actual": 1273334,
+      "actual": 1337001,
       "comments": ""
     },
     {
@@ -19729,7 +19729,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 18673200,
       "fc2": 18264578,
-      "actual": 17885859,
+      "actual": 18780152,
       "comments": ""
     },
     {
@@ -19740,7 +19740,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1333800,
       "fc2": 1300146,
-      "actual": 1253496,
+      "actual": 1316171,
       "comments": ""
     },
     {
@@ -20576,7 +20576,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 921600,
       "fc2": 861637,
-      "actual": 785940,
+      "actual": 864534,
       "comments": ""
     },
     {
@@ -20587,7 +20587,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 921600,
       "fc2": 874278,
-      "actual": 859028,
+      "actual": 944931,
       "comments": ""
     },
     {
@@ -20598,7 +20598,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 614400,
       "fc2": 574510,
-      "actual": 540569,
+      "actual": 594626,
       "comments": ""
     },
     {
@@ -20609,7 +20609,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 614400,
       "fc2": 556099,
-      "actual": 571886,
+      "actual": 629075,
       "comments": ""
     },
     {
@@ -20620,7 +20620,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1267200,
       "fc2": 1219166,
-      "actual": 1180060,
+      "actual": 1298066,
       "comments": ""
     },
     {
@@ -20631,7 +20631,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 844800,
       "fc2": 804607,
-      "actual": 766260,
+      "actual": 842886,
       "comments": ""
     },
     {
@@ -20642,7 +20642,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1689600,
       "fc2": 1642734,
-      "actual": 1590511,
+      "actual": 1749562,
       "comments": ""
     },
     {
@@ -20653,7 +20653,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1689600,
       "fc2": 1636894,
-      "actual": 1566190,
+      "actual": 1722809,
       "comments": ""
     },
     {
@@ -20664,7 +20664,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 844800,
       "fc2": 811538,
-      "actual": 758964,
+      "actual": 834860,
       "comments": ""
     },
     {
@@ -20675,7 +20675,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 2112000,
       "fc2": 2029995,
-      "actual": 1932312,
+      "actual": 2125543,
       "comments": ""
     },
     {
@@ -20686,7 +20686,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 2496000,
       "fc2": 2452113,
-      "actual": 2339840,
+      "actual": 2573824,
       "comments": ""
     },
     {
@@ -20697,7 +20697,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 2496000,
       "fc2": 2427014,
-      "actual": 2346195,
+      "actual": 2580815,
       "comments": ""
     },
     {
@@ -20708,7 +20708,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1248000,
       "fc2": 1219996,
-      "actual": 1190072,
+      "actual": 2856173,
       "comments": ""
     },
     {
@@ -20719,7 +20719,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 17472000,
       "fc2": 17021878,
-      "actual": 16232675,
+      "actual": 25160646,
       "comments": ""
     },
     {
@@ -20730,7 +20730,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1248000,
       "fc2": 1230052,
-      "actual": 1185385,
+      "actual": 2192962,
       "comments": ""
     },
     {
@@ -20741,7 +20741,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 1296000,
       "fc2": 1260915,
-      "actual": 1306353,
+      "actual": 1436988,
       "comments": ""
     },
     {
@@ -20752,7 +20752,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 1296000,
       "fc2": 1196937,
-      "actual": 1287327,
+      "actual": 1416060,
       "comments": ""
     },
     {
@@ -20763,7 +20763,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 864000,
       "fc2": 806895,
-      "actual": 799458,
+      "actual": 879404,
       "comments": ""
     },
     {
@@ -20774,7 +20774,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 864000,
       "fc2": 863430,
-      "actual": 906993,
+      "actual": 997692,
       "comments": ""
     },
     {
@@ -20785,7 +20785,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1782000,
       "fc2": 1739115,
-      "actual": 1685027,
+      "actual": 1853530,
       "comments": ""
     },
     {
@@ -20796,7 +20796,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 1188000,
       "fc2": 1157735,
-      "actual": 1089551,
+      "actual": 1198506,
       "comments": ""
     },
     {
@@ -20807,7 +20807,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 2376000,
       "fc2": 2284967,
-      "actual": 2128205,
+      "actual": 2341026,
       "comments": ""
     },
     {
@@ -20818,7 +20818,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 2376000,
       "fc2": 2303914,
-      "actual": 2197499,
+      "actual": 2417249,
       "comments": ""
     },
     {
@@ -20829,7 +20829,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 1188000,
       "fc2": 1129971,
-      "actual": 1085948,
+      "actual": 1194543,
       "comments": ""
     },
     {
@@ -20840,7 +20840,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 2970000,
       "fc2": 2889047,
-      "actual": 2716467,
+      "actual": 2988114,
       "comments": ""
     },
     {
@@ -20851,7 +20851,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 3510000,
       "fc2": 3455733,
-      "actual": 3363946,
+      "actual": 3700341,
       "comments": ""
     },
     {
@@ -20862,7 +20862,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 3510000,
       "fc2": 3449145,
-      "actual": 3342942,
+      "actual": 3677236,
       "comments": ""
     },
     {
@@ -20873,7 +20873,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1755000,
       "fc2": 1726951,
-      "actual": 1691102,
+      "actual": 4058645,
       "comments": ""
     },
     {
@@ -20884,7 +20884,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 24570000,
       "fc2": 23865646,
-      "actual": 22697049,
+      "actual": 35180426,
       "comments": ""
     },
     {
@@ -20895,7 +20895,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1755000,
       "fc2": 1731463,
-      "actual": 1660319,
+      "actual": 3071590,
       "comments": ""
     },
     {
@@ -20906,7 +20906,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 633600,
       "fc2": 631100,
-      "actual": 619522,
+      "actual": 681474,
       "comments": ""
     },
     {
@@ -20917,7 +20917,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 633600,
       "fc2": 571919,
-      "actual": 525991,
+      "actual": 578590,
       "comments": ""
     },
     {
@@ -20928,7 +20928,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 422400,
       "fc2": 417861,
-      "actual": 425096,
+      "actual": 467606,
       "comments": ""
     },
     {
@@ -20939,7 +20939,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 422400,
       "fc2": 390448,
-      "actual": 392426,
+      "actual": 431669,
       "comments": ""
     },
     {
@@ -20950,7 +20950,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 871200,
       "fc2": 848785,
-      "actual": 793533,
+      "actual": 872886,
       "comments": ""
     },
     {
@@ -20961,7 +20961,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 580800,
       "fc2": 566894,
-      "actual": 545594,
+      "actual": 600153,
       "comments": ""
     },
     {
@@ -20972,7 +20972,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1161600,
       "fc2": 1119185,
-      "actual": 1057285,
+      "actual": 1163014,
       "comments": ""
     },
     {
@@ -20983,7 +20983,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1161600,
       "fc2": 1125093,
-      "actual": 1061948,
+      "actual": 1168143,
       "comments": ""
     },
     {
@@ -20994,7 +20994,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 580800,
       "fc2": 552952,
-      "actual": 515447,
+      "actual": 566992,
       "comments": ""
     },
     {
@@ -21005,7 +21005,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 1452000,
       "fc2": 1405245,
-      "actual": 1328598,
+      "actual": 1461458,
       "comments": ""
     },
     {
@@ -21016,7 +21016,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 1716000,
       "fc2": 1665971,
-      "actual": 1585002,
+      "actual": 1743502,
       "comments": ""
     },
     {
@@ -21027,7 +21027,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 1716000,
       "fc2": 1678387,
-      "actual": 1642250,
+      "actual": 1806475,
       "comments": ""
     },
     {
@@ -21038,7 +21038,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 858000,
       "fc2": 847191,
-      "actual": 824267,
+      "actual": 1978241,
       "comments": ""
     },
     {
@@ -21049,7 +21049,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 12012000,
       "fc2": 11721732,
-      "actual": 11320890,
+      "actual": 17547380,
       "comments": ""
     },
     {
@@ -21060,7 +21060,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 858000,
       "fc2": 846932,
-      "actual": 822772,
+      "actual": 1522128,
       "comments": ""
     },
     {
@@ -21071,7 +21071,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 864000,
       "fc2": 810346,
-      "actual": 740330,
+      "actual": 814363,
       "comments": ""
     },
     {
@@ -21082,7 +21082,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 864000,
       "fc2": 796831,
-      "actual": 718866,
+      "actual": 790753,
       "comments": ""
     },
     {
@@ -21093,7 +21093,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 576000,
       "fc2": 543473,
-      "actual": 559561,
+      "actual": 615517,
       "comments": ""
     },
     {
@@ -21104,7 +21104,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 576000,
       "fc2": 525229,
-      "actual": 524904,
+      "actual": 577394,
       "comments": ""
     },
     {
@@ -21115,7 +21115,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1188000,
       "fc2": 1131200,
-      "actual": 1076371,
+      "actual": 1184008,
       "comments": ""
     },
     {
@@ -21126,7 +21126,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 792000,
       "fc2": 771750,
-      "actual": 722640,
+      "actual": 794904,
       "comments": ""
     },
     {
@@ -21137,7 +21137,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 1584000,
       "fc2": 1551539,
-      "actual": 1486809,
+      "actual": 1635490,
       "comments": ""
     },
     {
@@ -21148,7 +21148,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 1584000,
       "fc2": 1545196,
-      "actual": 1478011,
+      "actual": 1625812,
       "comments": ""
     },
     {
@@ -21159,7 +21159,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 792000,
       "fc2": 762619,
-      "actual": 739345,
+      "actual": 813280,
       "comments": ""
     },
     {
@@ -21170,7 +21170,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 1980000,
       "fc2": 1899935,
-      "actual": 1786235,
+      "actual": 1964859,
       "comments": ""
     },
     {
@@ -21181,7 +21181,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 2340000,
       "fc2": 2270419,
-      "actual": 2209415,
+      "actual": 2430357,
       "comments": ""
     },
     {
@@ -21192,7 +21192,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 2340000,
       "fc2": 2290941,
-      "actual": 2206569,
+      "actual": 2427226,
       "comments": ""
     },
     {
@@ -21203,7 +21203,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1170000,
       "fc2": 1153250,
-      "actual": 1102666,
+      "actual": 2646398,
       "comments": ""
     },
     {
@@ -21214,7 +21214,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 16379999,
       "fc2": 15965484,
-      "actual": 15642867,
+      "actual": 24246444,
       "comments": ""
     },
     {
@@ -21225,7 +21225,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1170000,
       "fc2": 1151044,
-      "actual": 1123266,
+      "actual": 2078042,
       "comments": ""
     },
     {
@@ -21236,7 +21236,7 @@ export const sampleData = {
       "subCategory": "Equipment",
       "fc1": 1094400,
       "fc2": 1003487,
-      "actual": 1021251,
+      "actual": 1123376,
       "comments": ""
     },
     {
@@ -21247,7 +21247,7 @@ export const sampleData = {
       "subCategory": "Laptops",
       "fc1": 1094400,
       "fc2": 1069692,
-      "actual": 1115423,
+      "actual": 1226965,
       "comments": ""
     },
     {
@@ -21258,7 +21258,7 @@ export const sampleData = {
       "subCategory": "Software",
       "fc1": 729600,
       "fc2": 705844,
-      "actual": 684658,
+      "actual": 753124,
       "comments": ""
     },
     {
@@ -21269,7 +21269,7 @@ export const sampleData = {
       "subCategory": "Vehicles",
       "fc1": 729600,
       "fc2": 719151,
-      "actual": 694729,
+      "actual": 764202,
       "comments": ""
     },
     {
@@ -21280,7 +21280,7 @@ export const sampleData = {
       "subCategory": "Consulting",
       "fc1": 1504800,
       "fc2": 1465961,
-      "actual": 1408173,
+      "actual": 1548990,
       "comments": ""
     },
     {
@@ -21291,7 +21291,7 @@ export const sampleData = {
       "subCategory": "Depreciation",
       "fc1": 1003200,
       "fc2": 967304,
-      "actual": 918065,
+      "actual": 1009872,
       "comments": ""
     },
     {
@@ -21302,7 +21302,7 @@ export const sampleData = {
       "subCategory": "Facility",
       "fc1": 2006400,
       "fc2": 1925274,
-      "actual": 1804985,
+      "actual": 1985484,
       "comments": ""
     },
     {
@@ -21313,7 +21313,7 @@ export const sampleData = {
       "subCategory": "IT",
       "fc1": 2006400,
       "fc2": 1908001,
-      "actual": 1848173,
+      "actual": 2032990,
       "comments": ""
     },
     {
@@ -21324,7 +21324,7 @@ export const sampleData = {
       "subCategory": "Others",
       "fc1": 1003200,
       "fc2": 972862,
-      "actual": 930152,
+      "actual": 1023167,
       "comments": ""
     },
     {
@@ -21335,7 +21335,7 @@ export const sampleData = {
       "subCategory": "Travel",
       "fc1": 2508000,
       "fc2": 2383824,
-      "actual": 2257542,
+      "actual": 2483296,
       "comments": ""
     },
     {
@@ -21346,7 +21346,7 @@ export const sampleData = {
       "subCategory": "Benefits",
       "fc1": 2964000,
       "fc2": 2915530,
-      "actual": 2836159,
+      "actual": 3119775,
       "comments": ""
     },
     {
@@ -21357,7 +21357,7 @@ export const sampleData = {
       "subCategory": "Bonus",
       "fc1": 2964000,
       "fc2": 2907359,
-      "actual": 2844254,
+      "actual": 3128679,
       "comments": ""
     },
     {
@@ -21368,7 +21368,7 @@ export const sampleData = {
       "subCategory": "Recruitment",
       "fc1": 1482000,
       "fc2": 1460935,
-      "actual": 1428924,
+      "actual": 3429418,
       "comments": ""
     },
     {
@@ -21379,7 +21379,7 @@ export const sampleData = {
       "subCategory": "Salaries",
       "fc1": 20748000,
       "fc2": 20283768,
-      "actual": 19328094,
+      "actual": 29958546,
       "comments": ""
     },
     {
@@ -21390,7 +21390,7 @@ export const sampleData = {
       "subCategory": "Training",
       "fc1": 1482000,
       "fc2": 1464744,
-      "actual": 1410999,
+      "actual": 2610348,
       "comments": ""
     },
     {
