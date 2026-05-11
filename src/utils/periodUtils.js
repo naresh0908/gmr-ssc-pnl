@@ -102,9 +102,12 @@ export function derivePeriodByDept(rawRevenue, rawCost, departments, year, month
   }).sort((a, b) => b.ebit - a.ebit)
 }
 
-// Compute the available months for a given year from rawRevenue
+// Compute the available months for a given year from rawRevenue.
+// We treat months with positive actual service fees as available so panels stop at the last actual month.
 export function getAvailMonths(rawRevenue, year) {
-  return MONTHS.filter((m) => rawRevenue.some((r) => r.year === year && r.month === m))
+  return MONTHS.filter((m) =>
+    rawRevenue.some((r) => r.year === year && r.month === m && (r.actServiceFees || 0) > 0)
+  )
 }
 
 // Returns the last month that has non-zero actuals in the given year

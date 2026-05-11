@@ -11,6 +11,10 @@ export default function PeriodBar() {
   } = useDashStore()
 
   const availMonths = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
+  const monthHasActual = useMemo(
+    () => Object.fromEntries(MONTHS.map((m) => [m, availMonths.includes(m)])),
+    [availMonths]
+  )
 
   const availQuarters = useMemo(
     () => Object.keys(QUARTERS).filter((q) => QUARTERS[q].some((m) => availMonths.includes(m))),
@@ -36,26 +40,32 @@ export default function PeriodBar() {
       <div className="w-px h-4 bg-[var(--line)] mx-0.5 shrink-0" />
 
       {/* Quarter buttons */}
-      {availQuarters.map((q) => (
+      {Object.keys(QUARTERS).map((q) => {
+        const hasActuals = availQuarters.includes(q)
+        return (
         <button
           key={q}
-          onClick={() => setSelectedQ(q)}
-          className={pill(periodMode === 'quarter' && selectedQ === q)}
+          onClick={() => hasActuals && setSelectedQ(q)}
+          disabled={!hasActuals}
+          className={`${pill(periodMode === 'quarter' && selectedQ === q)} ${!hasActuals ? 'opacity-45 cursor-not-allowed hover:bg-transparent hover:text-[var(--ink-soft)]' : ''}`}
+          title={hasActuals ? q : `${q} - forecast only`}
         >
           {q}
         </button>
-      ))}
+        )
+      })}
 
       <div className="w-px h-4 bg-[var(--line)] mx-0.5 shrink-0" />
 
       {/* Month buttons */}
-      {availMonths.map((m) => {
-        const hasActuals = rawRevenue.some((r) => r.year === year && r.month === m && r.actServiceFees > 0)
+      {MONTHS.map((m) => {
+        const hasActuals = monthHasActual[m]
         return (
           <button
             key={m}
-            onClick={() => setSelectedPeriodMonth(m)}
-            className={`${pill(periodMode === 'month' && selectedPeriodMonth === m)} ${!hasActuals ? 'opacity-50' : ''}`}
+            onClick={() => hasActuals && setSelectedPeriodMonth(m)}
+            disabled={!hasActuals}
+            className={`${pill(periodMode === 'month' && selectedPeriodMonth === m)} ${!hasActuals ? 'opacity-45 cursor-not-allowed hover:bg-transparent hover:text-[var(--ink-soft)]' : ''}`}
             title={hasActuals ? m : `${m} - forecast only`}
           >
             {m}
