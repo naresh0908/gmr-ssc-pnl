@@ -2,19 +2,12 @@
  * Vercel API Endpoint: Microsoft Graph Webhook Handler
  * 
  * Receives real-time notifications from SharePoint when the tracked file changes.
- * 
- * Usage:
- *   POST /api/webhooks/sharepoint
- * 
- * Setup:
- *   node scripts/setup-webhook.mjs
  */
 
 import { spawn } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 
-// Store last sync time to avoid duplicate syncs
 const lastSyncTimeFile = path.join(process.cwd(), '.webhook-last-sync.json')
 
 function recordSync() {
@@ -77,36 +70,45 @@ async function runSync() {
 export default async function handler(req, res) {
   console.log(`[Webhook] ${req.method} request received`)
 
-  // Microsoft Graph sends a POST with validationToken during subscription setup
   if (req.method === 'POST') {
-    const { value, validationToken } = req.body
+    const body = req.body || {}
+    
+    // Check for validation token (Microsoft Graph subscription validation)
+    // Can come as query param, body property, or in value array
+    let validationToken = body.validationToken
+    
+    if (!validationToken && body.value && Array.isArray(body.value)) {
+      // Check if it's in the first item (shouldn't be for validation, but check anyway)
+      validationToken = body.value[0]?.validationToken
+    }
 
-    // Handle subscription validation (initial handshake)
+    // Handle subscription validation
     if (validationToken) {
-      console.log('[Webhook] Validating subscription...')
-      // Echo back the validation token as plain text
-      return res.status(200).set('Content-Type', 'text/plain').send(validationToken)
+      console.log('[Webhook] 🔐 Validating subscription with token:', validationToken.substring(0, 20) + '...')
+      // Echo back the validation token as plain text (REQUIRED by Microsoft Graph)
+      res.setHeader('Content-Type', 'text/plain')
+      return res.status(200).send(validationToken)
     }
 
     // Handle file change notifications
-    if (Array.isArray(value) && value.length > 0) {
-      const notification = value[0]
+    if (body.value && Array.isArray(body.value)) {
+      for (const notification of body.value) {
+        if (notification.resourceData) {
+          console.log('[Webhook] 📢 File change detected!')
+          console.log(`        Resource: ${notification.resource}`)
+          console.log(`        Type: ${notification.changeType}`)
 
-      if (notification.resourceData) {
-        console.log('[Webhook] 📢 File change detected!')
-        console.log(`        Resource: ${notification.resource}`)
-        console.log(`        Type: ${notification.changeType}`)
+          // Run sync asynchronously (don't wait for it)
+          runSync().catch(err => console.error('Sync error:', err))
 
-        // Run sync asynchronously (don't wait for it)
-        runSync().catch(err => console.error('Sync error:', err))
-
-        // Return 202 Accepted immediately
-        return res.status(202).json({ status: 'accepted' })
+          // Return 202 Accepted immediately
+          return res.status(202).json({ status: 'accepted' })
+        }
       }
     }
 
-    // Return success for other POST requests
-    return res.status(202).json({ status: 'notification received' })
+    // Return 202 for any other POST
+    return res.status(202).json({ status: 'received' })
   }
 
   // GET for health check
