@@ -73,24 +73,24 @@ export default function KPISection() {
   ]
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 mt-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3.5 mt-3 md:mt-4">
       {cards.map((c, i) => (
         <motion.div
           key={c.label}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.05 * i }}
-          className="bg-[var(--card)] border border-[var(--line)] rounded-[14px] p-4 px-5"
+          className="bg-[var(--card)] border border-[var(--line)] rounded-[12px] md:rounded-[14px] p-3 md:p-4 md:px-5"
         >
-          <div className="text-[11px] tracking-[.14em] uppercase text-[var(--muted)] font-semibold">{c.label}</div>
-          <div className="font-display font-medium text-[30px] tracking-[-.5px] mt-2">
+          <div className="text-[9px] md:text-[11px] tracking-[.14em] uppercase text-[var(--muted)] font-semibold">{c.label}</div>
+          <div className="font-display font-medium text-[24px] md:text-[30px] tracking-[-.5px] mt-1.5 md:mt-2">
             {c.value != null ? c.value.toFixed(1) : '-'}
-            <span className="font-mono text-[13px] text-[var(--muted)] font-medium ml-1">{c.value != null ? c.unit : ''}</span>
+            <span className="font-mono text-[10px] md:text-[13px] text-[var(--muted)] font-medium ml-1">{c.value != null ? c.unit : ''}</span>
           </div>
-          <div className={`text-[12px] mt-1.5 font-mono font-medium ${c.up == null ? 'text-[var(--muted)]' : c.up ? 'text-brand-green' : 'text-brand-red'}`}>
+          <div className={`text-[10px] md:text-[12px] mt-1 md:mt-1.5 font-mono font-medium ${c.up == null ? 'text-[var(--muted)]' : c.up ? 'text-brand-green' : 'text-brand-red'}`}>
             {c.delta}
           </div>
-          <div className="text-[11.5px] text-[var(--muted)] mt-1">{c.sub}</div>
+          <div className="text-[9px] md:text-[11.5px] text-[var(--muted)] mt-0.5 md:mt-1">{c.sub}</div>
         </motion.div>
       ))}
     </div>

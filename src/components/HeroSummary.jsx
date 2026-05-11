@@ -26,17 +26,17 @@ export default function HeroSummary() {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: 'easeOut' }}
-      className="mt-7 grid lg:grid-cols-[1.4fr_1fr] grid-cols-1 gap-6"
+      className="mt-4 md:mt-7 grid lg:grid-cols-[1.4fr_1fr] grid-cols-1 gap-3 md:gap-6"
     >
-      <div className="relative overflow-hidden rounded-[18px] border border-[var(--line)] bg-[var(--card)] p-7">
+      <div className="relative overflow-hidden rounded-[14px] md:rounded-[18px] border border-[var(--line)] bg-[var(--card)] p-4 md:p-7">
         <div
           className="absolute inset-0 pointer-events-none opacity-70"
           style={{ background: 'radial-gradient(400px 200px at 100% 0%, rgba(31,111,235,.08), transparent 70%)' }}
         />
-        <div className="text-[11px] tracking-[.18em] uppercase text-[var(--muted)] font-semibold relative">
+        <div className="text-[9px] md:text-[11px] tracking-[.18em] uppercase text-[var(--muted)] font-semibold relative">
           {periodLabel} · Executive Summary
         </div>
-        <h2 className="font-display font-normal text-[42px] leading-[1.05] tracking-[-1px] mt-2.5 mb-1.5 relative">
+        <h2 className="font-display font-normal text-[24px] md:text-[42px] leading-[1.05] tracking-[-1px] mt-2 md:mt-2.5 mb-1 md:mb-1.5 relative">
           {yoy != null ? (
             <>Revenue {yoy >= 0 ? 'up' : 'down'}{' '}
               <em className="not-italic text-brand-blue font-medium italic">{Math.abs(yoy).toFixed(1)}%</em>,<br /></>
@@ -47,31 +47,31 @@ export default function HeroSummary() {
           execution {Number(revGap) < 0 ? 'trailing' : 'beating'} plan by{' '}
           <em className="not-italic text-brand-blue font-medium italic">₹{Math.abs(Number(revGap))} Cr</em>.
         </h2>
-        <p className="m-0 text-[14.5px] text-[var(--ink-soft)] max-w-[60ch] leading-[1.55] relative">
+        <p className="m-0 text-[12px] md:text-[14.5px] text-[var(--ink-soft)] max-w-[60ch] leading-[1.55] relative">
           {periodMode === 'year'
             ? 'Actuals are running ' + (Number(revGap) < 0 ? 'below' : 'above') + ' FC1 across service lines, primarily driven by hiring timing and CAPEX deferrals. FC2 was already revised - actuals are tracking close to FC2.'
             : `Showing ${periodLabel} actuals. Net profit ₹${pk.netProfit.toFixed(1)} Cr vs FC1 ₹${(pk.netProfitFc1 ?? 0).toFixed(1)} Cr / FC2 ₹${(pk.netProfitFc2 ?? 0).toFixed(1)} Cr.`}
         </p>
-        <div className="mt-5 flex flex-wrap gap-5 text-[12px] text-[var(--muted)] relative">
+        <div className="mt-3 md:mt-5 flex flex-wrap gap-3 md:gap-5 text-[10px] md:text-[12px] text-[var(--muted)] relative">
           <span>Reporting period · <b className="text-[var(--ink)] font-semibold">{periodLabel}</b></span>
           <span>Departments · <b className="text-[var(--ink)] font-semibold">{derived.departments.length}</b></span>
           <span>Cost lines · <b className="text-[var(--ink)] font-semibold">15</b></span>
         </div>
       </div>
 
-      <div className="rounded-[18px] p-6 text-[#F6F4EE] flex flex-col justify-between"
+      <div className="rounded-[14px] md:rounded-[18px] p-4 md:p-6 text-[#F6F4EE] flex flex-col justify-between"
            style={{ background: 'linear-gradient(135deg,#0E1116 0%,#1A2030 100%)' }}>
-        <div className="text-[11px] tracking-[.18em] uppercase text-[#9AA4B5] font-semibold">
+        <div className="text-[9px] md:text-[11px] tracking-[.18em] uppercase text-[#9AA4B5] font-semibold">
           Executive Verdict · {periodLabel}
         </div>
-        <div className="font-display text-[24px] leading-[1.25] font-normal my-3">
+        <div className="font-display text-[16px] md:text-[24px] leading-[1.25] font-normal my-2 md:my-3">
           {Number(revGap) < 0 && (yoy == null || yoy >= 0)
             ? <>Plan was ambitious.{' '}<em className="not-italic italic text-[#7BB0FF]">Execution is steady but conservative.</em></>
             : Number(revGap) > 0
             ? <>Beating plan -{' '}<em className="not-italic italic text-[#7BB0FF]">lock in baseline upgrade for next year.</em></>
             : <>Period held flat -{' '}<em className="not-italic italic text-[#7BB0FF]">growth pipeline needs attention.</em></>}
         </div>
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex gap-2 md:gap-3 flex-wrap">
           <Pill label="Actual vs FC1" value={`₹${revGap} Cr`}    dir={Number(revGap)    < 0 ? 'down' : 'up'} />
           <Pill label="Actual vs FC2" value={`₹${revGapFc2} Cr`} dir={Number(revGapFc2) < 0 ? 'down' : 'up'} />
           <Pill
