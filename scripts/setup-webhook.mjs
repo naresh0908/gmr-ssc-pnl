@@ -54,17 +54,21 @@ async function getExistingSubscription(accessToken) {
   }
 }
 
-async function createSubscription(accessToken, itemId) {
+async function createSubscription(accessToken, siteId, itemId) {
   try {
+    // Microsoft Graph webhooks for SharePoint require subscribing to /drive/root
+    // (can't subscribe to individual items directly)
+    // We'll subscribe to drive root and filter on client side
     const payload = {
       changeType: 'updated',
       notificationUrl: notificationUrl,
-      resource: `/sites/${process.env.SHAREPOINT_SITE_ID || 'default'}/drive/items/${itemId}`,
+      resource: `/sites/${siteId}/drive/root`,
       expirationDateTime: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days
       clientState: 'sharepoint-file-monitor',
     }
 
-    console.log(`\n   Creating subscription for item: ${itemId}`)
+    console.log(`\n   Creating subscription to monitor drive for file changes`)
+    console.log(`   (Subscribing to drive root, will detect changes to target file)`)
     console.log(`   Payload:`, JSON.stringify(payload, null, 2))
 
     const response = await makeGraphRequest(
@@ -119,6 +123,16 @@ async function main() {
     
     const siteId = siteResponse.id
     console.log(`   ✓ Site ID: ${siteId}`)
+
+    // Get drive info
+    console.log(`\n   Getting drive information...`)
+    const driveResponse = await makeGraphRequest(
+      accessToken,
+      `/sites/${siteId}/drive`
+    )
+    
+    const driveId = driveResponse.id
+    console.log(`   ✓ Drive ID: ${driveId}`)
 
     // Navigate to folder and find file
     console.log(`\n   Navigating to: General/2026_May_HARTS_GMR_PNL_Dashboard...`)
@@ -186,7 +200,7 @@ async function main() {
       )
     } else {
       // Create new subscription
-      await createSubscription(accessToken, excelFile.id)
+      await createSubscription(accessToken, siteId, excelFile.id)
     }
 
     console.log(`\n✅ Webhook setup complete!`)
