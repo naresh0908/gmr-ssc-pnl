@@ -50,6 +50,21 @@ function readRows(workbook, sheetName) {
   return XLSX.utils.sheet_to_json(sheet, { defval: '' })
 }
 
+const COST_TYPE_MAP = {
+  'Employee Cost': 'PEX',
+  'Operating Expenses': 'OPEX',
+  'Depreciation / Amortisation': 'CAPEX',
+  'Allocated Overhead': 'OPEX',
+}
+
+function normalizeCostRows(rows) {
+  return rows.map((r) => {
+    const mapped = COST_TYPE_MAP[r.costType]
+    if (mapped) return { ...r, costType: mapped }
+    return r
+  })
+}
+
 async function syncFromLocal() {
   console.log('📂 Syncing from local workbook...')
   
@@ -59,7 +74,7 @@ async function syncFromLocal() {
 
   const workbook = XLSX.readFile(localWorkbookPath)
   const revenueRows = readRows(workbook, 'Revenue')
-  const costRows = readRows(workbook, 'Cost')
+  const costRows = normalizeCostRows(readRows(workbook, 'Cost'))
   const transactions = readRows(workbook, 'Transactions')
   const fte = readRows(workbook, 'FTE')
 
@@ -224,7 +239,7 @@ async function syncFromSharePoint() {
     console.log(`Found ${excelFiles.length} Excel file(s):`)
     excelFiles.forEach(f => console.log(`   - ${f.name}`))
 
-    const targetFileName = '2026_May_HARTS_GMR_SSC_Financial_Model_v2.xlsx'
+    const targetFileName = '2026_May_HARTS_GMR_SSC_Financial_Model_v3.xlsx'
     const excelFile = excelFiles.find(f => f.name === targetFileName) || excelFiles[0]
     if (excelFile.name !== targetFileName) {
       console.log(`⚠️  Target file "${targetFileName}" not found, falling back to: ${excelFile.name}`)
@@ -246,7 +261,7 @@ async function syncFromSharePoint() {
 
     // Read sheets
     const revenueRows = readRows(workbook, 'Revenue')
-    const costRows = readRows(workbook, 'Cost')
+    const costRows = normalizeCostRows(readRows(workbook, 'Cost'))
     const transactions = readRows(workbook, 'Transactions')
     const fte = readRows(workbook, 'FTE')
 

@@ -256,7 +256,7 @@ export default function DriverWaterfall() {
        We break PEX into department-level drivers to show an
        "FTE impact" bridge (Salary variance by department) */
     const depts = [...new Set(rawCost.filter(c => c.year === year && activeMonths.includes(c.month)).map(c => c.department))]
-    const salaryRows = rawCost.filter(c => c.year === year && activeMonths.includes(c.month) && c.costType === 'PEX' && c.subCategory === 'Salaries')
+    const salaryRows = rawCost.filter(c => c.year === year && activeMonths.includes(c.month) && c.costType === 'PEX' && c.subCategory === 'Salaries & Wages')
     const fteFcTotal = salaryRows.reduce((a, r) => a + r[fcKey], 0) / CR
     const fteActTotal = salaryRows.reduce((a, r) => a + r.actual, 0) / CR
 

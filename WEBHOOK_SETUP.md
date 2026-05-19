@@ -85,7 +85,7 @@ This script will:
 
    Connecting to: HARTSFellowship-2025...
    ✓ Site ID: xxxx
-   ✓ File found: 2026_May_HARTS_GMR_SSC_Financial_Model_v2.xlsx
+   ✓ File found: 2026_May_HARTS_GMR_SSC_Financial_Model_v3.xlsx
 
 ✅ Webhook setup complete!
 

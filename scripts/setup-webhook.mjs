@@ -169,7 +169,7 @@ async function main() {
     )
     
     const excelFile = (folderChildren.value || []).find(
-      (item) => item.name.includes('2026_May_HARTS_GMR_SSC_Financial_Model_v2.xlsx')
+      (item) => item.name.includes('2026_May_HARTS_GMR_SSC_Financial_Model_v3.xlsx')
     )
     
     if (!excelFile) {
