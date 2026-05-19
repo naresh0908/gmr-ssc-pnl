@@ -223,8 +223,12 @@ async function syncFromSharePoint() {
 
     console.log(`Found ${excelFiles.length} Excel file(s):`)
     excelFiles.forEach(f => console.log(`   - ${f.name}`))
-    
-    const excelFile = excelFiles[0]
+
+    const targetFileName = '2026_May_HARTS_GMR_SSC_Financial_Model_v2.xlsx'
+    const excelFile = excelFiles.find(f => f.name === targetFileName) || excelFiles[0]
+    if (excelFile.name !== targetFileName) {
+      console.log(`⚠️  Target file "${targetFileName}" not found, falling back to: ${excelFile.name}`)
+    }
     console.log(`📄 Using: ${excelFile.name}`)
 
     // Download and parse
