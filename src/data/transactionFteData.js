@@ -4718,6 +4718,8 @@ export const transactionFteData = {
       "fteCount": 9,
       "ratePerFte": 1000000,
       "revenue": 9000000
+      "ratePerFte": 1000000,
+      "revenue": 9000000
     },
     {
       "year": 2025,
