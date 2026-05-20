@@ -18,12 +18,42 @@ const txnFteCache = path.join(tmpDir, 'transactionFteData.json')
 const metadataCache = path.join(tmpDir, 'sync-metadata.json')
 
 /**
+ * Sanitize data for JSON serialization
+ * Removes problematic values like undefined, NaN, Infinity
+ */
+function sanitizeData(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeData(item))
+  }
+  if (obj !== null && typeof obj === 'object') {
+    const cleaned = {}
+    for (const [key, value] of Object.entries(obj)) {
+      cleaned[key] = sanitizeData(value)
+    }
+    return cleaned
+  }
+  // Handle primitive values
+  if (typeof obj === 'number') {
+    if (!isFinite(obj)) return null  // NaN, Infinity → null
+    return obj
+  }
+  if (typeof obj === 'string') {
+    // Ensure string doesn't have problematic characters
+    return String(obj).trim()
+  }
+  return obj
+}
+
+/**
  * Write data to temp cache
  */
 function writeCache(filePath, data) {
   try {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8')
-    console.log(`✅ Cached: ${path.basename(filePath)}`)
+    // Sanitize before writing
+    const sanitized = sanitizeData(data)
+    const json = JSON.stringify(sanitized, null, 2)
+    fs.writeFileSync(filePath, json, 'utf8')
+    console.log(`✅ Cached: ${path.basename(filePath)} (${json.length} bytes)`)
     return true
   } catch (e) {
     console.error(`❌ Error caching to ${filePath}:`, e.message)
@@ -92,6 +122,8 @@ export default async function handler(req, res) {
     }
 
     // Cache in /tmp (Vercel writable directory)
+    console.log('[Webhook] Sanitizing and caching data...')
+    
     const sampleOk = writeCache(
       sampleDataCache,
       {

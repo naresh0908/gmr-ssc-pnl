@@ -46,9 +46,12 @@ function readJsonCache(cachePath, fallbackPath, exportName) {
   if (fs.existsSync(cachePath)) {
     try {
       const content = fs.readFileSync(cachePath, 'utf8')
-      return JSON.parse(content)
+      const parsed = JSON.parse(content)
+      console.log(`✅ Loaded from cache: ${path.basename(cachePath)}`)
+      return parsed
     } catch (e) {
-      console.warn(`Error reading cache ${cachePath}:`, e.message)
+      console.warn(`⚠️  Cache parse error for ${path.basename(cachePath)}: ${e.message}`)
+      // Continue to fallback
     }
   }
 
@@ -56,9 +59,13 @@ function readJsonCache(cachePath, fallbackPath, exportName) {
   if (fs.existsSync(fallbackPath)) {
     try {
       const content = fs.readFileSync(fallbackPath, 'utf8')
-      return extractJsonFromModule(content, exportName)
+      const parsed = extractJsonFromModule(content, exportName)
+      if (parsed) {
+        console.log(`✅ Loaded from fallback: ${path.basename(fallbackPath)}`)
+        return parsed
+      }
     } catch (e) {
-      console.warn(`Error reading fallback ${fallbackPath}:`, e.message)
+      console.warn(`⚠️  Fallback parse error for ${path.basename(fallbackPath)}: ${e.message}`)
     }
   }
 
