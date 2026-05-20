@@ -11,6 +11,7 @@ import { spawn } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { recordWebhookCall } from '../_last-webhook-call.js'
 
 const lastSyncTimeFile = path.join(process.cwd(), '.webhook-last-sync.json')
 
@@ -116,6 +117,9 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
+    // Record this call for diagnostics
+    recordWebhookCall(req)
+    
     // Microsoft Graph validation token
     if (req.query?.validationToken) {
       console.log('[Webhook] 🔐 Microsoft Graph validation request')
