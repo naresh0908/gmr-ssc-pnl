@@ -310,16 +310,17 @@ export default function CostAnalysisPanel() {
     return ['PEX', 'OPEX', 'CAPEX'].map((type) => {
       const entry = { type }
       derived.years.forEach((y) => {
-        const Y  = derived.byYear[y]
+        const Y = derived.byYear[y]
         const ct = Y?.costByType.find((c) => c.type === type)
         if (ct) { entry[`fy${y}_actual`] = ct.actual; entry[`fy${y}_fc2`] = ct.fc2 }
       })
       if (derived.years.length >= 2) {
         const latest = derived.years[derived.years.length - 1]
         const prev   = derived.years[derived.years.length - 2]
-        const lv = entry[`fy${latest}_actual`] ?? 0
-        const pv = entry[`fy${prev}_actual`]   ?? 0
+        const lv = entry[`fy${latest}_actual`] ?? entry[`fy${latest}`] ?? 0
+        const pv = entry[`fy${prev}_actual`]   ?? entry[`fy${prev}`]   ?? 0
         entry.yoyChange = pv > 0 ? r2(((lv - pv) / pv) * 100) : null
+        entry.change = r2(lv - pv)
       }
       return entry
     })
@@ -335,29 +336,29 @@ export default function CostAnalysisPanel() {
   const headerInfo = {
     cost: {
       title:  `Monthly Cost Breakdown · ${periodLabel}`,
-      sub:    'Stacked bars = actual spend by type · Dashed lines = FC1 (amber) & FC2 (black) totals',
+      sub:    'Actual spend by type with FC1 and FC2 totals.',
     },
     revenue: {
       title:  `Monthly Revenue Breakdown · ${periodLabel}`,
-      sub:    'Stacked bars = Service Fees + Other Income + Interest · Dashed lines = FC1 & FC2 total revenue',
+      sub:    'Actual revenue by stream with FC1 and FC2 totals.',
     },
     combined: {
       title:  `Revenue vs Cost · ${periodLabel}`,
-      sub:    'Cost stacked as bars (PEX·OPEX·CAPEX) · Revenue as solid line · Net profit as dashed blue line',
+      sub:    'Cost bars, revenue line, and net profit line.',
     },
     yoy: {
       title:  `Cost Evolution · ${derived.years.map((y) => `FY ${y}`).join(' vs ')}`,
-      sub:    'Monthly total actual cost per financial year · grouped bars',
+      sub:    'Monthly actual cost by financial year.',
     },
   }
 
   return (
     <div className="mt-7">
       <SectionHead num="02" title={`Cost & Revenue Analysis · ${periodLabel}`}>
-        {view === 'cost'     && 'Monthly cost split by type - PEX, OPEX, CAPEX vs forecast targets.'}
-        {view === 'revenue'  && 'Monthly revenue split by stream - Service Fees, Other Income, Interest vs forecast targets.'}
-        {view === 'combined' && 'Side-by-side view of revenue and cost per month - visualises monthly profit at a glance.'}
-        {view === 'yoy'      && 'Year-on-year cost evolution - monthly and annual comparison across financial years.'}
+        {view === 'cost'     && 'Cost by type.'}
+        {view === 'revenue'  && 'Revenue by stream.'}
+        {view === 'combined' && 'Revenue, cost, and net profit.'}
+        {view === 'yoy'      && 'Cost by financial year.'}
       </SectionHead>
 
       <motion.div
