@@ -77,12 +77,14 @@ export default async function handler(req, res) {
       `/sites/${siteId}/drive/items/${targetFolder.id}/children`
     )
     
+    // Find the latest Excel file matching the pattern (flexible version number)
     const excelFile = (folderChildren.value || []).find(
-      (item) => item.name.includes('2026_May_HARTS_GMR_SSC_Financial_Model_v3.xlsx')
+      (item) => item.name.match(/2026_May_HARTS_GMR_SSC.*\.xlsx$/i)
     )
     
     if (!excelFile) {
-      throw new Error('Excel file not found')
+      const available = (folderChildren.value || []).map(i => i.name).join(', ')
+      throw new Error(`Excel file not found. Available files: ${available}`)
     }
 
     console.log(`[Sync API] ✓ Found: ${excelFile.name}`)
