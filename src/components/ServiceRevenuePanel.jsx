@@ -22,7 +22,7 @@ export default function ServiceRevenuePanel() {
   const [selectedMonth, setSelectedMonth] = useState(null)   // null = whole period; bar click sets one month
   const { serviceRevenue, derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
-  const insights = useMemo(() => getSectionInsights('service-revenue', { derived, serviceRevenue, year }), [derived, serviceRevenue, year])
+  const insights = useMemo(() => getSectionInsights('service-revenue', { derived, serviceRevenue, year, periodMode, selectedQ, selectedPeriodMonth }), [derived, serviceRevenue, year, periodMode, selectedQ, selectedPeriodMonth])
 
   const SRY = serviceRevenue?.[year]
   if (!SRY) return null

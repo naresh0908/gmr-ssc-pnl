@@ -156,8 +156,8 @@ export default function PLStatement() {
   const [expanded, setExpanded] = useState(() => new Set())
 
   const insights = useMemo(
-    () => getSectionInsights('pl', { derived, year, rawRevenue, rawCost }),
-    [derived, year, rawRevenue, rawCost]
+    () => getSectionInsights('pl', { derived, year, rawRevenue, rawCost, periodMode, selectedQ, selectedPeriodMonth }),
+    [derived, year, rawRevenue, rawCost, periodMode, selectedQ, selectedPeriodMonth]
   )
 
   const availMonths = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])

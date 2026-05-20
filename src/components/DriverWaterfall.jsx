@@ -221,7 +221,7 @@ export default function DriverWaterfall() {
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const [scenario, setScenario] = useState('fc1')
   const [dept, setDept] = useState('All')
-  const insights = useMemo(() => getSectionInsights('waterfall', { derived, year, rawCost }), [derived, year, rawCost])
+  const insights = useMemo(() => getSectionInsights('waterfall', { derived, year, rawCost, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, rawCost, periodMode, selectedQ, selectedPeriodMonth])
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
