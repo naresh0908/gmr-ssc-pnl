@@ -10,8 +10,15 @@
 import { spawn } from 'child_process'
 import fs from 'fs'
 import path from 'path'
+import os from 'os'
 
 const lastSyncTimeFile = path.join(process.cwd(), '.webhook-last-sync.json')
+
+// Cache files for Power Automate data
+const tmpDir = os.tmpdir()
+const sampleDataCache = path.join(tmpDir, 'sampleData.json')
+const txnFteCache = path.join(tmpDir, 'transactionFteData.json')
+const metadataCache = path.join(tmpDir, 'sync-metadata.json')
 
 function recordSync(source = 'unknown') {
   const data = {
@@ -146,15 +153,73 @@ export default async function handler(req, res) {
       }
     }
     
-    // Handle Power Automate requests
+    // Handle Power Automate direct data requests (NEW)
+    if (body.revenue && Array.isArray(body.revenue)) {
+      console.log('[Webhook] 📊 Power Automate sent direct Excel data!')
+      console.log(`        Revenue rows: ${body.revenue.length}`)
+      console.log(`        Cost rows: ${body.cost?.length || 0}`)
+      console.log(`        Transactions rows: ${body.transactions?.length || 0}`)
+      console.log(`        FTE rows: ${body.fte?.length || 0}`)
+      
+      // Extract and store the data (same as sharepoint-data.js)
+      try {
+        const { store: dataStore } = await import('../_store.js')
+        
+        // Sanitize
+        function sanitizeData(obj) {
+          if (Array.isArray(obj)) return obj.map(sanitizeData)
+          if (obj !== null && typeof obj === 'object') {
+            const out = {}
+            for (const [k, v] of Object.entries(obj)) out[k] = sanitizeData(v)
+            return out
+          }
+          if (typeof obj === 'number') return isFinite(obj) ? obj : null
+          if (typeof obj === 'string') return obj.trim()
+          return obj
+        }
+        
+        const sampleData = sanitizeData({ revenue: body.revenue, cost: body.cost })
+        const transactionFteData = sanitizeData({ transactions: body.transactions, fte: body.fte })
+        const timestamp = Date.now().toString()
+        
+        // Store in memory
+        dataStore.sampleData = sampleData
+        dataStore.transactionFteData = transactionFteData
+        dataStore.timestamp = timestamp
+        dataStore.source = 'power-automate-direct'
+        
+        // Also write to /tmp for persistence
+        try {
+          fs.writeFileSync(sampleDataCache, JSON.stringify(sampleData, null, 2))
+          fs.writeFileSync(txnFteCache, JSON.stringify(transactionFteData, null, 2))
+          fs.writeFileSync(metadataCache, JSON.stringify({ 
+            syncedAt: new Date().toISOString(), 
+            timestamp, 
+            source: 'power-automate-direct' 
+          }, null, 2))
+          console.log('[Webhook] ✅ Data cached to /tmp')
+        } catch (cacheErr) {
+          console.warn('[Webhook] ⚠️  Could not write /tmp cache:', cacheErr.message)
+        }
+        
+        console.log('[Webhook] ✅ Data stored in memory and ready for dashboard')
+      } catch (e) {
+        console.warn('[Webhook] ⚠️  Could not store direct data:', e.message)
+      }
+    }
+    
+    // Handle Power Automate file change notifications
     if (body.changeType || body.fileName || body.timestamp) {
       console.log('[Webhook] 📢 File change detected via Power Automate!')
       if (body.fileName) console.log(`        File: ${body.fileName}`)
       if (body.changeType) console.log(`        Change Type: ${body.changeType}`)
     }
 
-    // Trigger sync
-    const syncResult = await runSync()
+    // Trigger sync only if NOT receiving direct data
+    let syncResult = { success: true, message: 'Data received (no sync needed)' }
+    if (!body.revenue) {
+      syncResult = await runSync()
+    }
     recordSync(source)
 
     // Return result to Power Automate
