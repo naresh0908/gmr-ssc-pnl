@@ -42,10 +42,36 @@ function writeCache(filePath, data) {
 
 function validateData(body) {
   const errors = []
-  if (!body.revenue || !Array.isArray(body.revenue)) errors.push('Missing or invalid: revenue (should be array)')
-  if (!body.cost || !Array.isArray(body.cost)) errors.push('Missing or invalid: cost (should be array)')
-  if (!body.transactions || !Array.isArray(body.transactions)) errors.push('Missing or invalid: transactions (should be array)')
-  if (!body.fte || !Array.isArray(body.fte)) errors.push('Missing or invalid: fte (should be array)')
+  
+  // Check if we have arrays
+  if (!body.revenue) {
+    errors.push('Missing: revenue')
+  } else if (!Array.isArray(body.revenue)) {
+    console.warn('[Webhook] Revenue is not an array:', typeof body.revenue, Object.keys(body.revenue || {}).slice(0, 5))
+    errors.push('Invalid: revenue (not an array)')
+  }
+  
+  if (!body.cost) {
+    errors.push('Missing: cost')
+  } else if (!Array.isArray(body.cost)) {
+    console.warn('[Webhook] Cost is not an array:', typeof body.cost, Object.keys(body.cost || {}).slice(0, 5))
+    errors.push('Invalid: cost (not an array)')
+  }
+  
+  if (!body.transactions) {
+    errors.push('Missing: transactions')
+  } else if (!Array.isArray(body.transactions)) {
+    console.warn('[Webhook] Transactions is not an array:', typeof body.transactions)
+    errors.push('Invalid: transactions (not an array)')
+  }
+  
+  if (!body.fte) {
+    errors.push('Missing: fte')
+  } else if (!Array.isArray(body.fte)) {
+    console.warn('[Webhook] FTE is not an array:', typeof body.fte)
+    errors.push('Invalid: fte (not an array)')
+  }
+  
   return { valid: errors.length === 0, errors }
 }
 
@@ -69,8 +95,23 @@ export default async function handler(req, res) {
 
   try {
     console.log('[Webhook] 📥 Data received from Power Automate')
-
+    
     const body = req.body || {}
+    
+    // Debug: log what we received
+    console.log('[Webhook] Body keys:', Object.keys(body))
+    console.log('[Webhook] Body revenue type:', typeof body.revenue, 'Is array?', Array.isArray(body.revenue))
+    console.log('[Webhook] Body cost type:', typeof body.cost, 'Is array?', Array.isArray(body.cost))
+    console.log('[Webhook] Body transactions type:', typeof body.transactions, 'Is array?', Array.isArray(body.transactions))
+    console.log('[Webhook] Body fte type:', typeof body.fte, 'Is array?', Array.isArray(body.fte))
+    
+    if (body.revenue) {
+      console.log('[Webhook] Revenue sample:', JSON.stringify(body.revenue[0]).substring(0, 100))
+    }
+    if (body.cost) {
+      console.log('[Webhook] Cost sample:', JSON.stringify(body.cost[0]).substring(0, 100))
+    }
+    
     const validation = validateData(body)
     if (!validation.valid) {
       console.error('[Webhook] ❌ Validation errors:', validation.errors)
@@ -83,15 +124,25 @@ export default async function handler(req, res) {
     const timestamp = Date.now().toString()
 
     // 1. Store in /tmp for persistence across Lambda instances
+    console.log('[Webhook] Writing to /tmp cache...')
     const sampleOk = writeCache(sampleDataCache, sampleData)
     const txnOk = writeCache(txnFteCache, transactionFteData)
     const metaOk = writeCache(metadataCache, { syncedAt: new Date().toISOString(), timestamp, source: 'power-automate' })
 
+    console.log('[Webhook] /tmp write results:', { sampleOk, txnOk, metaOk })
+
     // 2. Also store in memory for fast access on warm instances
+    console.log('[Webhook] Storing in memory...')
     store.sampleData = sampleData
     store.transactionFteData = transactionFteData
     store.timestamp = timestamp
     store.source = 'power-automate'
+    
+    console.log('[Webhook] Memory store updated:', {
+      hasSampleData: !!store.sampleData,
+      hasTransactionFteData: !!store.transactionFteData,
+      timestamp: store.timestamp,
+    })
 
     if (!sampleOk || !txnOk || !metaOk) {
       console.warn('[Webhook] ⚠️  Some writes failed, but data is in memory')
