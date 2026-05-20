@@ -43,15 +43,29 @@ export function useRealtimeWebhookSync({
 
         // Check if data has changed
         if (lastTimestampRef.current === null) {
-          // First load
+          // First load — immediately apply data so the dashboard shows live PA data
           lastTimestampRef.current = timestamp
-          if (verbose) console.log('📡 Monitoring SharePoint file for changes...')
+          if (sampleData?.revenue?.length) {
+            useDashStore.getState().setData(
+              sampleData.revenue,
+              sampleData.cost,
+              transactionFteData?.transactions,
+              transactionFteData?.fte
+            )
+            console.log('✅ Initial data loaded from Power Automate')
+          }
+          if (verbose) console.log('📡 Monitoring for Power Automate updates...')
         } else if (lastTimestampRef.current !== timestamp) {
           // Data has changed!
           console.log('✅ Real-time data update detected!')
           
-          // Update store with new data
-          useDashStore.getState().setData(sampleData.revenue, sampleData.cost)
+          // Update store with all live data from Power Automate
+          useDashStore.getState().setData(
+            sampleData.revenue,
+            sampleData.cost,
+            transactionFteData?.transactions,
+            transactionFteData?.fte
+          )
           
           lastTimestampRef.current = timestamp
           

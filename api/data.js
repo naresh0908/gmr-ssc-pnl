@@ -10,6 +10,7 @@
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+import { store } from './_store.js'
 
 // Paths for cache (webhook writes here)
 const tmpDir = os.tmpdir()
@@ -182,6 +183,24 @@ export default function handler(req, res) {
 
   try {
     console.log('[/api/data] Fetching dashboard data...')
+
+    // Fastest path: in-memory store populated by the Power Automate webhook
+    if (store.sampleData && store.transactionFteData) {
+      console.log('[/api/data] ✅ Serving live Power Automate data from memory')
+      console.log(`   Revenue: ${store.sampleData.revenue?.length || 0} rows`)
+      console.log(`   Cost: ${store.sampleData.cost?.length || 0} rows`)
+      console.log(`   Transactions: ${store.transactionFteData.transactions?.length || 0} rows`)
+      console.log(`   FTE: ${store.transactionFteData.fte?.length || 0} rows`)
+      return res.status(200).json({
+        sampleData: store.sampleData,
+        transactionFteData: store.transactionFteData,
+        timestamp: store.timestamp,
+        source: store.source,
+      })
+    }
+
+    // Fallback: read from static data files (used on cold start before first PA push)
+    console.log('[/api/data] No live data yet — loading from static files')
 
     // Read sample data (from cache or fallback)
     let sampleData = readJsonCache(sampleDataCache, sampleDataPath, 'sampleData')
