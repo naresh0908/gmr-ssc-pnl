@@ -2,28 +2,31 @@
  * Vercel API Endpoint: Power Automate Direct Data Webhook
  * 
  * Receives Excel data directly from Power Automate (no auth needed).
- * Writes data to src/data files for immediate dashboard refresh.
+ * Stores data in /tmp (Vercel's temporary storage) for dashboard retrieval.
+ * 
+ * Note: Vercel's filesystem is READ-ONLY for src/dist. We use /tmp instead.
  */
 
 import fs from 'fs'
 import path from 'path'
+import os from 'os'
 
-const repoRoot = process.cwd()
-const sampleDataOut = path.join(repoRoot, 'src', 'data', 'sampleData.js')
-const txnFteOut = path.join(repoRoot, 'src', 'data', 'transactionFteData.js')
+// Use /tmp directory (writable on Vercel)
+const tmpDir = os.tmpdir()
+const sampleDataCache = path.join(tmpDir, 'sampleData.json')
+const txnFteCache = path.join(tmpDir, 'transactionFteData.json')
+const metadataCache = path.join(tmpDir, 'sync-metadata.json')
 
 /**
- * Write data to module file
+ * Write data to temp cache
  */
-function writeModule(filePath, exportName, data, source) {
+function writeCache(filePath, data) {
   try {
-    const timestamp = new Date().toISOString()
-    const content = `// Auto-generated from ${source} at ${timestamp}. Do not edit by hand.\nexport const ${exportName} = ${JSON.stringify(data, null, 2)};\n`
-    fs.writeFileSync(filePath, content, 'utf8')
-    console.log(`✅ Written: ${filePath}`)
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8')
+    console.log(`✅ Cached: ${path.basename(filePath)}`)
     return true
   } catch (e) {
-    console.error(`❌ Error writing ${filePath}:`, e.message)
+    console.error(`❌ Error caching to ${filePath}:`, e.message)
     return false
   }
 }
@@ -51,20 +54,6 @@ function validateData(body) {
   }
 
   return { valid: errors.length === 0, errors }
-}
-
-/**
- * Parse JSON if string, return data otherwise
- */
-function parseData(str) {
-  if (typeof str === 'string') {
-    try {
-      return JSON.parse(str)
-    } catch (e) {
-      throw new Error(`Invalid JSON: ${e.message}`)
-    }
-  }
-  return str
 }
 
 export default async function handler(req, res) {
@@ -102,34 +91,45 @@ export default async function handler(req, res) {
       })
     }
 
-    // Write revenue & cost
-    const sampleOk = writeModule(
-      sampleDataOut,
-      'sampleData',
+    // Cache in /tmp (Vercel writable directory)
+    const sampleOk = writeCache(
+      sampleDataCache,
       {
         revenue: body.revenue,
         cost: body.cost,
-      },
-      'Power Automate'
+      }
     )
 
-    // Write transactions & FTE
-    const txnFteOk = writeModule(
-      txnFteOut,
-      'transactionFteData',
+    const txnFteOk = writeCache(
+      txnFteCache,
       {
         transactions: body.transactions,
         fte: body.fte,
-      },
-      'Power Automate'
+      }
     )
 
-    if (!sampleOk || !txnFteOk) {
-      console.error('[Webhook] ❌ Failed to write all files')
-      return res.status(500).json({ error: 'Failed to write data files' })
+    // Write metadata with timestamp
+    const metaOk = writeCache(
+      metadataCache,
+      {
+        syncedAt: new Date().toISOString(),
+        timestamp: Date.now().toString(),
+        source: 'power-automate',
+        rows: {
+          revenue: body.revenue.length,
+          cost: body.cost.length,
+          transactions: body.transactions.length,
+          fte: body.fte.length,
+        },
+      }
+    )
+
+    if (!sampleOk || !txnFteOk || !metaOk) {
+      console.error('[Webhook] ❌ Failed to cache all data')
+      return res.status(500).json({ error: 'Failed to cache data' })
     }
 
-    console.log('[Webhook] ✅ Data synced successfully')
+    console.log('[Webhook] ✅ Data cached successfully (in /tmp)')
     console.log(`   Revenue: ${body.revenue.length} rows`)
     console.log(`   Cost: ${body.cost.length} rows`)
     console.log(`   Transactions: ${body.transactions.length} rows`)
@@ -139,6 +139,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       message: 'Data synced',
+      cacheLocation: '/tmp (Vercel temp storage)',
       rows: {
         revenue: body.revenue.length,
         cost: body.cost.length,
