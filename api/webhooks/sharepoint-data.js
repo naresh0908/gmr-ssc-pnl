@@ -98,25 +98,34 @@ export default async function handler(req, res) {
     
     const body = req.body || {}
     
-    // Debug: log what we received
+    // DEBUG: Log the entire body structure
+    console.log('[Webhook] ============ RAW BODY ============')
+    console.log('[Webhook] Body:', JSON.stringify(body, null, 2).substring(0, 500))
     console.log('[Webhook] Body keys:', Object.keys(body))
+    console.log('[Webhook] ===================================')
+    
+    // Debug: log what we received
     console.log('[Webhook] Body revenue type:', typeof body.revenue, 'Is array?', Array.isArray(body.revenue))
     console.log('[Webhook] Body cost type:', typeof body.cost, 'Is array?', Array.isArray(body.cost))
     console.log('[Webhook] Body transactions type:', typeof body.transactions, 'Is array?', Array.isArray(body.transactions))
     console.log('[Webhook] Body fte type:', typeof body.fte, 'Is array?', Array.isArray(body.fte))
     
     if (body.revenue) {
-      console.log('[Webhook] Revenue sample:', JSON.stringify(body.revenue[0]).substring(0, 100))
+      console.log('[Webhook] Revenue first item:', JSON.stringify(body.revenue[0]).substring(0, 200))
     }
     if (body.cost) {
-      console.log('[Webhook] Cost sample:', JSON.stringify(body.cost[0]).substring(0, 100))
+      console.log('[Webhook] Cost first item:', JSON.stringify(body.cost[0]).substring(0, 200))
     }
     
     const validation = validateData(body)
     if (!validation.valid) {
-      console.error('[Webhook] ❌ Validation errors:', validation.errors)
+      console.error('[Webhook] ❌ Validation FAILED!')
+      console.error('[Webhook] Validation errors:', validation.errors)
+      console.error('[Webhook] Returning 400 error')
       return res.status(400).json({ error: 'Invalid data structure', details: validation.errors })
     }
+    
+    console.log('[Webhook] ✅ Validation PASSED')
 
     // Sanitize data
     const sampleData = sanitizeData({ revenue: body.revenue, cost: body.cost })
