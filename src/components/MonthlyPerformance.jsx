@@ -11,7 +11,7 @@ export default function MonthlyPerformance() {
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const Y = derived.byYear[year]
   const [targetView, setTargetView] = useState('fc1')
-  const insights = useMemo(() => getSectionInsights('monthly', { derived, year }), [derived, year])
+  const insights = useMemo(() => getSectionInsights('monthly', { derived, year, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, periodMode, selectedQ, selectedPeriodMonth])
   if (!Y) return null
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])

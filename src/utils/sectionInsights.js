@@ -90,25 +90,79 @@ function deptHitInMonth(rawRevenue, year, month) {
 }
 
 // ─── Public entry point ───────────────────────────────────────────────────────
-export function getSectionInsights(section, { derived, serviceRevenue, year, rawRevenue, rawCost }) {
+import { getActivePeriodMonths, derivePeriodKPIs, QUARTERS, derivePeriodCostByType, derivePeriodByDept } from './periodUtils'
+
+export function getSectionInsights(section, { derived, serviceRevenue, year, rawRevenue, rawCost, periodMode = 'year', selectedQ = 'Q1', selectedPeriodMonth = 'Jan' }) {
   const Y = derived?.byYear?.[year]
   if (!Y) return []
+
+  // Determine active months for the selected period and the previous period
+  const availMonths = Y.monthly.map((m) => m.month)
+  const activeMonths = getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths)
+  const pk = derivePeriodKPIs(Y.monthly, activeMonths) ?? Y.kpis
+
+  // previous period
+  function getPrevInfo() {
+    if (periodMode === 'year') return { yearOffset: -1, months: null }
+    if (periodMode === 'quarter') {
+      const keys = Object.keys(QUARTERS)
+      const idx = keys.indexOf(selectedQ)
+      const prevIdx = idx <= 0 ? keys.length - 1 : idx - 1
+      const yearOffset = idx <= 0 ? -1 : 0
+      return { yearOffset, months: QUARTERS[keys[prevIdx]] }
+    }
+    // month
+    const monthsOrder = availMonths.length ? availMonths : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    const idx = monthsOrder.indexOf(selectedPeriodMonth)
+    const prevIdx = idx <= 0 ? monthsOrder.length - 1 : idx - 1
+    const yearOffset = idx <= 0 ? -1 : 0
+    return { yearOffset, months: [monthsOrder[prevIdx]] }
+  }
+
+  const prevInfo = getPrevInfo()
+  const prevYear = year + prevInfo.yearOffset
+  const prevY = derived.byYear?.[prevYear]
+  let prevPk = null
+  if (prevY) {
+    const prevMonths = prevInfo.months === null ? prevY.monthly.map((m) => m.month) : prevInfo.months
+    prevPk = derivePeriodKPIs(prevY.monthly, prevMonths) || null
+  }
+
+  // derive period-level cost and dept slices when raw data is available
+  const periodCostByType = rawCost && activeMonths.length ? derivePeriodCostByType(rawCost, year, activeMonths) : (Y.costByType || [])
+  const periodByDept = (rawRevenue && rawCost && derived?.departments && activeMonths.length)
+    ? derivePeriodByDept(rawRevenue, rawCost, derived.departments, year, activeMonths)
+    : (Y.byDept || [])
+
+  let prevPeriodCostByType = null
+  let prevPeriodByDept = null
+  if (prevY && prevInfo.months) {
+    prevPeriodCostByType = rawCost ? derivePeriodCostByType(rawCost, prevYear, prevInfo.months) : prevY.costByType
+    prevPeriodByDept = (rawRevenue && rawCost && derived?.departments)
+      ? derivePeriodByDept(rawRevenue, rawCost, derived.departments, prevYear, prevInfo.months)
+      : prevY.byDept
+  }
+
+  const ctx = { periodMode, selectedQ, selectedPeriodMonth, activeMonths, pk, prevPk, prevYear, periodCostByType, prevPeriodCostByType, periodByDept, prevPeriodByDept }
+
   switch (section) {
-    case 'pl':              return plInsights(Y, year, rawRevenue, rawCost, derived)
-    case 'monthly':         return monthlyInsights(Y, year, rawRevenue, rawCost)
-    case 'service-revenue': return serviceRevenueInsights(serviceRevenue?.[year], year)
-    case 'ebit-dept':       return ebitDeptInsights(Y, year, rawRevenue, rawCost)
-    case 'cost-prof':       return costProfInsights(Y, year, rawCost)
-    case 'waterfall':       return waterfallInsights(Y, year, rawCost)
-    case 'ebit-customer':   return ebitCustomerInsights(Y, year)
-    case 'cost-analysis':   return costAnalysisInsights(Y, year, rawCost)
+    case 'pl':              return plInsights(Y, year, rawRevenue, rawCost, derived, ctx)
+    case 'monthly':         return monthlyInsights(Y, year, rawRevenue, rawCost, ctx)
+    case 'service-revenue': return serviceRevenueInsights(serviceRevenue?.[year], year, ctx)
+    case 'ebit-dept':       return ebitDeptInsights(Y, year, rawRevenue, rawCost, ctx)
+    case 'cost-prof':       return costProfInsights(Y, year, rawCost, ctx)
+    case 'waterfall':       return waterfallInsights(Y, year, rawCost, ctx)
+    case 'ebit-customer':   return ebitCustomerInsights(Y, year, ctx)
+    case 'cost-analysis':   return costAnalysisInsights(Y, year, rawCost, ctx)
     default: return []
   }
 }
 
 // ─── 01 · P&L Statement ───────────────────────────────────────────────────────
-function plInsights(Y, year, rawRevenue, rawCost, derived) {
-  const { kpis, costByType } = Y
+function plInsights(Y, year, rawRevenue, rawCost, derived, ctx = {}) {
+  const { kpis: Ykpis } = Y
+  const costByType = ctx.periodCostByType || Y.costByType || []
+  const kpis = ctx.pk ?? Ykpis
   const causal  = CAUSAL_NOTES[year]
   const out     = []
 
@@ -205,9 +259,10 @@ function plInsights(Y, year, rawRevenue, rawCost, derived) {
 }
 
 // ─── 02 · Monthly Performance ─────────────────────────────────────────────────
-function monthlyInsights(Y, year, rawRevenue, rawCost) {
+function monthlyInsights(Y, year, rawRevenue, rawCost, ctx = {}) {
   const { monthly } = Y
   const causal = CAUSAL_NOTES[year]
+  const kpis = ctx.pk ?? Y.kpis
   const out    = []
 
   const actualMonths = monthly.filter((m) => m.revAct > 0)
@@ -286,7 +341,7 @@ function monthlyInsights(Y, year, rawRevenue, rawCost) {
 }
 
 // ─── 03 · Service Revenue ─────────────────────────────────────────────────────
-function serviceRevenueInsights(SRY, year) {
+function serviceRevenueInsights(SRY, year, ctx = {}) {
   if (!SRY || !SRY.byDept?.length) return []
   const { byDept, totalFte, totalTxn, total, monthly } = SRY
   const out = []
@@ -340,11 +395,13 @@ function serviceRevenueInsights(SRY, year) {
 }
 
 // ─── 04 · EBIT Matrix - Department ───────────────────────────────────────────
-function ebitDeptInsights(Y, year, rawRevenue, rawCost) {
-  const { ebitMatrix, byDept } = Y
+function ebitDeptInsights(Y, year, rawRevenue, rawCost, ctx = {}) {
+  const { ebitMatrix } = Y
   const causal = CAUSAL_NOTES[year]
   const out    = []
+  const kpis = ctx.pk ?? Y.kpis
 
+  const byDept = ctx.periodByDept || Y.byDept || []
   const totalEBIT = ebitMatrix.reduce((s, d) => s + d.total, 0)
 
   // ── EBIT leader - what is making it work, and can it be replicated? ──────────
@@ -411,9 +468,12 @@ function ebitDeptInsights(Y, year, rawRevenue, rawCost) {
 }
 
 // ─── 05 · Cost & Profitability ────────────────────────────────────────────────
-function costProfInsights(Y, year, rawCost) {
-  const { costByType, byDept } = Y
+function costProfInsights(Y, year, rawCost, ctx = {}) {
+  const { costByType: YcostByType, byDept: YbyDept } = Y
+  const costByType = ctx.periodCostByType || YcostByType || []
+  const byDept = ctx.periodByDept || YbyDept || []
   const out = []
+  const kpis = ctx.pk ?? Y.kpis
 
   const total = costByType.reduce((s, c) => s + c.actual, 0)
   const pex   = costByType.find((c) => c.type === 'PEX')
@@ -488,10 +548,12 @@ function costProfInsights(Y, year, rawCost) {
 }
 
 // ─── 06 · Driver Waterfall ────────────────────────────────────────────────────
-function waterfallInsights(Y, year, rawCost) {
-  const { costByType, kpis } = Y
+function waterfallInsights(Y, year, rawCost, ctx = {}) {
+  const { costByType: YcostByType } = Y
   const causal = CAUSAL_NOTES[year]
   const out    = []
+  const kpis = ctx.pk ?? Y.kpis
+  const costByType = ctx.periodCostByType || YcostByType || []
 
   const costVarF2  = r2(kpis.totalCost - (kpis.costFc2 ?? 0))
   const overrun    = biggestMonthlyOverrun(rawCost, year, null)
@@ -545,7 +607,7 @@ function waterfallInsights(Y, year, rawCost) {
 }
 
 // ─── 07 · EBIT Matrix - Customer ─────────────────────────────────────────────
-function ebitCustomerInsights(Y, year) {
+function ebitCustomerInsights(Y, year, ctx = {}) {
   const { ebitCustomerMatrix } = Y
   if (!ebitCustomerMatrix?.length) return []
   const out = []
@@ -615,10 +677,12 @@ function ebitCustomerInsights(Y, year) {
 }
 
 // ─── 08 · Cost Analysis ───────────────────────────────────────────────────────
-function costAnalysisInsights(Y, year, rawCost) {
-  const { monthly, costByType } = Y
+function costAnalysisInsights(Y, year, rawCost, ctx = {}) {
+  const { monthly, costByType: YcostByType } = Y
   const causal = CAUSAL_NOTES[year]
   const out    = []
+  const kpis = ctx.pk ?? Y.kpis
+  const costByType = ctx.periodCostByType || YcostByType || []
 
   const validMonths = monthly.filter((m) => m.costAct > 0)
 

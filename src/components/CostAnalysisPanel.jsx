@@ -291,7 +291,7 @@ export default function CostAnalysisPanel() {
   const [view, setView] = useState('cost')   // 'cost' | 'revenue' | 'combined' | 'yoy'
   const { rawCost, derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
-  const insights = useMemo(() => getSectionInsights('cost-analysis', { derived, year, rawCost }), [derived, year, rawCost])
+  const insights = useMemo(() => getSectionInsights('cost-analysis', { derived, year, rawCost, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, rawCost, periodMode, selectedQ, selectedPeriodMonth])
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(

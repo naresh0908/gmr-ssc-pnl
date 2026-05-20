@@ -11,7 +11,7 @@ export default function EBITMatrix({ type = 'department', num = '01' }) {
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const Y = derived.byYear[year]
   const section = type === 'customer' ? 'ebit-customer' : 'ebit-dept'
-  const insights = useMemo(() => getSectionInsights(section, { derived, year }), [derived, year, section])
+  const insights = useMemo(() => getSectionInsights(section, { derived, year, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, section, periodMode, selectedQ, selectedPeriodMonth])
   if (!Y) return null
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
