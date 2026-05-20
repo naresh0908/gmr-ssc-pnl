@@ -43,36 +43,38 @@ function writeCache(filePath, data) {
 function validateData(body) {
   const errors = []
   
-  // Check if we have arrays
-  if (!body.revenue) {
-    errors.push('Missing: revenue')
-  } else if (!Array.isArray(body.revenue)) {
-    console.warn('[Webhook] Revenue is not an array:', typeof body.revenue, Object.keys(body.revenue || {}).slice(0, 5))
-    errors.push('Invalid: revenue (not an array)')
+  // Helper to extract array from various formats
+  const getArray = (val) => {
+    if (Array.isArray(val)) return val
+    if (val?.value && Array.isArray(val.value)) return val.value
+    if (val?.data && Array.isArray(val.data)) return val.data
+    return null
   }
   
-  if (!body.cost) {
-    errors.push('Missing: cost')
-  } else if (!Array.isArray(body.cost)) {
-    console.warn('[Webhook] Cost is not an array:', typeof body.cost, Object.keys(body.cost || {}).slice(0, 5))
-    errors.push('Invalid: cost (not an array)')
-  }
+  // Try to extract arrays - be VERY permissive
+  const revenue = getArray(body.revenue)
+  const cost = getArray(body.cost)
+  const transactions = getArray(body.transactions)
+  const fte = getArray(body.fte)
   
-  if (!body.transactions) {
-    errors.push('Missing: transactions')
-  } else if (!Array.isArray(body.transactions)) {
-    console.warn('[Webhook] Transactions is not an array:', typeof body.transactions)
-    errors.push('Invalid: transactions (not an array)')
+  if (!revenue) {
+    errors.push('Could not find revenue array in: ' + JSON.stringify(body.revenue?.constructor?.name || typeof body.revenue))
   }
-  
-  if (!body.fte) {
-    errors.push('Missing: fte')
-  } else if (!Array.isArray(body.fte)) {
-    console.warn('[Webhook] FTE is not an array:', typeof body.fte)
-    errors.push('Invalid: fte (not an array)')
+  if (!cost) {
+    errors.push('Could not find cost array')
   }
-  
-  return { valid: errors.length === 0, errors }
+  if (!transactions) {
+    errors.push('Could not find transactions array')
+  }
+  if (!fte) {
+    errors.push('Could not find fte array')
+  }
+
+  return { 
+    valid: errors.length === 0, 
+    errors,
+    extracted: { revenue, cost, transactions, fte }
+  }
 }
 
 export default async function handler(req, res) {
@@ -132,6 +134,18 @@ export default async function handler(req, res) {
     }
     
     const validation = validateData(body)
+    
+    console.log('[Webhook] Validation result:', {
+      valid: validation.valid,
+      errors: validation.errors,
+      extractedArrays: {
+        revenue: validation.extracted.revenue?.length || 0,
+        cost: validation.extracted.cost?.length || 0,
+        transactions: validation.extracted.transactions?.length || 0,
+        fte: validation.extracted.fte?.length || 0,
+      }
+    })
+    
     if (!validation.valid) {
       console.error('[Webhook] ❌ Validation FAILED!')
       console.error('[Webhook] Validation errors:', validation.errors)
@@ -141,9 +155,15 @@ export default async function handler(req, res) {
     
     console.log('[Webhook] ✅ Validation PASSED')
 
-    // Sanitize data
-    const sampleData = sanitizeData({ revenue: body.revenue, cost: body.cost })
-    const transactionFteData = sanitizeData({ transactions: body.transactions, fte: body.fte })
+    // Use the EXTRACTED arrays (handles both direct and wrapped formats)
+    const sampleData = sanitizeData({ 
+      revenue: validation.extracted.revenue, 
+      cost: validation.extracted.cost 
+    })
+    const transactionFteData = sanitizeData({ 
+      transactions: validation.extracted.transactions, 
+      fte: validation.extracted.fte 
+    })
     const timestamp = Date.now().toString()
 
     // 1. Store in /tmp for persistence across Lambda instances
@@ -172,19 +192,19 @@ export default async function handler(req, res) {
     }
 
     console.log('[Webhook] ✅ Data stored (memory + /tmp cache)')
-    console.log(`   Revenue: ${body.revenue.length} rows`)
-    console.log(`   Cost: ${body.cost.length} rows`)
-    console.log(`   Transactions: ${body.transactions.length} rows`)
-    console.log(`   FTE: ${body.fte.length} rows`)
+    console.log(`   Revenue: ${validation.extracted.revenue.length} rows`)
+    console.log(`   Cost: ${validation.extracted.cost.length} rows`)
+    console.log(`   Transactions: ${validation.extracted.transactions.length} rows`)
+    console.log(`   FTE: ${validation.extracted.fte.length} rows`)
 
     return res.status(200).json({
       success: true,
       message: 'Data received and ready for dashboard',
       rows: {
-        revenue: body.revenue.length,
-        cost: body.cost.length,
-        transactions: body.transactions.length,
-        fte: body.fte.length,
+        revenue: validation.extracted.revenue.length,
+        cost: validation.extracted.cost.length,
+        transactions: validation.extracted.transactions.length,
+        fte: validation.extracted.fte.length,
       },
     })
   } catch (error) {

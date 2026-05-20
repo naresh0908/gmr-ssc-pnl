@@ -158,14 +158,31 @@ export default async function handler(req, res) {
     }
     
     // Handle Power Automate direct data requests (NEW)
-    if (body.revenue && Array.isArray(body.revenue)) {
-      console.log('[Webhook] 📊 Power Automate sent direct Excel data!')
-      console.log(`        Revenue rows: ${body.revenue.length}`)
-      console.log(`        Cost rows: ${body.cost?.length || 0}`)
-      console.log(`        Transactions rows: ${body.transactions?.length || 0}`)
-      console.log(`        FTE rows: ${body.fte?.length || 0}`)
+    // This handles both formats:
+    // - Direct arrays: {revenue: [...], cost: [...]}
+    // - Wrapped arrays: {revenue: {value: [...]}}
+    if (body.revenue || body.cost || body.transactions || body.fte) {
+      console.log('[Webhook] 📊 Power Automate sent Excel data!')
       
-      // Extract and store the data (same as sharepoint-data.js)
+      // Helper to extract array from various formats
+      const getArray = (val) => {
+        if (Array.isArray(val)) return val
+        if (val?.value && Array.isArray(val.value)) return val.value
+        if (val?.data && Array.isArray(val.data)) return val.data
+        return []
+      }
+      
+      const revenue = getArray(body.revenue)
+      const cost = getArray(body.cost)
+      const transactions = getArray(body.transactions)
+      const fte = getArray(body.fte)
+      
+      console.log(`        Revenue rows: ${revenue.length}`)
+      console.log(`        Cost rows: ${cost.length}`)
+      console.log(`        Transactions rows: ${transactions.length}`)
+      console.log(`        FTE rows: ${fte.length}`)
+      
+      // Extract and store the data
       try {
         const { store: dataStore } = await import('../_store.js')
         
@@ -182,8 +199,8 @@ export default async function handler(req, res) {
           return obj
         }
         
-        const sampleData = sanitizeData({ revenue: body.revenue, cost: body.cost })
-        const transactionFteData = sanitizeData({ transactions: body.transactions, fte: body.fte })
+        const sampleData = sanitizeData({ revenue, cost })
+        const transactionFteData = sanitizeData({ transactions, fte })
         const timestamp = Date.now().toString()
         
         // Store in memory
