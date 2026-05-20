@@ -33,20 +33,38 @@ export function computeServiceRevenue(transactions, fte, rawRevenue) {
       const dFte = fteY.filter((f) => f.dept === dept)
       const dRev = revY.filter((r) => r.department === dept)
 
+      // Source of truth: Revenue sheet Service Fees
       const annualActSF = round(dRev.reduce((s, r) => s + (r.actServiceFees || 0), 0) / CR)
+      const total = annualActSF
 
-      const txnRevenue = round(sumRevenue(dTxn, 'txnCount', 'ratePerTxn') / CR)
-      const fteRevenue = round(sumRevenue(dFte, 'fteCount', 'ratePerFte') / CR)
-      const total = round(txnRevenue + fteRevenue)
+      // FTE vs Transaction breakdown from the transaction/FTE sheets
+      // Prorate to match the Revenue sheet total
+      const txnRevenueRaw = round(sumRevenue(dTxn, 'txnCount', 'ratePerTxn') / CR)
+      const fteRevenueRaw = round(sumRevenue(dFte, 'fteCount', 'ratePerFte') / CR)
+      const breakdownTotal = round(txnRevenueRaw + fteRevenueRaw)
+      
+      // Prorate breakdown to match Revenue sheet total
+      const scale = breakdownTotal > 0 ? total / breakdownTotal : 1
+      const txnRevenue = round(txnRevenueRaw * scale)
+      const fteRevenue = round(fteRevenueRaw * scale)
 
-      // Monthly breakdown: totals from row-level revenue, grouped by the Revenue sheet month.
+      // Monthly breakdown: totals from Revenue sheet Service Fees, with FTE/Txn split proriated
       const monthly = MONTHS.map((m) => {
+        const mRev = dRev.filter((r) => r.month === m)
+        const mTotal = round(mRev.reduce((s, r) => s + (r.actServiceFees || 0), 0) / CR)
+        
+        if (mTotal === 0) return null
+
+        // Prorate FTE vs Transaction breakdown to match Revenue sheet monthly total
         const mTxnRows = dTxn.filter((t) => t.month === m)
         const mFteRows = dFte.filter((f) => f.month === m)
-        const mTxnRevenue = round(sumRevenue(mTxnRows, 'txnCount', 'ratePerTxn') / CR)
-        const mFteRevenue = round(sumRevenue(mFteRows, 'fteCount', 'ratePerFte') / CR)
-        const mTotal = round(mTxnRevenue + mFteRevenue)
-        if (mTotal === 0) return null
+        const mTxnRevenueRaw = round(sumRevenue(mTxnRows, 'txnCount', 'ratePerTxn') / CR)
+        const mFteRevenueRaw = round(sumRevenue(mFteRows, 'fteCount', 'ratePerFte') / CR)
+        const mBreakdownTotal = round(mTxnRevenueRaw + mFteRevenueRaw)
+        
+        const mScale = mBreakdownTotal > 0 ? mTotal / mBreakdownTotal : 1
+        const mTxnRevenue = round(mTxnRevenueRaw * mScale)
+        const mFteRevenue = round(mFteRevenueRaw * mScale)
 
         return { month: m, txnRevenue: mTxnRevenue, fteRevenue: mFteRevenue, total: mTotal }
       }).filter(Boolean)
@@ -99,18 +117,28 @@ export function computeServiceRevenue(transactions, fte, rawRevenue) {
       return { dept, txnRevenue, fteRevenue, total, annualActSF, monthly, txnByService, fteByFunction }
     }).sort((a, b) => b.total - a.total)
 
-    // All-department monthly aggregate
+    // All-department monthly aggregate: source from Revenue sheet Service Fees
     const monthly = MONTHS.map((m) => {
-      const txnRev = round(byDept.reduce((s, d) => s + (d.monthly.find((mm) => mm.month === m)?.txnRevenue ?? 0), 0))
-      const fteRev = round(byDept.reduce((s, d) => s + (d.monthly.find((mm) => mm.month === m)?.fteRevenue ?? 0), 0))
-      const total = round(txnRev + fteRev)
-      if (total === 0) return null
-      return { month: m, txnRevenue: txnRev, fteRevenue: fteRev, total }
+      const mRev = revY.filter((r) => r.month === m)
+      const mTotal = round(mRev.reduce((s, r) => s + (r.actServiceFees || 0), 0) / CR)
+      
+      if (mTotal === 0) return null
+
+      // Prorate FTE vs Transaction breakdown to match Revenue sheet total
+      const mTxnRevRaw = round(txnY.filter((t) => t.month === m).reduce((s, t) => s + getRowRevenue(t, 'txnCount', 'ratePerTxn'), 0) / CR)
+      const mFteRevRaw = round(fteY.filter((f) => f.month === m).reduce((s, f) => s + getRowRevenue(f, 'fteCount', 'ratePerFte'), 0) / CR)
+      const mBreakdownTotal = round(mTxnRevRaw + mFteRevRaw)
+      
+      const mScale = mBreakdownTotal > 0 ? mTotal / mBreakdownTotal : 1
+      const txnRev = round(mTxnRevRaw * mScale)
+      const fteRev = round(mFteRevRaw * mScale)
+      
+      return { month: m, txnRevenue: txnRev, fteRevenue: fteRev, total: mTotal }
     }).filter(Boolean)
 
     const totalTxn = round(byDept.reduce((s, d) => s + d.txnRevenue, 0))
     const totalFte = round(byDept.reduce((s, d) => s + d.fteRevenue, 0))
-    const total = round(totalTxn + totalFte)
+    const total = round(byDept.reduce((s, d) => s + d.total, 0))
 
     byYear[y] = { byDept, monthly, totalTxn, totalFte, total }
   })

@@ -89,7 +89,7 @@ export default function ServiceRevenuePanel() {
   return (
     <div className="mt-7">
       <SectionHead
-        num="04"
+        num="03"
         title={(
           <span className="inline-flex flex-col leading-tight">
             <span>Service Revenue</span>

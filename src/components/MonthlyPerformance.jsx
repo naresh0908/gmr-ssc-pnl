@@ -37,7 +37,7 @@ export default function MonthlyPerformance() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="02" title={`Monthly Performance · ${periodLabel}`}>
+      <SectionHead num="06" title={`Monthly Performance · ${periodLabel}`}>
         Actuals against FC1 and FC2 for the selected period. Solid bars are actuals; tick marks denote target.
       </SectionHead>
 

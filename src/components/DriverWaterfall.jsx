@@ -299,7 +299,7 @@ export default function DriverWaterfall() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="06" title={`Driver-Based Cost Bridge · ${periodLabel}`}>
+      <SectionHead num="05" title={`Driver-Based Cost Bridge · ${periodLabel}`}>
         Variance decomposed by business driver. Each waterfall bridges from the Forecast
         anchor to the Actual result - showing exactly which categories drove cost over- or under-spend.
       </SectionHead>
