@@ -33,10 +33,45 @@ function extractJsonFromModule(content, exportName) {
       return null
     }
 
-    const jsonStr = match[1].trim()
-    return JSON.parse(jsonStr)
+    let jsonStr = match[1].trim()
+    
+    // Try to parse - if it fails, try to recover
+    try {
+      return JSON.parse(jsonStr)
+    } catch (parseError) {
+      console.warn(`Initial parse failed for ${exportName}, attempting recovery...`)
+      
+      // Try to extract just the array part
+      const arrayMatch = jsonStr.match(/\[\s*([\s\S]*)\s*\]/)
+      if (arrayMatch) {
+        // Get the items
+        const itemsStr = arrayMatch[1]
+        const items = []
+        
+        // Split by { and try to parse each object individually
+        const objMatches = itemsStr.match(/\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g)
+        if (objMatches) {
+          for (const objStr of objMatches) {
+            try {
+              items.push(JSON.parse(objStr))
+            } catch (e) {
+              // Skip corrupted items
+              console.warn(`Skipped corrupted item in ${exportName}`)
+            }
+          }
+          
+          if (items.length > 0) {
+            console.log(`✅ Recovered ${items.length} valid items from ${exportName}`)
+            return items
+          }
+        }
+      }
+      
+      console.error(`Could not recover ${exportName}:`, parseError.message)
+      return null
+    }
   } catch (e) {
-    console.error(`Error parsing ${exportName}:`, e.message)
+    console.error(`Error extracting ${exportName}:`, e.message)
     return null
   }
 }
@@ -51,6 +86,13 @@ function readJsonCache(cachePath, fallbackPath, exportName) {
       return parsed
     } catch (e) {
       console.warn(`⚠️  Cache parse error for ${path.basename(cachePath)}: ${e.message}`)
+      // Delete corrupted cache file
+      try {
+        fs.unlinkSync(cachePath)
+        console.log(`🗑️  Removed corrupted cache: ${path.basename(cachePath)}`)
+      } catch (delErr) {
+        // ignore
+      }
       // Continue to fallback
     }
   }
@@ -62,6 +104,16 @@ function readJsonCache(cachePath, fallbackPath, exportName) {
       const parsed = extractJsonFromModule(content, exportName)
       if (parsed) {
         console.log(`✅ Loaded from fallback: ${path.basename(fallbackPath)}`)
+        // Handle both object and array returns
+        if (Array.isArray(parsed)) {
+          // Recovery mode - convert back to expected structure
+          if (exportName === 'sampleData') {
+            return { revenue: parsed, cost: [] }
+          } else if (exportName === 'transactionFteData') {
+            return { transactions: parsed, fte: [] }
+          }
+          return parsed
+        }
         return parsed
       }
     } catch (e) {
@@ -69,6 +121,12 @@ function readJsonCache(cachePath, fallbackPath, exportName) {
     }
   }
 
+  // Last resort - return empty structure
+  if (exportName === 'sampleData') {
+    return { revenue: [], cost: [] }
+  } else if (exportName === 'transactionFteData') {
+    return { transactions: [], fte: [] }
+  }
   return null
 }
 
@@ -126,15 +184,26 @@ export default function handler(req, res) {
     console.log('[/api/data] Fetching dashboard data...')
 
     // Read sample data (from cache or fallback)
-    const sampleData = readJsonCache(sampleDataCache, sampleDataPath, 'sampleData') || { revenue: [], cost: [] }
+    let sampleData = readJsonCache(sampleDataCache, sampleDataPath, 'sampleData')
+    if (!sampleData) {
+      sampleData = { revenue: [], cost: [] }
+    }
 
     // Read transaction/FTE data (from cache or fallback)
-    const transactionFteData = readJsonCache(txnFteCache, txnFtePath, 'transactionFteData') || { transactions: [], fte: [] }
+    let transactionFteData = readJsonCache(txnFteCache, txnFtePath, 'transactionFteData')
+    if (!transactionFteData) {
+      transactionFteData = { transactions: [], fte: [] }
+    }
 
     // Get timestamp for change detection
     const timestamp = getTimestamp()
 
-    console.log('[/api/data] ✅ Data served - Revenue:', sampleData.revenue?.length || 0, 'rows, Timestamp:', timestamp)
+    console.log('[/api/data] ✅ Data served')
+    console.log(`   Revenue: ${sampleData.revenue?.length || 0} rows`)
+    console.log(`   Cost: ${sampleData.cost?.length || 0} rows`)
+    console.log(`   Transactions: ${transactionFteData.transactions?.length || 0} rows`)
+    console.log(`   FTE: ${transactionFteData.fte?.length || 0} rows`)
+    console.log(`   Timestamp: ${timestamp}`)
 
     // Return data with timestamp for change detection
     return res.status(200).json({
@@ -144,10 +213,15 @@ export default function handler(req, res) {
       source: fs.existsSync(sampleDataCache) ? 'webhook-cache' : 'original-files',
     })
   } catch (error) {
-    console.error('[/api/data] Error:', error.message)
-    return res.status(500).json({
-      error: 'Failed to load data',
-      message: error.message,
+    console.error('[/api/data] ❌ Error:', error.message)
+    
+    // Fallback response - return empty data but valid structure
+    return res.status(200).json({
+      sampleData: { revenue: [], cost: [] },
+      transactionFteData: { transactions: [], fte: [] },
+      timestamp: Date.now().toString(),
+      error: error.message,
+      source: 'fallback-empty',
     })
   }
 }
