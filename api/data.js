@@ -25,7 +25,7 @@ const txnFtePath = path.join(repoRoot, 'src', 'data', 'transactionFteData.js')
 function extractJsonFromModule(content, exportName) {
   try {
     // Match: export const exportName = {...} (with or without semicolon)
-    const regex = new RegExp(`export\\s+const\\s+${exportName}\\s*=\\s*({[\\s\\S]*?});?\\s*$`, 'ms')
+    const regex = new RegExp(`export\\s+const\\s+${exportName}\\s*=\\s*((?:\\{|\\[)[\\s\\S]*(?:\\}|\\]));?\\s*$`, 's')
     const match = content.match(regex)
     
     if (!match) {
