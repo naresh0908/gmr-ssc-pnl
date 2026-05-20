@@ -29,7 +29,7 @@ export default function InsightsPanel() {
               key={ins.kind + i}
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: i * 0.04 }}
-              className={`bg-[var(--card)] border ${s.wrap} rounded-[14px] p-4 px-5 flex gap-3.5 hover:-translate-y-0.5 hover:border-[var(--ink-soft)] transition`}
+              className={`group bg-[var(--card)] border ${s.wrap} rounded-[14px] p-4 px-5 flex gap-3.5 hover:-translate-y-0.5 hover:border-[var(--ink-soft)] transition`}
             >
               <div className={`w-9 h-9 rounded-[9px] flex items-center justify-center flex-shrink-0 ${s.icon}`}>
                 <Icon size={16} strokeWidth={2.2} />
@@ -44,6 +44,16 @@ export default function InsightsPanel() {
                 <div className="text-[12.5px] text-[var(--ink-soft)] mt-1.5 leading-[1.5]">
                   {ins.reason}
                 </div>
+                {ins.meta && (
+                  <div className="text-[12px] text-[var(--ink-soft)] mt-1.5 leading-[1.4] hidden group-hover:block">
+                    <div className="font-medium">Details</div>
+                    <div>Months: {ins.meta.months.join(', ') || '—'}</div>
+                    <div>YTD: ₹{ins.meta.ytd.act.toFixed(2)} Cr vs FC2 ₹{ins.meta.ytd.fc2.toFixed(2)} Cr · Δ ₹{ins.meta.ytd.delta.toFixed(2)} Cr ({ins.meta.ytd.pct}% )</div>
+                    {ins.meta.annualised.fyFc2 !== null && (
+                      <div>Annualised: ₹{ins.meta.annualised.act.toFixed(2)} Cr vs FY FC2 ₹{ins.meta.annualised.fyFc2.toFixed(2)} Cr · Δ ₹{(ins.meta.annualised.delta||0).toFixed(2)} Cr ({ins.meta.annualised.pct}% )</div>
+                    )}
+                  </div>
+                )}
                 <div className="mt-2.5 flex flex-wrap gap-1.5">
                   {ins.chips.map((c) => (
                     <span key={c} className="text-[11px] px-2 py-1 rounded-md bg-[var(--bg)] text-[var(--ink-soft)] font-medium border border-[var(--line)]">
