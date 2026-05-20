@@ -158,12 +158,27 @@ function WaterfallChart({ title, unit, fcTotal, actTotal, drivers }) {
                 ? fmt(b.value, unit)
                 : fmtDelta(b.value, unit)}
             </text>
-            {/* x-axis label */}
-            <text x={b.cx} y={H - PAD_B + 16} textAnchor="middle"
-              fill="var(--ink-soft)"
-              style={{ fontSize: 9.5, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
-              {wrapLabel(b.label, b.cx, H - PAD_B + 16)}
-            </text>
+            {/* x-axis label (wrap into up to 2 lines) */}
+            {(() => {
+              const txt = b.label || ''
+              const maxLen = 16
+              let lines = []
+              if (txt.length <= maxLen) lines = [txt]
+              else {
+                const idx = txt.lastIndexOf(' ', maxLen)
+                if (idx > 0) lines = [txt.slice(0, idx), txt.slice(idx + 1)]
+                else lines = [txt.slice(0, maxLen), txt.slice(maxLen)]
+              }
+              return (
+                <text x={b.cx} y={H - PAD_B + 12} textAnchor="middle" fill="var(--ink-soft)" style={{ fontSize: 10, fontFamily: 'DM Sans, system-ui, sans-serif' }}>
+                  {lines.map((l, i) => (
+                    <tspan key={i} x={b.cx} dy={i === 0 ? '0' : '14'}>
+                      {l}
+                    </tspan>
+                  ))}
+                </text>
+              )
+            })()}
           </g>
         ))}
 
@@ -193,6 +208,7 @@ function WaterfallChart({ title, unit, fcTotal, actTotal, drivers }) {
 
 /* helper: returns label string (truncate if needed) */
 function wrapLabel(text) {
+  if (!text) return ''
   if (text.length <= 12) return text
   return text.slice(0, 11) + '…'
 }
@@ -300,8 +316,7 @@ export default function DriverWaterfall() {
   return (
     <div className="mt-7">
       <SectionHead num="05" title={`Driver-Based Cost Bridge · ${periodLabel}`}>
-        Variance decomposed by business driver. Each waterfall bridges from the Forecast
-        anchor to the Actual result - showing exactly which categories drove cost over- or under-spend.
+        Variance bridge from Forecast to Actual by business driver.
       </SectionHead>
 
       {/* controls */}

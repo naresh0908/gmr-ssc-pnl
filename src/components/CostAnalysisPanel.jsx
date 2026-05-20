@@ -24,6 +24,30 @@ const TYPE_BG    = { PEX: 'bg-brand-red-soft', OPEX: 'bg-brand-amber-soft', CAPE
 const REV_COLOR = { sf: '#1F8A4C', oi: '#5BB87C', it: '#A9D9BB' }
 const REV_LABEL = { sf: 'Service Fees', oi: 'Other Income', it: 'Interest Income' }
 
+// Helper: wrap long tick labels into up to 2 lines
+function wrapLabel(text, maxLen = 14) {
+  if (!text) return ['']
+  if (text.length <= maxLen) return [text]
+  // try to split on space nearest to middle
+  const idx = text.lastIndexOf(' ', Math.min(text.length, maxLen + 1))
+  if (idx > 0) return [text.slice(0, idx), text.slice(idx + 1)]
+  // fallback: hard split
+  return [text.slice(0, maxLen), text.slice(maxLen)]
+}
+
+function MonthTick({ x, y, payload }) {
+  const lines = wrapLabel(payload.value)
+  return (
+    <text x={x} y={y} textAnchor="middle" fontSize={11} fontFamily="DM Sans, system-ui, sans-serif" fill="var(--ink-soft)">
+      {lines.map((l, i) => (
+        <tspan key={i} x={x} dy={i === 0 ? '0' : '14'}>
+          {l}
+        </tspan>
+      ))}
+    </text>
+  )
+}
+
 // ─── Tooltip ─────────────────────────────────────────────────────────────────
 function ChartTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null
@@ -56,7 +80,14 @@ function CostMoMChart({ data }) {
     <ResponsiveContainer width="100%" height={300}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis
+          dataKey="month"
+          tick={<MonthTick />}
+          axisLine={false}
+          tickLine={false}
+          interval={0}
+          height={60}
+        />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
           tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
@@ -80,7 +111,14 @@ function RevenueMoMChart({ data }) {
     <ResponsiveContainer width="100%" height={300}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis
+          dataKey="month"
+          tick={<MonthTick />}
+          axisLine={false}
+          tickLine={false}
+          interval={0}
+          height={60}
+        />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
           tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
@@ -104,7 +142,14 @@ function CombinedChart({ data }) {
     <ResponsiveContainer width="100%" height={320}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis
+          dataKey="month"
+          tick={<MonthTick />}
+          axisLine={false}
+          tickLine={false}
+          interval={0}
+          height={60}
+        />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
           tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
@@ -130,7 +175,14 @@ function YoYChart({ data, years }) {
     <ResponsiveContainer width="100%" height={300}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis
+          dataKey="month"
+          tick={<MonthTick />}
+          axisLine={false}
+          tickLine={false}
+          interval={0}
+          height={70}
+        />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
           tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
@@ -310,16 +362,17 @@ export default function CostAnalysisPanel() {
     return ['PEX', 'OPEX', 'CAPEX'].map((type) => {
       const entry = { type }
       derived.years.forEach((y) => {
-        const Y  = derived.byYear[y]
+        const Y = derived.byYear[y]
         const ct = Y?.costByType.find((c) => c.type === type)
         if (ct) { entry[`fy${y}_actual`] = ct.actual; entry[`fy${y}_fc2`] = ct.fc2 }
       })
       if (derived.years.length >= 2) {
         const latest = derived.years[derived.years.length - 1]
         const prev   = derived.years[derived.years.length - 2]
-        const lv = entry[`fy${latest}_actual`] ?? 0
-        const pv = entry[`fy${prev}_actual`]   ?? 0
+        const lv = entry[`fy${latest}_actual`] ?? entry[`fy${latest}`] ?? 0
+        const pv = entry[`fy${prev}_actual`]   ?? entry[`fy${prev}`]   ?? 0
         entry.yoyChange = pv > 0 ? r2(((lv - pv) / pv) * 100) : null
+        entry.change = r2(lv - pv)
       }
       return entry
     })
@@ -335,29 +388,29 @@ export default function CostAnalysisPanel() {
   const headerInfo = {
     cost: {
       title:  `Monthly Cost Breakdown · ${periodLabel}`,
-      sub:    'Stacked bars = actual spend by type · Dashed lines = FC1 (amber) & FC2 (black) totals',
+      sub:    'Actual spend by type with FC1 and FC2 totals.',
     },
     revenue: {
       title:  `Monthly Revenue Breakdown · ${periodLabel}`,
-      sub:    'Stacked bars = Service Fees + Other Income + Interest · Dashed lines = FC1 & FC2 total revenue',
+      sub:    'Actual revenue by stream with FC1 and FC2 totals.',
     },
     combined: {
       title:  `Revenue vs Cost · ${periodLabel}`,
-      sub:    'Cost stacked as bars (PEX·OPEX·CAPEX) · Revenue as solid line · Net profit as dashed blue line',
+      sub:    'Cost bars, revenue line, and net profit line.',
     },
     yoy: {
       title:  `Cost Evolution · ${derived.years.map((y) => `FY ${y}`).join(' vs ')}`,
-      sub:    'Monthly total actual cost per financial year · grouped bars',
+      sub:    'Monthly actual cost by financial year.',
     },
   }
 
   return (
     <div className="mt-7">
       <SectionHead num="02" title={`Cost & Revenue Analysis · ${periodLabel}`}>
-        {view === 'cost'     && 'Monthly cost split by type - PEX, OPEX, CAPEX vs forecast targets.'}
-        {view === 'revenue'  && 'Monthly revenue split by stream - Service Fees, Other Income, Interest vs forecast targets.'}
-        {view === 'combined' && 'Side-by-side view of revenue and cost per month - visualises monthly profit at a glance.'}
-        {view === 'yoy'      && 'Year-on-year cost evolution - monthly and annual comparison across financial years.'}
+        {view === 'cost'     && 'Cost by type.'}
+        {view === 'revenue'  && 'Revenue by stream.'}
+        {view === 'combined' && 'Revenue, cost, and net profit.'}
+        {view === 'yoy'      && 'Cost by financial year.'}
       </SectionHead>
 
       <motion.div

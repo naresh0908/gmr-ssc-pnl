@@ -31,19 +31,32 @@ export const useDashStore = create((set, get) => ({
   selectedPeriodMonth: defaultPeriodMonth,
 
   setPeriodMode:         (mode) => set({ periodMode: mode }),
-  setSelectedQ:          (q)    => set({ selectedQ: q, periodMode: 'quarter' }),
-  setSelectedPeriodMonth:(m)    => set({ selectedPeriodMonth: m, periodMode: 'month' }),
+  setPeriodMode:         (mode) => {
+    set({ periodMode: mode })
+    const insights = generateInsights(get().derived, get().year, { periodMode: mode, selectedQ: get().selectedQ, selectedPeriodMonth: get().selectedPeriodMonth })
+    set({ insights })
+  },
+  setSelectedQ:          (q)    => {
+    set({ selectedQ: q, periodMode: 'quarter' })
+    const insights = generateInsights(get().derived, get().year, { periodMode: 'quarter', selectedQ: q, selectedPeriodMonth: get().selectedPeriodMonth })
+    set({ insights })
+  },
+  setSelectedPeriodMonth:(m)    => {
+    set({ selectedPeriodMonth: m, periodMode: 'month' })
+    const insights = generateInsights(get().derived, get().year, { periodMode: 'month', selectedQ: get().selectedQ, selectedPeriodMonth: m })
+    set({ insights })
+  },
 
   setData: (revenue, cost) => {
     const derived = computeDerived(revenue, cost)
     const serviceRevenue = computeServiceRevenue(transactionFteData.transactions, transactionFteData.fte, revenue)
     const year = derived.years.at(-1) ?? get().year
-    const insights = generateInsights(derived, year)
+    const insights = generateInsights(derived, year, { periodMode: get().periodMode, selectedQ: get().selectedQ, selectedPeriodMonth: get().selectedPeriodMonth })
     set({ rawRevenue: revenue, rawCost: cost, derived, serviceRevenue, year, insights })
   },
 
   setYear: (y) => {
-    const insights = generateInsights(get().derived, y)
+    const insights = generateInsights(get().derived, y, { periodMode: get().periodMode, selectedQ: get().selectedQ, selectedPeriodMonth: get().selectedPeriodMonth })
     const newPeriodMonth = getLastActualMonth(get().rawRevenue, y)
     set({ year: y, insights, selectedPeriodMonth: newPeriodMonth, selectedQ: monthToQuarter(newPeriodMonth) })
   },
@@ -56,7 +69,7 @@ export const useDashStore = create((set, get) => ({
 
   // Init insights on first load
   initInsights: () => {
-    const insights = generateInsights(get().derived, get().year)
+    const insights = generateInsights(get().derived, get().year, { periodMode: get().periodMode, selectedQ: get().selectedQ, selectedPeriodMonth: get().selectedPeriodMonth })
     set({ insights })
   }
 }))
