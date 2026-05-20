@@ -320,9 +320,9 @@ function monthlyInsights(Y, year, rawRevenue, rawCost, ctx = {}) {
         : null
       out.push({
         severity: negYoY.length >= 3 ? 'warn' : 'info',
-        tag:   `YoY Trend · ${negYoY.length} Negative Month${negYoY.length > 1 ? 's' : ''}`,
-        title: `${negYoY.length} of ${withYoY.length} months declined vs base year - deepest in ${deepest.month} at ${deepest.yoy?.toFixed(1)}%${annualised ? `, equivalent to ~₹${annualised.toFixed(1)} Cr annual revenue shortfall` : ''}`,
-        reason: `Negative vs base in ${negYoY.map((m) => m.month).join(', ')}.`,
+        tag:   `YoY Perf · ${negYoY.length} NegMo`,
+        title: `${negYoY.length}/${withYoY.length} Mo − YoY · deepest ${deepest.month} Δ${deepest.yoy?.toFixed(1)}%${annualised ? ` · Annualised shortfall ₹${annualised.toFixed(1)} Cr` : ''}`,
+        reason: `Months: ${negYoY.map((m) => m.month).join(', ')}`,
       })
     } else if (posYoY.length > 0) {
       const annualised = Y.kpis.totalRevenue > 0 && Y.kpis.yoyGrowth
@@ -330,9 +330,9 @@ function monthlyInsights(Y, year, rawRevenue, rawCost, ctx = {}) {
         : null
       out.push({
         severity: 'good',
-        tag:   `YoY Trend · All Months Positive`,
-        title: `All ${posYoY.length} comparable months grew vs base year - average +${avgYoY}%${annualised ? `, adding ₹${annualised.toFixed(1)} Cr above the baseline` : ''}`,
-        reason: `Consistent growth across every month with actuals. The recovery trajectory is intact - set FY ${year + 1} baseline at the current H2 run-rate, not the full-year average, to avoid sandbagging the target.`,
+        tag:   `YoY Perf · ${posYoY.length} PosMo`,
+        title: `${posYoY.length}/${withYoY.length} Mo + YoY · Avg Δ +${avgYoY}%${annualised ? ` · Annualised gain ₹${annualised.toFixed(1)} Cr` : ''}`,
+        reason: `Months: ${posYoY.map((m) => m.month).join(', ')}`,
       })
     }
   }
@@ -352,13 +352,9 @@ function serviceRevenueInsights(SRY, year, ctx = {}) {
   const exitRisk = r2(topDept.total * 0.35) // rough EBIT proxy: loss if top dept exits
   out.push({
     severity: topPct > 45 ? 'warn' : 'good',
-    tag:   `Revenue Leader · ${shortDept(topDept.dept)} · ${topPct}%`,
-    title: topPct > 45
-      ? `${topDept.dept.split('(')[0].trim()} carries ${topPct}% of service revenue (₹${topDept.total.toFixed(1)} Cr) - single-account concentration above safe threshold`
-      : `${topDept.dept.split('(')[0].trim()} leads at ₹${topDept.total.toFixed(1)} Cr (${topPct}%) - portfolio is reasonably distributed`,
-    reason: topPct > 45
-      ? `FTE ₹${topDept.fteRevenue.toFixed(1)} Cr + Txn ₹${topDept.txnRevenue.toFixed(1)} Cr. Concentration risk ~₹${exitRisk.toFixed(1)} Cr of EBIT. Drill into customer contract and monthly revenue to quantify exposure.`
-      : `FTE ₹${topDept.fteRevenue.toFixed(1)} Cr + Txn ₹${topDept.txnRevenue.toFixed(1)} Cr. Healthy spread. Drill into department monthly performance to monitor concentration.`,
+    tag:   `Top Dept Rev · ${shortDept(topDept.dept)} · ${topPct}%`,
+    title: `${topDept.dept.split('(')[0].trim()} ₹${topDept.total.toFixed(1)} Cr · ${topPct}%`,
+    reason: `FTE ₹${topDept.fteRevenue.toFixed(1)} Cr · Txn ₹${topDept.txnRevenue.toFixed(1)} Cr${topPct > 45 ? ` · Concentration risk ~₹${exitRisk.toFixed(1)} Cr` : ''}`,
   })
 
   // ── Billing mix: FTE (fixed income) vs Transaction (volume-linked upside) ────
@@ -369,9 +365,9 @@ function serviceRevenueInsights(SRY, year, ctx = {}) {
     : `Current mix caps revenue growth to headcount growth; drill into service mix and pricing to evaluate scalability options.`
   out.push({
     severity: txnPct > 40 ? 'good' : 'info',
-    tag:   `Billing Mix · ${ftePct}% FTE · ${txnPct}% Txn`,
-    title: `${ftePct}% FTE-billed (₹${totalFte.toFixed(1)} Cr) · ${txnPct}% transaction-billed (₹${totalTxn.toFixed(1)} Cr)`,
-    reason: `${upside} Drill into service mix and pricing to evaluate scalability and margin implications.`,
+    tag:   `Revenue Mix · FTE ${ftePct}% · Txn ${txnPct}%`,
+    title: `FTE ₹${totalFte.toFixed(1)} Cr · Txn ₹${totalTxn.toFixed(1)} Cr`,
+    reason: txnPct > 40 ? `Txn-driven upside` : `FTE-weighted; pricing review recommended`,
   })
 
   // ── Revenue momentum: is the portfolio accelerating or decelerating? ──────────
@@ -381,13 +377,18 @@ function serviceRevenueInsights(SRY, year, ctx = {}) {
     const h2        = r2(monthly.slice(midpoint).reduce((s, m) => s + m.total, 0))
     const h2Growth  = r1(((h2 - h1) / Math.max(h1, 0.01)) * 100)
     const monthly_run = r2((h2 / (monthly.length - midpoint)))
+    // create concise financial label with explicit month ranges for clarity
+    const h1Months = monthly.slice(0, midpoint)
+    const h2Months = monthly.slice(midpoint)
+    const h1Range = h1Months.length ? `${h1Months[0].month}→${h1Months[h1Months.length - 1].month}` : '-'
+    const h2Range = h2Months.length ? `${h2Months[0].month}→${h2Months[h2Months.length - 1].month}` : '-'
     out.push({
       severity: h2Growth >= 3 ? 'good' : h2Growth < -5 ? 'warn' : 'info',
-      tag:   `H1→H2 Momentum · ${h2Growth >= 0 ? '+' : ''}${h2Growth}%`,
-      title: h2Growth >= 0
-        ? `Service revenue accelerated ${h2Growth}% from H1 to H2 - current monthly run-rate ₹${monthly_run.toFixed(1)} Cr`
-        : `Service revenue decelerated ${abs(h2Growth)}% in H2 - run-rate entering FY ${year + 1} is below the H1 base`,
-      reason: `H1 ₹${h1.toFixed(1)} Cr → H2 ₹${h2.toFixed(1)} Cr. ${h2Growth >= 3 ? `H2 run-rate ~₹${monthly_run.toFixed(1)} Cr/month` : h2Growth < -5 ? `H2 deceleration observed` : `Broadly stable`} Drill into signed scope and monthly run-rate to set FY ${year + 1} baseline.`,
+      // concise financial notation: delta percent plus month ranges
+      tag:   `Δ H2 vs H1 · ${h2Growth >= 0 ? '+' : ''}${h2Growth}% (${h1Range}→${h2Range})`,
+      // precise, non-narrative title using financial symbols and run-rate
+      title: `Δ H2 vs H1: ${h2Growth >= 0 ? '+' : ''}${h2Growth}% · H2 run-rate ₹${monthly_run.toFixed(1)} Cr`,
+      reason: `H1 ₹${h1.toFixed(1)} Cr → H2 ₹${h2.toFixed(1)} Cr. H2 run-rate ₹${monthly_run.toFixed(1)} Cr/month.`,
     })
   }
 
@@ -722,12 +723,31 @@ function costAnalysisInsights(Y, year, rawCost, ctx = {}) {
     const varF2  = r2(opex.actual - opex.fc2)
     const note   = causal?.cost ? Object.values(causal.cost).find((v) => v.type === 'OPEX')?.note : null
     const pctVar = opex.fc2 > 0 ? r1((varF2 / opex.fc2) * 100) : 0
+    const activeCount = ctx?.activeMonths?.length || 12
+    const ytdAct = opex.actual
+    const ytdFc2 = opex.fc2
+    const ytdDelta = r2(ytdAct - ytdFc2)
+    const ytdPct = ytdFc2 > 0 ? r1((ytdAct - ytdFc2) / ytdFc2 * 100) : 0
+    const annualisedAct = r2(ytdAct * (12 / activeCount))
+    const annualisedDelta = kpis?.costFc2 ? r2(annualisedAct - (kpis.costFc2 || 0)) : null
+    const annualisedPct = (kpis?.costFc2 && kpis.costFc2 > 0) ? r1((annualisedDelta / kpis.costFc2) * 100) : 0
+
     out.push({
       severity: varF2 > 0.5 ? 'warn' : varF2 < -0.5 ? 'good' : 'info',
-      tag:   `OPEX FY · ${varF2 > 0 ? '+' : ''}${pctVar}% vs FC2`,
-      title: varF2 > 0
-        ? `OPEX overran FC2 by ₹${varF2.toFixed(1)} Cr (${pctVar}%) for the full year - discretionary spend needs tighter gates`
-        : `OPEX landed ₹${abs(varF2).toFixed(1)} Cr (${abs(pctVar)}%) below FC2 - full-year saving confirmed`,
+      tag:   (activeCount < 12)
+        ? `OPEX YTD · ${ytdPct > 0 ? '+' : ''}${ytdPct}% (YTD) · Ann Δ ${annualisedPct > 0 ? '+' : ''}${annualisedPct}%`
+        : `OPEX FY · ${pctVar > 0 ? '+' : ''}${pctVar}% vs FC2`,
+      title: (activeCount < 12)
+        ? `OPEX YTD Δ ${ytdPct > 0 ? '+' : ''}${ytdPct}% · Ann Δ ${annualisedPct > 0 ? '+' : ''}${annualisedPct}% · H2 run-rate N/A`
+        : (varF2 > 0
+            ? `OPEX overran FC2 by ₹${varF2.toFixed(1)} Cr (${pctVar}%) for the full year`
+            : `OPEX landed ₹${abs(varF2).toFixed(1)} Cr (${abs(pctVar)}%) below FC2`),
+      // attach meta for UI hover / drill: explicit numbers and months
+      meta: {
+        months: ctx?.activeMonths ?? [],
+        ytd: { act: ytdAct, fc2: ytdFc2, delta: ytdDelta, pct: ytdPct },
+        annualised: { act: annualisedAct, fyFc2: kpis?.costFc2 ?? null, delta: annualisedDelta, pct: annualisedPct }
+      },
       reason: note
         ? note
         : varF2 > 0
