@@ -47,9 +47,11 @@ export const useDashStore = create((set, get) => ({
     set({ insights })
   },
 
-  setData: (revenue, cost) => {
+  setData: (revenue, cost, transactions, fte) => {
     const derived = computeDerived(revenue, cost)
-    const serviceRevenue = computeServiceRevenue(transactionFteData.transactions, transactionFteData.fte, revenue)
+    const txns = transactions ?? transactionFteData.transactions
+    const fteRows = fte ?? transactionFteData.fte
+    const serviceRevenue = computeServiceRevenue(txns, fteRows, revenue)
     const year = derived.years.at(-1) ?? get().year
     const insights = generateInsights(derived, year, { periodMode: get().periodMode, selectedQ: get().selectedQ, selectedPeriodMonth: get().selectedPeriodMonth })
     set({ rawRevenue: revenue, rawCost: cost, derived, serviceRevenue, year, insights })

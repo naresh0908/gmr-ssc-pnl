@@ -1,144 +1,185 @@
 /**
  * Vercel API Endpoint: Power Automate Direct Data Webhook
- * 
- * Receives Excel data directly from Power Automate (no auth needed).
- * Writes data to src/data files for immediate dashboard refresh.
+ * Receives Excel data directly from Power Automate and stores it in:
+ * 1. In-memory store (for warm Lambda instances)
+ * 2. /tmp files (for persistence across cold starts)
  */
 
 import fs from 'fs'
 import path from 'path'
+import os from 'os'
+import { store } from '../_store.js'
 
-const repoRoot = process.cwd()
-const sampleDataOut = path.join(repoRoot, 'src', 'data', 'sampleData.js')
-const txnFteOut = path.join(repoRoot, 'src', 'data', 'transactionFteData.js')
+const tmpDir = os.tmpdir()
+const sampleDataCache = path.join(tmpDir, 'sampleData.json')
+const txnFteCache = path.join(tmpDir, 'transactionFteData.json')
+const metadataCache = path.join(tmpDir, 'sync-metadata.json')
 
-/**
- * Write data to module file
- */
-function writeModule(filePath, exportName, data, source) {
+function sanitizeData(obj) {
+  if (Array.isArray(obj)) return obj.map(sanitizeData)
+  if (obj !== null && typeof obj === 'object') {
+    const out = {}
+    for (const [k, v] of Object.entries(obj)) out[k] = sanitizeData(v)
+    return out
+  }
+  if (typeof obj === 'number') return isFinite(obj) ? obj : null
+  if (typeof obj === 'string') return obj.trim()
+  return obj
+}
+
+function writeCache(filePath, data) {
   try {
-    const timestamp = new Date().toISOString()
-    const content = `// Auto-generated from ${source} at ${timestamp}. Do not edit by hand.\nexport const ${exportName} = ${JSON.stringify(data, null, 2)};\n`
-    fs.writeFileSync(filePath, content, 'utf8')
-    console.log(`✅ Written: ${filePath}`)
+    const sanitized = sanitizeData(data)
+    const json = JSON.stringify(sanitized, null, 2)
+    fs.writeFileSync(filePath, json, 'utf8')
+    console.log(`✅ Cached to /tmp: ${path.basename(filePath)}`)
     return true
   } catch (e) {
-    console.error(`❌ Error writing ${filePath}:`, e.message)
+    console.error(`❌ Error writing cache: ${e.message}`)
     return false
   }
 }
 
-/**
- * Validate data structure
- */
 function validateData(body) {
   const errors = []
-
-  if (!body.revenue || !Array.isArray(body.revenue)) {
-    errors.push('Missing or invalid: revenue (should be array)')
+  
+  // Check if we have arrays
+  if (!body.revenue) {
+    errors.push('Missing: revenue')
+  } else if (!Array.isArray(body.revenue)) {
+    console.warn('[Webhook] Revenue is not an array:', typeof body.revenue, Object.keys(body.revenue || {}).slice(0, 5))
+    errors.push('Invalid: revenue (not an array)')
   }
-
-  if (!body.cost || !Array.isArray(body.cost)) {
-    errors.push('Missing or invalid: cost (should be array)')
+  
+  if (!body.cost) {
+    errors.push('Missing: cost')
+  } else if (!Array.isArray(body.cost)) {
+    console.warn('[Webhook] Cost is not an array:', typeof body.cost, Object.keys(body.cost || {}).slice(0, 5))
+    errors.push('Invalid: cost (not an array)')
   }
-
-  if (!body.transactions || !Array.isArray(body.transactions)) {
-    errors.push('Missing or invalid: transactions (should be array)')
+  
+  if (!body.transactions) {
+    errors.push('Missing: transactions')
+  } else if (!Array.isArray(body.transactions)) {
+    console.warn('[Webhook] Transactions is not an array:', typeof body.transactions)
+    errors.push('Invalid: transactions (not an array)')
   }
-
-  if (!body.fte || !Array.isArray(body.fte)) {
-    errors.push('Missing or invalid: fte (should be array)')
+  
+  if (!body.fte) {
+    errors.push('Missing: fte')
+  } else if (!Array.isArray(body.fte)) {
+    console.warn('[Webhook] FTE is not an array:', typeof body.fte)
+    errors.push('Invalid: fte (not an array)')
   }
-
+  
   return { valid: errors.length === 0, errors }
 }
 
-/**
- * Parse JSON if string, return data otherwise
- */
-function parseData(str) {
-  if (typeof str === 'string') {
-    try {
-      return JSON.parse(str)
-    } catch (e) {
-      throw new Error(`Invalid JSON: ${e.message}`)
-    }
-  }
-  return str
-}
-
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end()
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end()
 
-  // Health check
   if (req.method === 'GET') {
-    console.log('[Webhook] Health check')
-    return res.status(200).json({ status: 'ok', message: 'Power Automate data webhook ready' })
+    return res.status(200).json({
+      status: 'ok',
+      message: 'Power Automate data webhook ready',
+      hasData: !!store.sampleData,
+      lastSync: store.timestamp,
+    })
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   try {
     console.log('[Webhook] 📥 Data received from Power Automate')
-
+    
     const body = req.body || {}
-
-    // Validate structure
+    
+    // DEBUG: Log the entire body structure
+    console.log('[Webhook] ============ RAW BODY ============')
+    console.log('[Webhook] Body type:', typeof body)
+    console.log('[Webhook] Is array?', Array.isArray(body))
+    console.log('[Webhook] Body keys:', Object.keys(body))
+    console.log('[Webhook] Full body JSON:')
+    try {
+      const bodyJson = JSON.stringify(body, null, 2)
+      // Log in chunks if too large
+      if (bodyJson.length > 2000) {
+        console.log(bodyJson.substring(0, 2000))
+        console.log(`... (truncated, total: ${bodyJson.length} chars)`)
+      } else {
+        console.log(bodyJson)
+      }
+    } catch (e) {
+      console.log('[Webhook] Could not stringify body:', e.message)
+    }
+    console.log('[Webhook] ===================================')
+    
+    // Debug: log what we received
+    console.log('[Webhook] Body revenue type:', typeof body.revenue, 'Is array?', Array.isArray(body.revenue))
+    console.log('[Webhook] Body cost type:', typeof body.cost, 'Is array?', Array.isArray(body.cost))
+    console.log('[Webhook] Body transactions type:', typeof body.transactions, 'Is array?', Array.isArray(body.transactions))
+    console.log('[Webhook] Body fte type:', typeof body.fte, 'Is array?', Array.isArray(body.fte))
+    
+    if (body.revenue) {
+      console.log('[Webhook] Revenue first item:', JSON.stringify(body.revenue[0]).substring(0, 200))
+    }
+    if (body.cost) {
+      console.log('[Webhook] Cost first item:', JSON.stringify(body.cost[0]).substring(0, 200))
+    }
+    
     const validation = validateData(body)
     if (!validation.valid) {
-      console.error('[Webhook] ❌ Validation errors:', validation.errors)
-      return res.status(400).json({
-        error: 'Invalid data structure',
-        details: validation.errors,
-      })
+      console.error('[Webhook] ❌ Validation FAILED!')
+      console.error('[Webhook] Validation errors:', validation.errors)
+      console.error('[Webhook] Returning 400 error')
+      return res.status(400).json({ error: 'Invalid data structure', details: validation.errors })
+    }
+    
+    console.log('[Webhook] ✅ Validation PASSED')
+
+    // Sanitize data
+    const sampleData = sanitizeData({ revenue: body.revenue, cost: body.cost })
+    const transactionFteData = sanitizeData({ transactions: body.transactions, fte: body.fte })
+    const timestamp = Date.now().toString()
+
+    // 1. Store in /tmp for persistence across Lambda instances
+    console.log('[Webhook] Writing to /tmp cache...')
+    const sampleOk = writeCache(sampleDataCache, sampleData)
+    const txnOk = writeCache(txnFteCache, transactionFteData)
+    const metaOk = writeCache(metadataCache, { syncedAt: new Date().toISOString(), timestamp, source: 'power-automate' })
+
+    console.log('[Webhook] /tmp write results:', { sampleOk, txnOk, metaOk })
+
+    // 2. Also store in memory for fast access on warm instances
+    console.log('[Webhook] Storing in memory...')
+    store.sampleData = sampleData
+    store.transactionFteData = transactionFteData
+    store.timestamp = timestamp
+    store.source = 'power-automate'
+    
+    console.log('[Webhook] Memory store updated:', {
+      hasSampleData: !!store.sampleData,
+      hasTransactionFteData: !!store.transactionFteData,
+      timestamp: store.timestamp,
+    })
+
+    if (!sampleOk || !txnOk || !metaOk) {
+      console.warn('[Webhook] ⚠️  Some writes failed, but data is in memory')
     }
 
-    // Write revenue & cost
-    const sampleOk = writeModule(
-      sampleDataOut,
-      'sampleData',
-      {
-        revenue: body.revenue,
-        cost: body.cost,
-      },
-      'Power Automate'
-    )
-
-    // Write transactions & FTE
-    const txnFteOk = writeModule(
-      txnFteOut,
-      'transactionFteData',
-      {
-        transactions: body.transactions,
-        fte: body.fte,
-      },
-      'Power Automate'
-    )
-
-    if (!sampleOk || !txnFteOk) {
-      console.error('[Webhook] ❌ Failed to write all files')
-      return res.status(500).json({ error: 'Failed to write data files' })
-    }
-
-    console.log('[Webhook] ✅ Data synced successfully')
+    console.log('[Webhook] ✅ Data stored (memory + /tmp cache)')
     console.log(`   Revenue: ${body.revenue.length} rows`)
     console.log(`   Cost: ${body.cost.length} rows`)
     console.log(`   Transactions: ${body.transactions.length} rows`)
     console.log(`   FTE: ${body.fte.length} rows`)
 
-    // Return 200 to Power Automate immediately
     return res.status(200).json({
       success: true,
-      message: 'Data synced',
+      message: 'Data received and ready for dashboard',
       rows: {
         revenue: body.revenue.length,
         cost: body.cost.length,
@@ -148,9 +189,6 @@ export default async function handler(req, res) {
     })
   } catch (error) {
     console.error('[Webhook] ❌ Error:', error.message)
-    return res.status(500).json({
-      error: 'Internal server error',
-      message: error.message,
-    })
+    return res.status(500).json({ error: 'Internal server error', message: error.message })
   }
 }
