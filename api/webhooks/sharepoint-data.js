@@ -14,6 +14,7 @@ const tmpDir = os.tmpdir()
 const sampleDataCache = path.join(tmpDir, 'sampleData.json')
 const txnFteCache = path.join(tmpDir, 'transactionFteData.json')
 const metadataCache = path.join(tmpDir, 'sync-metadata.json')
+const webhookDiagnostics = path.join(tmpDir, 'webhook-call-diagnostics.json')
 
 function sanitizeData(obj) {
   if (Array.isArray(obj)) return obj.map(sanitizeData)
@@ -154,6 +155,24 @@ export default async function handler(req, res) {
     }
     
     console.log('[Webhook] ✅ Validation PASSED')
+
+    // Record this webhook call to /tmp for diagnostics
+    try {
+      fs.writeFileSync(webhookDiagnostics, JSON.stringify({
+        timestamp: new Date().toISOString(),
+        success: true,
+        bodyKeys: Object.keys(body),
+        extractedArrayLengths: {
+          revenue: validation.extracted.revenue.length,
+          cost: validation.extracted.cost.length,
+          transactions: validation.extracted.transactions.length,
+          fte: validation.extracted.fte.length,
+        }
+      }, null, 2))
+      console.log('[Webhook] 📝 Recorded call to /tmp diagnostics')
+    } catch (diagErr) {
+      console.warn('[Webhook] Could not write diagnostics:', diagErr.message)
+    }
 
     // Use the EXTRACTED arrays (handles both direct and wrapped formats)
     const sampleData = sanitizeData({ 
