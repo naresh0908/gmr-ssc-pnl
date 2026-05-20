@@ -100,8 +100,22 @@ export default async function handler(req, res) {
     
     // DEBUG: Log the entire body structure
     console.log('[Webhook] ============ RAW BODY ============')
-    console.log('[Webhook] Body:', JSON.stringify(body, null, 2).substring(0, 500))
+    console.log('[Webhook] Body type:', typeof body)
+    console.log('[Webhook] Is array?', Array.isArray(body))
     console.log('[Webhook] Body keys:', Object.keys(body))
+    console.log('[Webhook] Full body JSON:')
+    try {
+      const bodyJson = JSON.stringify(body, null, 2)
+      // Log in chunks if too large
+      if (bodyJson.length > 2000) {
+        console.log(bodyJson.substring(0, 2000))
+        console.log(`... (truncated, total: ${bodyJson.length} chars)`)
+      } else {
+        console.log(bodyJson)
+      }
+    } catch (e) {
+      console.log('[Webhook] Could not stringify body:', e.message)
+    }
     console.log('[Webhook] ===================================')
     
     // Debug: log what we received
