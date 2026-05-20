@@ -4,7 +4,10 @@
  * Output shape: { kind, severity, tag, title, reason, chips }
  * Keep it numeric, comparative, and free of fabricated causes.
  */
-export function generateInsights(derived, year) {
+import { getActivePeriodMonths, derivePeriodKPIs, QUARTERS } from './periodUtils'
+
+export function generateInsights(derived, year, opts = {}) {
+  const { periodMode = 'year', selectedQ = 'Q1', selectedPeriodMonth = 'Jan' } = opts
   const Y = derived.byYear?.[year]
   if (!Y) return []
 
@@ -12,6 +15,46 @@ export function generateInsights(derived, year) {
   const { kpis, byDept = [], costByType = [], monthly } = Y
 
   if (!monthly || monthly.length === 0) return []
+
+  // Compute current period KPIs and previous-period KPIs for comparisons
+  const availMonths = monthly.map((m) => m.month)
+  const activeMonths = getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths)
+  const pk = derivePeriodKPIs(monthly, activeMonths) || {}
+
+  // helper to get previous period months and year offset
+  const getPrevPeriod = () => {
+    if (periodMode === 'year') return { yearOffset: -1, months: null }
+    if (periodMode === 'quarter') {
+      const keys = Object.keys(QUARTERS)
+      const idx = keys.indexOf(selectedQ)
+      const prevIdx = idx <= 0 ? keys.length - 1 : idx - 1
+      const yearOffset = idx <= 0 ? -1 : 0
+      return { yearOffset, months: QUARTERS[keys[prevIdx]] }
+    }
+    // month
+    const monthsOrder = availMonths.length ? availMonths : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    const idx = monthsOrder.indexOf(selectedPeriodMonth)
+    const prevIdx = idx <= 0 ? monthsOrder.length - 1 : idx - 1
+    const yearOffset = idx <= 0 ? -1 : 0
+    return { yearOffset, months: [monthsOrder[prevIdx]] }
+  }
+
+  const prevInfo = getPrevPeriod()
+  const prevYear = year + prevInfo.yearOffset
+  const prevY = derived.byYear?.[prevYear]
+  let prevPk = null
+  if (prevY) {
+    const prevMonths = prevInfo.months === null ? prevY.monthly.map((m) => m.month) : prevInfo.months
+    prevPk = derivePeriodKPIs(prevY.monthly, prevMonths) || null
+  }
+
+  // Add a top-level period comparison card if we have previous period KPIs
+  if (prevPk) {
+    const revDelta = (pk.totalRevenue ?? 0) - (prevPk.totalRevenue ?? 0)
+    const npDelta = (pk.netProfit ?? 0) - (prevPk.netProfit ?? 0)
+    const revPct = prevPk.totalRevenue ? Math.round((revDelta / prevPk.totalRevenue) * 100 * 10) / 10 : null
+    out.push({ kind: 'period-comparison', severity: revDelta >= 0 ? 'good' : 'warn', tag: 'Period · Comparison', title: `Revenue ₹${(pk.totalRevenue ?? 0).toFixed(1)} Cr · Δ ₹${revDelta.toFixed(1)} Cr ${revPct != null ? `(${revPct}%)` : ''}`, reason: '', chips: [ 'Period' ] })
+  }
 
   // Simple monthly patterns (highest/lowest rev & cost, best margin)
   const highestRevMonth = [...monthly].sort((a, b) => b.revAct - a.revAct)[0]

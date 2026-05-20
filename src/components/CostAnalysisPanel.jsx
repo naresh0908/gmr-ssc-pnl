@@ -24,6 +24,30 @@ const TYPE_BG    = { PEX: 'bg-brand-red-soft', OPEX: 'bg-brand-amber-soft', CAPE
 const REV_COLOR = { sf: '#1F8A4C', oi: '#5BB87C', it: '#A9D9BB' }
 const REV_LABEL = { sf: 'Service Fees', oi: 'Other Income', it: 'Interest Income' }
 
+// Helper: wrap long tick labels into up to 2 lines
+function wrapLabel(text, maxLen = 14) {
+  if (!text) return ['']
+  if (text.length <= maxLen) return [text]
+  // try to split on space nearest to middle
+  const idx = text.lastIndexOf(' ', Math.min(text.length, maxLen + 1))
+  if (idx > 0) return [text.slice(0, idx), text.slice(idx + 1)]
+  // fallback: hard split
+  return [text.slice(0, maxLen), text.slice(maxLen)]
+}
+
+function MonthTick({ x, y, payload }) {
+  const lines = wrapLabel(payload.value)
+  return (
+    <text x={x} y={y} textAnchor="middle" fontSize={11} fontFamily="DM Sans, system-ui, sans-serif" fill="var(--ink-soft)">
+      {lines.map((l, i) => (
+        <tspan key={i} x={x} dy={i === 0 ? '0' : '14'}>
+          {l}
+        </tspan>
+      ))}
+    </text>
+  )
+}
+
 // ─── Tooltip ─────────────────────────────────────────────────────────────────
 function ChartTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null
@@ -56,7 +80,14 @@ function CostMoMChart({ data }) {
     <ResponsiveContainer width="100%" height={300}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis
+          dataKey="month"
+          tick={<MonthTick />}
+          axisLine={false}
+          tickLine={false}
+          interval={0}
+          height={60}
+        />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
           tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
@@ -80,7 +111,14 @@ function RevenueMoMChart({ data }) {
     <ResponsiveContainer width="100%" height={300}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis
+          dataKey="month"
+          tick={<MonthTick />}
+          axisLine={false}
+          tickLine={false}
+          interval={0}
+          height={60}
+        />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
           tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
@@ -104,7 +142,14 @@ function CombinedChart({ data }) {
     <ResponsiveContainer width="100%" height={320}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis
+          dataKey="month"
+          tick={<MonthTick />}
+          axisLine={false}
+          tickLine={false}
+          interval={0}
+          height={60}
+        />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
           tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}
@@ -130,7 +175,14 @@ function YoYChart({ data, years }) {
     <ResponsiveContainer width="100%" height={300}>
       <ComposedChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--ink-soft)' }} axisLine={false} tickLine={false} />
+        <XAxis
+          dataKey="month"
+          tick={<MonthTick />}
+          axisLine={false}
+          tickLine={false}
+          interval={0}
+          height={70}
+        />
         <YAxis
           tickFormatter={(v) => `${v.toFixed(0)}`}
           tick={{ fontSize: 11, fontFamily: 'DM Sans, system-ui, sans-serif', fill: 'var(--muted)' }}

@@ -141,8 +141,8 @@ function plInsights(Y, year, rawRevenue, rawCost, derived) {
       tag:   `P&L · Plan Beat FY ${year}`,
       title: `₹${kpis.netProfit.toFixed(1)} Cr net result beats FC2 by ₹${netVsF2.toFixed(1)} Cr - EBIT margin ${ebitMargin}%, above target`,
       reason: prevRev && kpis.totalRevenue > prevRev
-        ? `Revenue grew ₹${r2(kpis.totalRevenue - prevRev).toFixed(1)} Cr vs prior year while cost discipline held - both levers working together. Lock the H2 cost run-rate as the FY ${year + 1} floor; the upside from revenue growth flows directly to margin.`
-        : `Both revenue beat (₹${abs(revVsF2).toFixed(1)} Cr above FC2) and cost discipline contributed. Confirm whether the revenue drivers are contractual (recurring) or one-time before raising the FY ${year + 1} top-line target.`,
+        ? `Revenue grew ₹${r2(kpis.totalRevenue - prevRev).toFixed(1)} Cr vs prior year while cost discipline held. Drill into H2 run-rate and revenue composition to validate sustainability.`
+        : `Both revenue beat (₹${abs(revVsF2).toFixed(1)} Cr above FC2) and cost discipline contributed. Drill into revenue and cost composition to assess persistence of the beat.`,
     })
   } else {
     out.push({
@@ -194,14 +194,14 @@ function plInsights(Y, year, rawRevenue, rawCost, derived) {
       tag:   `PEX · ${pexPct}% of Total Cost`,
       title: `Personnel at ₹${pex.actual.toFixed(1)} Cr (${pexPct}% of cost) - ${verdict}`,
       reason: pexNote
-        ? `${pexNote}${revPerCostRatio ? ` Revenue-to-PEX ratio is ${revPerCostRatio.toFixed(1)}× - target >${r1(revPerCostRatio * 1.1).toFixed(1)}× before the next hiring wave.` : ''}`
+        ? `${pexNote}${revPerCostRatio ? ` Revenue-to-PEX ratio is ${revPerCostRatio.toFixed(1)}×.` : ''}`
         : pexVarF2 > 1.5
-          ? `PEX ₹${pex.actual.toFixed(1)} Cr vs FC2 ₹${pex.fc2.toFixed(1)} Cr. ${revPerCostRatio ? `Revenue covers personnel ${revPerCostRatio.toFixed(1)}× today. ` : ''}Freeze net headcount additions until revenue-per-FTE returns to the FY ${prevY ?? year - 1} level.`
-          : `PEX ₹${pex.actual.toFixed(1)} Cr (FC2 ₹${pex.fc2.toFixed(1)} Cr). Confirm whether the saving is structural efficiency or a timing lag - if structural, lower the FY ${year + 1} headcount budget; if timing, the cost will catch up.`,
+          ? `PEX ₹${pex.actual.toFixed(1)} Cr vs FC2 ₹${pex.fc2.toFixed(1)} Cr (Δ ₹${pexVarF2.toFixed(1)} Cr). Drill into headcount, hire dates and revenue-per-FTE by dept.`
+          : `PEX ₹${pex.actual.toFixed(1)} Cr vs FC2 ₹${pex.fc2.toFixed(1)} Cr (Δ ₹${pexVarF2.toFixed(1)} Cr). Drill into payroll timing and hiring to determine recurrence.`,
     })
   }
 
-  return out
+  return out.map(o => { delete o.reason; return o })
 }
 
 // ─── 02 · Monthly Performance ─────────────────────────────────────────────────
@@ -282,7 +282,7 @@ function monthlyInsights(Y, year, rawRevenue, rawCost) {
     }
   }
 
-  return out
+  return out.map(o => { delete o.reason; return o })
 }
 
 // ─── 03 · Service Revenue ─────────────────────────────────────────────────────
@@ -302,8 +302,8 @@ function serviceRevenueInsights(SRY, year) {
       ? `${topDept.dept.split('(')[0].trim()} carries ${topPct}% of service revenue (₹${topDept.total.toFixed(1)} Cr) - single-account concentration above safe threshold`
       : `${topDept.dept.split('(')[0].trim()} leads at ₹${topDept.total.toFixed(1)} Cr (${topPct}%) - portfolio is reasonably distributed`,
     reason: topPct > 45
-      ? `FTE ₹${topDept.fteRevenue.toFixed(1)} Cr + Txn ₹${topDept.txnRevenue.toFixed(1)} Cr. A single-scope reduction here puts ~₹${exitRisk.toFixed(1)} Cr of EBIT at risk. Lock a multi-year SLA before the next renewal window - negotiate a minimum transaction volume floor into the contract.`
-      : `FTE ₹${topDept.fteRevenue.toFixed(1)} Cr + Txn ₹${topDept.txnRevenue.toFixed(1)} Cr. Healthy spread - single-account churn is contained. Maintain by ensuring no second department exceeds ${topPct + 5}% concentration as the portfolio grows.`,
+      ? `FTE ₹${topDept.fteRevenue.toFixed(1)} Cr + Txn ₹${topDept.txnRevenue.toFixed(1)} Cr. Concentration risk ~₹${exitRisk.toFixed(1)} Cr of EBIT. Drill into customer contract and monthly revenue to quantify exposure.`
+      : `FTE ₹${topDept.fteRevenue.toFixed(1)} Cr + Txn ₹${topDept.txnRevenue.toFixed(1)} Cr. Healthy spread. Drill into department monthly performance to monitor concentration.`,
   })
 
   // ── Billing mix: FTE (fixed income) vs Transaction (volume-linked upside) ────
@@ -311,12 +311,12 @@ function serviceRevenueInsights(SRY, year) {
   const txnPct = r1(100 - ftePct)
   const upside = txnPct > 40
     ? `Volume growth flows directly to margin at zero incremental headcount cost.`
-    : `Current mix caps revenue growth to headcount growth - restructuring high-volume services (helpdesk, payroll) to per-transaction billing unlocks margin without adding FTEs.`
+    : `Current mix caps revenue growth to headcount growth; drill into service mix and pricing to evaluate scalability options.`
   out.push({
     severity: txnPct > 40 ? 'good' : 'info',
     tag:   `Billing Mix · ${ftePct}% FTE · ${txnPct}% Txn`,
     title: `${ftePct}% FTE-billed (₹${totalFte.toFixed(1)} Cr) · ${txnPct}% transaction-billed (₹${totalTxn.toFixed(1)} Cr)`,
-    reason: `${upside} Transaction-fee variants can increase scalability without proportional cost growth.`,
+    reason: `${upside} Drill into service mix and pricing to evaluate scalability and margin implications.`,
   })
 
   // ── Revenue momentum: is the portfolio accelerating or decelerating? ──────────
@@ -332,11 +332,11 @@ function serviceRevenueInsights(SRY, year) {
       title: h2Growth >= 0
         ? `Service revenue accelerated ${h2Growth}% from H1 to H2 - current monthly run-rate ₹${monthly_run.toFixed(1)} Cr`
         : `Service revenue decelerated ${abs(h2Growth)}% in H2 - run-rate entering FY ${year + 1} is below the H1 base`,
-      reason: `H1 ₹${h1.toFixed(1)} Cr → H2 ₹${h2.toFixed(1)} Cr. ${h2Growth >= 3 ? `Use ₹${monthly_run.toFixed(1)} Cr/month as the FY ${year + 1} floor, not the H1 average - the portfolio is growing into year-end.` : h2Growth < -5 ? `H2 deceleration means FY ${year + 1} targets set on the full-year average will be too optimistic. Validate Q1 pipeline coverage before locking targets.` : `Broadly stable. FY ${year + 1} baseline should mirror the H2 run-rate plus signed new scope only.`}`,
+      reason: `H1 ₹${h1.toFixed(1)} Cr → H2 ₹${h2.toFixed(1)} Cr. ${h2Growth >= 3 ? `H2 run-rate ~₹${monthly_run.toFixed(1)} Cr/month` : h2Growth < -5 ? `H2 deceleration observed` : `Broadly stable`} Drill into signed scope and monthly run-rate to set FY ${year + 1} baseline.`,
     })
   }
 
-  return out
+  return out.map(o => { delete o.reason; return o })
 }
 
 // ─── 04 · EBIT Matrix - Department ───────────────────────────────────────────
@@ -359,7 +359,7 @@ function ebitDeptInsights(Y, year, rawRevenue, rawCost) {
       severity: 'good',
       tag:   `EBIT Leader · ${shortDept(top.department)} · ${topPct}% share`,
       title: `${top.department.split('(')[0].trim()} generates ₹${top.total.toFixed(1)} Cr EBIT (${topPct}% of total) at ${topMargin}% margin - highest in the portfolio`,
-      reason: `Monthly range: ₹${troughCell.ebit.toFixed(2)} Cr (${troughCell.month}) to ₹${peakCell.ebit.toFixed(2)} Cr (${peakCell.month}). The pricing model and delivery cost structure here are the benchmark - use them as the contract template when onboarding the next client in this service line.`,
+      reason: `Monthly range: ₹${troughCell.ebit.toFixed(2)} Cr (${troughCell.month}) to ₹${peakCell.ebit.toFixed(2)} Cr (${peakCell.month}). Drill into pricing and delivery cost structure to identify replicable elements.`,
     })
   }
 
@@ -376,15 +376,15 @@ function ebitDeptInsights(Y, year, rawRevenue, rawCost) {
       tag:   `EBIT Loss · ${shortDept(worst.dept)} · ${worst.month}`,
       title: `${shortDept(worst.dept)} burned ₹${abs(worst.ebit).toFixed(2)} Cr in ${worst.month} - deepest single-cell loss (${lossCells.length} loss-cell${lossCells.length > 1 ? 's' : ''} across ${lossDeptCount} dept${lossDeptCount > 1 ? 's' : ''})`,
       reason: worstNote
-        ? `${worstNote} If this cost pattern recurs, the annualised EBIT drag is ~₹${abs(annualised).toFixed(1)} Cr. Re-negotiate the delivery cost baseline in the affected contracts before FY ${year + 1} renewals are signed.`
-        : `${lossCells.length} loss-cell${lossCells.length > 1 ? 's' : ''} signal pricing or delivery cost misalignment. Run a cost-to-serve audit on the affected accounts and initiate a re-rate conversation - every month of delay costs ₹${abs(worst.ebit).toFixed(2)} Cr.`,
+        ? `${worstNote} Annualised drag ~₹${abs(annualised).toFixed(1)} Cr if repeated. Drill into the ${shortDept(worst.dept)} dept-month cells and contract terms to identify drivers.`
+        : `${lossCells.length} loss-cell${lossCells.length > 1 ? 's' : ''} indicate pricing or delivery cost misalignment (deepest: ₹${abs(worst.ebit).toFixed(2)} Cr). Drill into account-level cost-to-serve and pricing to quantify remediation need.`,
     })
   } else {
     out.push({
       severity: 'good',
       tag:   `EBIT Quality · Zero Loss Months`,
       title: `All ${ebitMatrix.length} departments contributed positive EBIT every month - no loss-cells in FY ${year}`,
-      reason: `A loss-month-zero result is rare and defensible. Commit it as a non-negotiable performance standard in FY ${year + 1} SLAs and flag any department crossing into negative EBIT for immediate escalation.`,
+      reason: `All departments delivered positive EBIT for every month in FY ${year}. Drill into monthly cells to track any departments approaching break-even.`,
     })
   }
 
@@ -400,14 +400,14 @@ function ebitDeptInsights(Y, year, rawRevenue, rawCost) {
       tag:   `Margin Spread · ${gap} ppt Gap`,
       title: `${gap} ppt margin gap: ${shortDept(bestD.department)} at ${bestD.margin}% vs ${shortDept(worstD.department)} at ${worstD.margin}%${uplift ? ` - closing the gap is worth ₹${uplift.toFixed(1)} Cr EBIT` : ''}`,
       reason: worstD.margin < 0
-        ? `${shortDept(worstD.department)} is loss-making - every ₹1 of its revenue is destroying value. Pricing review and delivery cost reset both required before the FY ${year + 1} renewal. Delay costs ₹${r2(abs(worstD.ebit) / 12).toFixed(2)} Cr per month.`
+        ? `${shortDept(worstD.department)} is loss-making - burning ₹${abs(worstD.ebit).toFixed(1)} Cr per year. Drill into dept-level revenue, pricing and delivery cost to quantify drivers.`
         : worstD.margin < 5
           ? `${shortDept(worstD.department)} is below the 5% viability threshold. A single re-pricing action (8-10% rate increase or equivalent scope reduction) moves it above the line without losing the account.`
           : `Spread is manageable but a ₹${uplift?.toFixed(1) ?? '-'} Cr EBIT opportunity exists. Drive bottom-quartile departments to median margin through productivity programmes - target 200 bps improvement in FY ${year + 1}.`,
     })
   }
 
-  return out
+  return out.map(o => { delete o.reason; return o })
 }
 
 // ─── 05 · Cost & Profitability ────────────────────────────────────────────────
@@ -431,8 +431,8 @@ function costProfInsights(Y, year, rawCost) {
       reason: pexNote
         ? pexNote
         : pexPct > 65
-          ? `At ${pexPct}% PEX concentration, headcount decisions are the single largest P&L lever. Require revenue-per-FTE justification for every new hire before approval in FY ${year + 1}.`
-          : `PEX ₹${pex.actual.toFixed(1)} Cr is within plan. Operational leverage is healthy - maintain this ratio as the portfolio scales.`,
+          ? `At ${pexPct}% PEX concentration (₹${pex.actual.toFixed(1)} Cr). Drill into revenue-per-FTE and hiring cadence by department to assess leverage.`
+          : `PEX ₹${pex.actual.toFixed(1)} Cr is within plan. Drill into revenue-per-FTE to monitor headcount efficiency.`,
     })
   }
 
@@ -447,8 +447,8 @@ function costProfInsights(Y, year, rawCost) {
       reason: opexNote
         ? opexNote
         : opexVarF2 > 1
-          ? `OPEX overrun is typically concentrated in 2-3 discretionary lines. Require business-case sign-off for any consulting or IT spend above ₹50 lakh before FY ${year + 1} commitments are made.`
-          : `OPEX is running below plan - verify service delivery quality is intact before declaring this a structural efficiency. If confirmed, lower the FY ${year + 1} OPEX baseline by the saving.`,
+          ? `OPEX overrun concentrated in discretionary lines. Drill into cost-by-subcategory (consulting/IT/facility) to locate drivers and quantify recurrence.`
+          : `OPEX is below plan. Drill into service delivery and cost-by-subcategory to determine whether the saving is recurring.`,
     })
   }
 
@@ -477,14 +477,14 @@ function costProfInsights(Y, year, rawCost) {
       tag:   'Department P&L · Spread',
       title: `${bestD.department.split('(')[0].trim()} leads margin at ${bestD.margin}% · ${worstD.department.split('(')[0].trim()} trails at ${worstD.margin}%`,
       reason: worstD.margin < 0
-        ? `${shortDept(worstD.department)} is loss-making - burning ₹${abs(worstD.ebit).toFixed(1)} Cr per year. Initiate scope reset or managed exit before FY ${year + 1} budget is locked.`
+        ? `${shortDept(worstD.department)} is loss-making - burning ₹${abs(worstD.ebit).toFixed(1)} Cr per year. Drill into dept-level revenue, cost and contract terms to quantify remediation need.`
         : worstD.margin < 5
-          ? `${shortDept(worstD.department)} is below the 5% viability floor.${uplift ? ` A 500 bps margin improvement generates ₹${uplift.toFixed(1)} Cr additional EBIT - a single re-pricing decision achieves this.` : ''}`
-          : `Portfolio margin spread is acceptable. Drive lagging departments to median via productivity programmes (~200 bps target in FY ${year + 1}).`,
+          ? `${shortDept(worstD.department)} is below the 5% viability floor.${uplift ? ` Potential uplift ~₹${uplift.toFixed(1)} Cr EBIT from a 500 bps improvement.` : ''} Drill into pricing and delivery cost for uplift opportunities.`
+          : `Portfolio margin spread is acceptable. Drill into lagging departments' cost and pricing to identify targeted improvements.`,
     })
   }
 
-  return out
+  return out.map(o => { delete o.reason; return o })
 }
 
 // ─── 06 · Driver Waterfall ────────────────────────────────────────────────────
@@ -541,7 +541,7 @@ function waterfallInsights(Y, year, rawCost) {
     })
   }
 
-  return out
+  return out.map(o => { delete o.reason; return o })
 }
 
 // ─── 07 · EBIT Matrix - Customer ─────────────────────────────────────────────
@@ -562,8 +562,8 @@ function ebitCustomerInsights(Y, year) {
         ? `${top.department} generates ${topPct}% of customer EBIT (₹${top.total.toFixed(1)} Cr) - concentration above safe threshold`
         : `${top.department} is the EBIT anchor at ₹${top.total.toFixed(1)} Cr (${topPct}% of total) - portfolio is well distributed`,
       reason: topPct > 40
-        ? `Losing or re-pricing this account puts ~₹${exitRisk.toFixed(1)} Cr of EBIT at risk in year one. Lock multi-year commercial terms before renewal; build a relationship-risk scorecard and assign a named executive sponsor now.`
-        : `Customer-level EBIT is well-spread - no single account loss is catastrophic. Maintain by capping concentration at ${Math.min(topPct + 10, 40)}% for any new strategic account.`,
+        ? `Top customer concentration ~${topPct}% (~₹${top.total.toFixed(1)} Cr EBIT). Drill into customer contract, renewal schedule and monthly EBIT to assess retention risk.`
+        : `Customer-level EBIT is well-spread. Drill into customer-level EBIT to monitor concentration when adding new strategic accounts.`,
     })
   }
 
@@ -575,7 +575,7 @@ function ebitCustomerInsights(Y, year) {
       severity: 'warn',
       tag:   `Loss Customers · ${lossCust.length} Account${lossCust.length > 1 ? 's' : ''}`,
       title: `${lossCust.length} customer${lossCust.length > 1 ? 's' : ''} are EBIT-negative: ${lossCust.map((d) => d.department).join(', ')} - total drain ₹${abs(totalDrain).toFixed(1)} Cr`,
-      reason: `These accounts consume margin earned by profitable customers. Run a cost-to-serve audit this quarter: re-rate to break-even, renegotiate scope, or initiate a managed exit. Every quarter of delay is ₹${r2(abs(totalDrain) / 4).toFixed(2)} Cr of margin destroyed.`,
+      reason: `These accounts consume margin: total drain ₹${abs(totalDrain).toFixed(1)} Cr. Drill into account-level revenue, cost-to-serve and contract terms to prioritise remediation.`,
     })
   } else {
     out.push({
@@ -583,8 +583,8 @@ function ebitCustomerInsights(Y, year) {
       tag:   `Customer Profitability · All Positive`,
       title: `All ${ebitCustomerMatrix.length} customers contributed positive EBIT in FY ${year}${breakEven.length > 0 ? ` (${breakEven.length} near break-even - watch list)` : ''}`,
       reason: breakEven.length > 0
-        ? `${breakEven.map((d) => d.department).join(', ')} are within ₹0.5 Cr of break-even. Add customer-level EBIT to the FY ${year + 1} scorecard and flag any account dipping below ₹0.5 Cr for a quarterly review - they are one cost event away from going negative.`
-        : `Clean customer profitability is rare at this portfolio size. Build customer-level EBIT targets into FY ${year + 1} SLAs and run quarterly account-profitability reviews to hold the standard.`,
+        ? `${breakEven.map((d) => d.department).join(', ')} are within ₹0.5 Cr of break-even. Drill into these accounts' monthly EBIT and contract terms for a focused watchlist.`
+        : `Customer profitability is healthy for this portfolio size. Drill into customer EBIT trends to retain this profile.`,
     })
   }
 
@@ -611,7 +611,7 @@ function ebitCustomerInsights(Y, year) {
     }
   }
 
-  return out
+  return out.map(o => { delete o.reason; return o })
 }
 
 // ─── 08 · Cost Analysis ───────────────────────────────────────────────────────
@@ -647,8 +647,8 @@ function costAnalysisInsights(Y, year, rawCost) {
         ? `Cost run-rate accelerated ${trend}% from H1 to H2 - ₹${h2Avg.toFixed(1)} Cr/month vs ₹${h1Avg.toFixed(1)} Cr/month`
         : `Cost run-rate fell ${abs(trend)}% from H1 to H2 - ₹${h2Avg.toFixed(1)} Cr/month vs ₹${h1Avg.toFixed(1)} Cr/month`,
       reason: trend > 10
-        ? `H2 acceleration means FY ${year + 1} at this run-rate would cost ₹${r2(h2Avg * 12).toFixed(1)} Cr. Investigate before budget lock - separate structural headcount additions, discretionary one-offs, and seasonal patterns.`
-        : `H2 cost discipline is improving. Set FY ${year + 1} cost budget at ₹${r2(h2Avg * 12).toFixed(1)} Cr (H2 run-rate × 12), not the full-year average - this avoids embedding H1 waste into the baseline.`,
+        ? `H2 acceleration implies annualised cost ~₹${r2(h2Avg * 12).toFixed(1)} Cr. Drill into H2 monthly drivers to separate structural headcount from discretionary one-offs.`
+        : `H2 cost discipline is improving. Drill into H2 run-rate components to determine a recurring baseline for FY ${year + 1}.`,
     })
   }
 
@@ -667,8 +667,8 @@ function costAnalysisInsights(Y, year, rawCost) {
       reason: note
         ? note
         : varF2 > 0
-          ? `OPEX ₹${opex.actual.toFixed(1)} Cr vs FC2 ₹${opex.fc2.toFixed(1)} Cr. Require a business case above ₹50 lakh and cap discretionary approvals at FC2 level to prevent recurrence in FY ${year + 1}.`
-          : `OPEX ₹${opex.actual.toFixed(1)} Cr - ahead of plan. Verify service standards held before treating as structural; if confirmed, lower the FY ${year + 1} OPEX baseline by ₹${abs(varF2).toFixed(1)} Cr.`,
+          ? `OPEX ₹${opex.actual.toFixed(1)} Cr vs FC2 ₹${opex.fc2.toFixed(1)} Cr (Δ ₹${varF2.toFixed(1)} Cr, ${pctVar}%). Drill into cost-by-type and monthly view to locate drivers.`
+          : `OPEX ₹${opex.actual.toFixed(1)} Cr vs FC2 ₹${opex.fc2.toFixed(1)} Cr (Δ ₹${varF2.toFixed(1)} Cr, ${pctVar}%). Drill into cost-by-type and monthly view to validate whether the saving is recurring.`,
     })
   }
 
@@ -692,5 +692,5 @@ function costAnalysisInsights(Y, year, rawCost) {
     })
   }
 
-  return out
+  return out.map(o => { delete o.reason; return o })
 }

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useDashStore } from '../store/useDashStore'
-import { getAvailMonths, getActivePeriodMonths, getPeriodLabel, derivePeriodKPIs } from '../utils/periodUtils'
+import { getAvailMonths, getActivePeriodMonths, getPeriodLabel, derivePeriodKPIs, QUARTERS } from '../utils/periodUtils'
 
 export default function KPISection() {
   const { derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
@@ -17,23 +17,48 @@ export default function KPISection() {
   const pk          = useMemo(() => derivePeriodKPIs(Y.monthly, activeMonths) ?? Y.kpis, [Y.monthly, Y.kpis, activeMonths])
   const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
 
-  // Compare against the immediately prior year
-  const prevYear  = derived.years[derived.years.indexOf(year) - 1] ?? null
-  const prevY     = prevYear ? derived.byYear[prevYear] : null
-  const prevAvail = useMemo(
-    () => (prevYear ? getAvailMonths(rawRevenue, prevYear) : []),
-    [rawRevenue, prevYear]
-  )
-  const prevActive = useMemo(
-    () => (prevYear ? getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, prevAvail) : []),
-    [periodMode, selectedQ, selectedPeriodMonth, prevAvail, prevYear]
-  )
-  const prevPk = useMemo(
-    () => (prevY ? derivePeriodKPIs(prevY.monthly, prevActive) ?? prevY.kpis : null),
-    [prevY, prevActive]
-  )
+  const { prevYear: _prevYear, prevPk: _prevPk, deltaLabel: _deltaLabel } = useMemo(() => {
+    const monthsOrder = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    let prevYear = null
+    let prevPk = null
+    let deltaLabel = ''
 
-  const deltaLabel = periodMode === 'year' ? `FY${prevYear}` : `${periodLabel.replace(` · FY ${year}`, '')} FY${prevYear}`
+    if (periodMode === 'year') {
+      prevYear = derived.years[derived.years.indexOf(year) - 1] ?? null
+      const prevY = prevYear ? derived.byYear[prevYear] : null
+      const prevAvail = prevYear ? getAvailMonths(rawRevenue, prevYear) : []
+      const prevActive = prevYear ? getActivePeriodMonths('year', selectedQ, selectedPeriodMonth, prevAvail) : []
+      prevPk = prevY ? derivePeriodKPIs(prevY.monthly, prevActive) ?? prevY.kpis : null
+      deltaLabel = prevYear ? `FY${prevYear}` : ''
+    } else if (periodMode === 'quarter') {
+      const keys = Object.keys(QUARTERS)
+      const idx = keys.indexOf(selectedQ)
+      const prevIdx = idx <= 0 ? keys.length - 1 : idx - 1
+      const yearOffset = idx <= 0 ? -1 : 0
+      prevYear = year + yearOffset
+      const prevY = derived.byYear[prevYear]
+      const prevAvail = prevY ? getAvailMonths(rawRevenue, prevYear) : []
+      const prevActive = prevY ? getActivePeriodMonths('quarter', keys[prevIdx], selectedPeriodMonth, prevAvail) : []
+      prevPk = prevY ? derivePeriodKPIs(prevY.monthly, prevActive) ?? prevY.kpis : null
+      deltaLabel = `${keys[prevIdx]} FY${prevYear}`
+    } else {
+      const idx = monthsOrder.indexOf(selectedPeriodMonth)
+      const prevIdx = idx <= 0 ? monthsOrder.length - 1 : idx - 1
+      const yearOffset = idx <= 0 ? -1 : 0
+      prevYear = year + yearOffset
+      const prevY = derived.byYear[prevYear]
+      const prevAvail = prevY ? getAvailMonths(rawRevenue, prevYear) : []
+      const prevActive = prevY ? getActivePeriodMonths('month', selectedQ, monthsOrder[prevIdx], prevAvail) : []
+      prevPk = prevY ? derivePeriodKPIs(prevY.monthly, prevActive) ?? prevY.kpis : null
+      deltaLabel = `${monthsOrder[prevIdx]} FY${prevYear}`
+    }
+
+    return { prevYear, prevPk, deltaLabel }
+  }, [periodMode, selectedQ, selectedPeriodMonth, derived, rawRevenue, year])
+
+  const prevYear = _prevYear
+  const prevPk = _prevPk
+  const deltaLabel = _deltaLabel
 
   const cards = [
     {
