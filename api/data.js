@@ -200,18 +200,39 @@ export default function handler(req, res) {
     }
 
     // Fallback: read from static data files (used on cold start before first PA push)
-    console.log('[/api/data] No live data yet — loading from static files')
+    console.log('[/api/data] Checking /tmp cache for cold start recovery...')
 
-    // Read sample data (from cache or fallback)
-    let sampleData = readJsonCache(sampleDataCache, sampleDataPath, 'sampleData')
-    if (!sampleData) {
-      sampleData = { revenue: [], cost: [] }
+    // Check /tmp cache first
+    let sampleData = null
+    let transactionFteData = null
+    let source = 'static-files'
+
+    if (fs.existsSync(sampleDataCache) && fs.existsSync(txnFteCache)) {
+      try {
+        sampleData = JSON.parse(fs.readFileSync(sampleDataCache, 'utf8'))
+        transactionFteData = JSON.parse(fs.readFileSync(txnFteCache, 'utf8'))
+        source = 'tmp-cache'
+        console.log('[/api/data] ✅ Loaded from /tmp cache')
+      } catch (e) {
+        console.warn('[/api/data] /tmp cache corrupted:', e.message)
+        sampleData = null
+        transactionFteData = null
+      }
     }
 
-    // Read transaction/FTE data (from cache or fallback)
-    let transactionFteData = readJsonCache(txnFteCache, txnFtePath, 'transactionFteData')
+    // If cache failed, read from static files
+    if (!sampleData) {
+      sampleData = readJsonCache(sampleDataCache, sampleDataPath, 'sampleData')
+      if (!sampleData) {
+        sampleData = { revenue: [], cost: [] }
+      }
+    }
+
     if (!transactionFteData) {
-      transactionFteData = { transactions: [], fte: [] }
+      transactionFteData = readJsonCache(txnFteCache, txnFtePath, 'transactionFteData')
+      if (!transactionFteData) {
+        transactionFteData = { transactions: [], fte: [] }
+      }
     }
 
     // Get timestamp for change detection
@@ -222,14 +243,14 @@ export default function handler(req, res) {
     console.log(`   Cost: ${sampleData.cost?.length || 0} rows`)
     console.log(`   Transactions: ${transactionFteData.transactions?.length || 0} rows`)
     console.log(`   FTE: ${transactionFteData.fte?.length || 0} rows`)
-    console.log(`   Timestamp: ${timestamp}`)
+    console.log(`   Source: ${source}`)
 
     // Return data with timestamp for change detection
     return res.status(200).json({
       sampleData,
       transactionFteData,
       timestamp,
-      source: fs.existsSync(sampleDataCache) ? 'webhook-cache' : 'original-files',
+      source,
     })
   } catch (error) {
     console.error('[/api/data] ❌ Error:', error.message)

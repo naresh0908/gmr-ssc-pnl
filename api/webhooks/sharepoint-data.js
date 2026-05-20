@@ -1,10 +1,19 @@
 /**
  * Vercel API Endpoint: Power Automate Direct Data Webhook
- * Receives Excel data directly from Power Automate and stores it in the shared
- * in-memory store so /api/data can serve it immediately on the next poll.
+ * Receives Excel data directly from Power Automate and stores it in:
+ * 1. In-memory store (for warm Lambda instances)
+ * 2. /tmp files (for persistence across cold starts)
  */
 
+import fs from 'fs'
+import path from 'path'
+import os from 'os'
 import { store } from '../_store.js'
+
+const tmpDir = os.tmpdir()
+const sampleDataCache = path.join(tmpDir, 'sampleData.json')
+const txnFteCache = path.join(tmpDir, 'transactionFteData.json')
+const metadataCache = path.join(tmpDir, 'sync-metadata.json')
 
 function sanitizeData(obj) {
   if (Array.isArray(obj)) return obj.map(sanitizeData)
@@ -16,6 +25,19 @@ function sanitizeData(obj) {
   if (typeof obj === 'number') return isFinite(obj) ? obj : null
   if (typeof obj === 'string') return obj.trim()
   return obj
+}
+
+function writeCache(filePath, data) {
+  try {
+    const sanitized = sanitizeData(data)
+    const json = JSON.stringify(sanitized, null, 2)
+    fs.writeFileSync(filePath, json, 'utf8')
+    console.log(`✅ Cached to /tmp: ${path.basename(filePath)}`)
+    return true
+  } catch (e) {
+    console.error(`❌ Error writing cache: ${e.message}`)
+    return false
+  }
 }
 
 function validateData(body) {
@@ -55,13 +77,27 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid data structure', details: validation.errors })
     }
 
-    // Store directly in memory — no filesystem needed
-    store.sampleData = sanitizeData({ revenue: body.revenue, cost: body.cost })
-    store.transactionFteData = sanitizeData({ transactions: body.transactions, fte: body.fte })
-    store.timestamp = Date.now().toString()
+    // Sanitize data
+    const sampleData = sanitizeData({ revenue: body.revenue, cost: body.cost })
+    const transactionFteData = sanitizeData({ transactions: body.transactions, fte: body.fte })
+    const timestamp = Date.now().toString()
+
+    // 1. Store in /tmp for persistence across Lambda instances
+    const sampleOk = writeCache(sampleDataCache, sampleData)
+    const txnOk = writeCache(txnFteCache, transactionFteData)
+    const metaOk = writeCache(metadataCache, { syncedAt: new Date().toISOString(), timestamp, source: 'power-automate' })
+
+    // 2. Also store in memory for fast access on warm instances
+    store.sampleData = sampleData
+    store.transactionFteData = transactionFteData
+    store.timestamp = timestamp
     store.source = 'power-automate'
 
-    console.log('[Webhook] ✅ Data stored in memory')
+    if (!sampleOk || !txnOk || !metaOk) {
+      console.warn('[Webhook] ⚠️  Some writes failed, but data is in memory')
+    }
+
+    console.log('[Webhook] ✅ Data stored (memory + /tmp cache)')
     console.log(`   Revenue: ${body.revenue.length} rows`)
     console.log(`   Cost: ${body.cost.length} rows`)
     console.log(`   Transactions: ${body.transactions.length} rows`)
