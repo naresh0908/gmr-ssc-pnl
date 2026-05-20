@@ -8,7 +8,16 @@ const r1  = (n) => Math.round(n * 10) / 10
 const r2  = (n) => Math.round(n * 100) / 100
 const CR  = 1e7
 const abs = Math.abs
-const shortDept = (name) => name.match(/\(([^)]+)\)/)?.[1] ?? name.split(' ').slice(0, 2).join(' ')
+const shortDept = (name) => {
+  const par = name.match(/\(([^)]+)\)/)?.[1]
+  if (par) return par
+  const parts = name.split(' ').filter(Boolean)
+  // if an ampersand is present, prefer the token(s) before it (e.g. "Procurement & Contracts" -> "Procurement")
+  const ampIdx = parts.indexOf('&')
+  if (ampIdx > 0) return parts.slice(0, ampIdx).join(' ')
+  // fallback: first two words
+  return parts.slice(0, 2).join(' ')
+}
 
 const CAUSAL_NOTES = {}
 
