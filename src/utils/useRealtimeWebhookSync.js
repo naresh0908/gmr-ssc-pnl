@@ -2,92 +2,80 @@ import { useEffect, useRef } from 'react'
 import { useDashStore } from '../store/useDashStore'
 
 /**
- * Real-time Webhook Hook: Detects SharePoint file changes via webhook
+ * Real-time Data Sync Hook: Polls SharePoint directly for fresh data
  * 
  * How it works:
- * 1. SharePoint notifies Vercel webhook when file changes
- * 2. Webhook triggers sync (data files updated)
- * 3. This hook polls for sync completion
- * 4. Dashboard auto-updates with new data
- * 
- * Works on both local dev and Vercel production
+ * 1. Every 5 seconds, fetches fresh data directly from SharePoint
+ * 2. Updates dashboard with latest Excel data
+ * 3. No webhook complexity, no persistence issues
+ * 4. Works perfectly on Vercel (stateless, always fresh)
  * 
  * Usage in App.jsx:
- *   useRealtimeWebhookSync({ pollInterval: 5000, verbose: false })
+ *   useRealtimeWebhookSync()
  */
 export function useRealtimeWebhookSync({ 
   pollInterval = 5000,
   verbose = false,
   onDataRefresh = null
 } = {}) {
-  const lastTimestampRef = useRef(null)
   const pollTimeoutRef = useRef(null)
 
   useEffect(() => {
-    const checkForSync = async () => {
+    const fetchLatestData = async () => {
       try {
-        // Fetch current data from API endpoint
-        const response = await fetch('/api/data', {
+        // Fetch fresh data directly from SharePoint
+        const response = await fetch('/api/sync-fresh', {
           cache: 'no-store',
           headers: { 'pragma': 'no-cache' }
         })
 
         if (!response.ok) {
-          if (verbose) console.log('⏳ Data API not ready')
-          // Schedule next check and return
-          pollTimeoutRef.current = setTimeout(checkForSync, pollInterval)
+          if (verbose) console.log('⏳ SharePoint API not ready:', response.status)
+          pollTimeoutRef.current = setTimeout(fetchLatestData, pollInterval)
           return
         }
 
-        const { sampleData, transactionFteData, timestamp } = await response.json()
+        const data = await response.json()
+        const { sampleData, transactionFteData, source } = data
 
-        // Check if data has changed
-        if (lastTimestampRef.current === null) {
-          // First load — immediately apply data so the dashboard shows live PA data
-          lastTimestampRef.current = timestamp
-          if (sampleData?.revenue?.length) {
-            useDashStore.getState().setData(
-              sampleData.revenue,
-              sampleData.cost,
-              transactionFteData?.transactions,
-              transactionFteData?.fte
-            )
-            console.log('✅ Initial data loaded from Power Automate')
-          }
-          if (verbose) console.log('📡 Monitoring for Power Automate updates...')
-        } else if (lastTimestampRef.current !== timestamp) {
-          // Data has changed!
-          console.log('✅ Real-time data update detected!')
-          
-          // Update store with all live data from Power Automate
+        if (verbose) {
+          console.log('📊 Fresh data from SharePoint:', {
+            source,
+            revenue: sampleData?.revenue?.length || 0,
+            cost: sampleData?.cost?.length || 0,
+            transactions: transactionFteData?.transactions?.length || 0,
+            fte: transactionFteData?.fte?.length || 0,
+          })
+        }
+
+        // Update dashboard with fresh data
+        if (sampleData?.revenue?.length || sampleData?.cost?.length) {
           useDashStore.getState().setData(
             sampleData.revenue,
             sampleData.cost,
             transactionFteData?.transactions,
             transactionFteData?.fte
           )
-          
-          lastTimestampRef.current = timestamp
+
+          if (verbose) console.log('✅ Dashboard updated with fresh SharePoint data')
           
           if (onDataRefresh) {
             onDataRefresh({ sampleData, transactionFteData })
           }
-        } else if (verbose) {
-          console.log('✓ No data changes')
         }
       } catch (error) {
-        if (verbose) console.error('Sync check error:', error)
+        if (verbose) console.error('❌ Error fetching from SharePoint:', error.message)
       }
 
-      // Schedule next check
-      pollTimeoutRef.current = setTimeout(checkForSync, pollInterval)
+      // Schedule next fetch
+      pollTimeoutRef.current = setTimeout(fetchLatestData, pollInterval)
     }
 
-    // Start checking
+    // Start fetching immediately
     if (verbose) {
-      console.log(`📡 Real-time monitoring active (poll every ${pollInterval}ms)`)
+      console.log(`🔄 Real-time sync active (polling every ${pollInterval}ms)`)
     }
-    checkForSync()
+    fetchLatestData()
 
     // Cleanup
     return () => {
