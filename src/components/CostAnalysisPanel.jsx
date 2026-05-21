@@ -292,6 +292,20 @@ export default function CostAnalysisPanel() {
   const { rawCost, derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const insights = useMemo(() => getSectionInsights('cost-analysis', { derived, year, rawCost, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, rawCost, periodMode, selectedQ, selectedPeriodMonth])
+  // Also fetch Cost & Profitability insights so PEX and CAPEX cards appear
+  const costProfInsights = useMemo(() => getSectionInsights('cost-prof', { derived, year, rawCost, rawRevenue, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, rawCost, rawRevenue, periodMode, selectedQ, selectedPeriodMonth])
+
+  // Merge and filter insights: remove OPEX and Department Margins cards per UX request
+  const combinedInsights = useMemo(() => {
+    const all = [...(insights || []), ...(costProfInsights || [])]
+    return all.filter((i) => {
+      if (!i || !i.tag) return true
+      // remove cards with tags starting with 'OPEX' or 'Department Margins'
+      if (i.tag.startsWith('OPEX')) return false
+      if (i.tag.startsWith('Department Margins')) return false
+      return true
+    })
+  }, [insights, costProfInsights])
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
@@ -511,7 +525,7 @@ export default function CostAnalysisPanel() {
         {view === 'yoy' && <YoYTypeTable data={yoyTypeData} years={derived.years} />}
       </motion.div>
 
-      <SectionInsightBar insights={insights} />
+      <SectionInsightBar insights={combinedInsights} />
     </div>
   )
 }
