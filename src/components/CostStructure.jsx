@@ -38,9 +38,7 @@ export default function CostStructure() {
       <h4 className="m-0 font-display font-medium text-[16px] md:text-[18px] tracking-[-.2px]">
         Cost Structure · {periodLabel}
       </h4>
-      <div className="text-[11px] md:text-[12px] text-[var(--muted)] mt-1 mb-3 md:mb-4">
-        PEX is the largest cost; CAPEX is shown separately in the mix.
-      </div>
+      {/* subtitle removed per UX request: avoid unnecessary explanatory text */}
 
       <div className="flex h-10 md:h-[46px] rounded-[10px] overflow-hidden border border-[var(--line)]">
         {costByType.map((s) => {
