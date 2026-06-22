@@ -2,9 +2,13 @@ import { useEffect } from 'react'
 import { useDashStore } from './store/useDashStore'
 import { useRealtimeWebhookSync } from './utils/useRealtimeWebhookSync'
 import TopBar from './components/TopBar'
-import PeriodBar from './components/PeriodBar'
+import FilterBar from './components/FilterBar'
 import HeroSummary from './components/HeroSummary'
 import KPISection from './components/KPISection'
+import MonthlyCharts from './components/MonthlyCharts'
+import ProjectStatusChart from './components/ProjectStatusChart'
+import MarginRankCharts from './components/MarginRankCharts'
+import MonthlyComparison from './components/MonthlyComparison'
 import CostStructure from './components/CostStructure'
 import EBITMatrix from './components/EBITMatrix'
 import ServiceRevenuePanel from './components/ServiceRevenuePanel'
@@ -25,44 +29,35 @@ export default function App() {
 
   return (
     <div>
-      {/* Sticky header - full viewport width so background covers edge-to-edge */}
-      <div className="sticky top-0 z-40 bg-[var(--bg)] shadow-[0_4px_16px_rgba(0,0,0,0.06)]">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-9 pt-4 md:pt-7 pb-2 md:pb-3">
-          <TopBar />
-          <PeriodBar />
-        </div>
+      <div className="max-w-[1800px] mx-auto px-4 md:px-6 pt-4 md:pt-7 pb-2 md:pb-3">
+        <TopBar />
+        <FilterBar />
       </div>
 
-    <div className="max-w-[1440px] mx-auto px-4 md:px-9 pb-12 md:pb-20">
-      {/* Executive summary block: hero + KPI cards + cost structure overview */}
+    <div className="max-w-[1800px] mx-auto px-4 md:px-6 pb-12 md:pb-20">
       <HeroSummary />
       <KPISection />
-      <div className="mt-4">
-        <CostStructure />
-      </div>
+      <MonthlyCharts />
+      <MonthlyComparison />
+      <ProjectStatusChart />
+      <MarginRankCharts />
 
-      {/* 01 · P&L Statement */}
-      <PLStatement />
-
-      {/* 02 · Cost & Revenue Analysis */}
-      <CostAnalysisPanel />
-
-      {/* 03 · Service Revenue: FTE vs Transaction billing */}
-      <ServiceRevenuePanel />
-
-      {/* 04 · EBIT Matrix · Department */}
-      <EBITMatrix type="department" num="04" />
-
-      {/* 05 · Driver-based Cost Bridge */}
-      <DriverWaterfall />
-
-      {/* 06 · Monthly Performance */}
-      <MonthlyPerformance />
-
-      <footer className="mt-8 pt-5 border-t border-[var(--line)] flex justify-between items-center text-[11.5px] text-[var(--muted)]">
-        <span className="font-mono">GMR SSC · Financial Decision Intelligence · v0.1</span>
-        <span className="font-mono"></span>
-      </footer>
+      {/* Sections below intentionally hidden while the dashboard is being redesigned.
+          Components remain in the codebase so we can wire them back in once the
+          new layout for each section is finalised. */}
+      {false && (
+        <>
+          <div className="mt-4">
+            <CostStructure />
+          </div>
+          <PLStatement />
+          <CostAnalysisPanel />
+          <ServiceRevenuePanel />
+          <EBITMatrix type="department" num="04" />
+          <DriverWaterfall />
+          <MonthlyPerformance />
+        </>
+      )}
     </div>
     </div>
   )

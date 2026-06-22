@@ -20,19 +20,19 @@ const short = (name) => {
 export default function ServiceRevenuePanel() {
   const [activeDept, setActiveDept]     = useState('All')
   const [selectedMonth, setSelectedMonth] = useState(null)   // null = whole period; bar click sets one month
-  const { serviceRevenue, derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const { serviceRevenue, derived, year, fromMonth, toMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
-  const insights = useMemo(() => getSectionInsights('service-revenue', { derived, serviceRevenue, year, periodMode, selectedQ, selectedPeriodMonth }), [derived, serviceRevenue, year, periodMode, selectedQ, selectedPeriodMonth])
+  const insights = useMemo(() => getSectionInsights('service-revenue', { derived, serviceRevenue, year, fromMonth, toMonth }), [derived, serviceRevenue, year, fromMonth, toMonth])
 
   const SRY = serviceRevenue?.[year]
   if (!SRY) return null
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
-    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
-    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+    () => getActivePeriodMonths(fromMonth, toMonth, availMonths),
+    [fromMonth, toMonth, availMonths]
   )
-  const periodLabel  = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+  const periodLabel  = getPeriodLabel(fromMonth, toMonth, year)
 
   // The "scope" months - when a bar is clicked, scope down to that single month.
   const scopeMonths = useMemo(
@@ -84,7 +84,7 @@ export default function ServiceRevenuePanel() {
   const sumTotal = deptData ? deptData.total      : filteredByDept.reduce((s, d) => s + d.total, 0)
   const ftePct   = sumTotal > 0 ? Math.round((sumFte / sumTotal) * 100) : 0
 
-  const scopeLabel = selectedMonth ? `${selectedMonth} · FY ${year}` : `${periodLabel}`
+  const scopeLabel = selectedMonth ? `${selectedMonth} ${year}` : `${periodLabel}`
 
   return (
     <div className="mt-7">

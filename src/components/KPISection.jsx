@@ -1,123 +1,129 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useDashStore } from '../store/useDashStore'
-import { getAvailMonths, getActivePeriodMonths, getPeriodLabel, derivePeriodKPIs, QUARTERS } from '../utils/periodUtils'
+import { getAvailMonths, getActivePeriodMonths, getPeriodLabel, derivePeriodKPIs } from '../utils/periodUtils'
+
+// Card accent palette — mirrors the reference image (blue / red / yellow / green).
+const ACCENTS = {
+  blue:   { bar: '#1F6FEB', gradient: 'linear-gradient(180deg, #FFFFFF 0%, #E3EDFA 100%)' },
+  red:    { bar: '#E04F4F', gradient: 'linear-gradient(180deg, #FFFFFF 0%, #FAE3E3 100%)' },
+  yellow: { bar: '#F1C232', gradient: 'linear-gradient(180deg, #FFFFFF 0%, #FAF1D7 100%)' },
+  green:  { bar: '#2CA15D', gradient: 'linear-gradient(180deg, #FFFFFF 0%, #DCEEE3 100%)' },
+}
 
 export default function KPISection() {
-  const { derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const { derived, year, fromMonth, toMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const Y = derived.byYear[year]
   if (!Y) return null
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
-    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
-    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+    () => getActivePeriodMonths(fromMonth, toMonth, availMonths),
+    [fromMonth, toMonth, availMonths]
   )
   const pk          = useMemo(() => derivePeriodKPIs(Y.monthly, activeMonths) ?? Y.kpis, [Y.monthly, Y.kpis, activeMonths])
-  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+  const periodLabel = getPeriodLabel(fromMonth, toMonth, year)
 
-  const { prevYear: _prevYear, prevPk: _prevPk, deltaLabel: _deltaLabel } = useMemo(() => {
-    const monthsOrder = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-    let prevYear = null
-    let prevPk = null
-    let deltaLabel = ''
-
-    if (periodMode === 'year') {
-      prevYear = derived.years[derived.years.indexOf(year) - 1] ?? null
-      const prevY = prevYear ? derived.byYear[prevYear] : null
-      const prevAvail = prevYear ? getAvailMonths(rawRevenue, prevYear) : []
-      const prevActive = prevYear ? getActivePeriodMonths('year', selectedQ, selectedPeriodMonth, prevAvail) : []
-      prevPk = prevY ? derivePeriodKPIs(prevY.monthly, prevActive) ?? prevY.kpis : null
-      deltaLabel = prevYear ? `FY${prevYear}` : ''
-    } else if (periodMode === 'quarter') {
-      const keys = Object.keys(QUARTERS)
-      const idx = keys.indexOf(selectedQ)
-      const prevIdx = idx <= 0 ? keys.length - 1 : idx - 1
-      const yearOffset = idx <= 0 ? -1 : 0
-      prevYear = year + yearOffset
-      const prevY = derived.byYear[prevYear]
-      const prevAvail = prevY ? getAvailMonths(rawRevenue, prevYear) : []
-      const prevActive = prevY ? getActivePeriodMonths('quarter', keys[prevIdx], selectedPeriodMonth, prevAvail) : []
-      prevPk = prevY ? derivePeriodKPIs(prevY.monthly, prevActive) ?? prevY.kpis : null
-      deltaLabel = `${keys[prevIdx]} FY${prevYear}`
-    } else {
-      const idx = monthsOrder.indexOf(selectedPeriodMonth)
-      const prevIdx = idx <= 0 ? monthsOrder.length - 1 : idx - 1
-      const yearOffset = idx <= 0 ? -1 : 0
-      prevYear = year + yearOffset
-      const prevY = derived.byYear[prevYear]
-      const prevAvail = prevY ? getAvailMonths(rawRevenue, prevYear) : []
-      const prevActive = prevY ? getActivePeriodMonths('month', selectedQ, monthsOrder[prevIdx], prevAvail) : []
-      prevPk = prevY ? derivePeriodKPIs(prevY.monthly, prevActive) ?? prevY.kpis : null
-      deltaLabel = `${monthsOrder[prevIdx]} FY${prevYear}`
+  const { prevPk: _prevPk, deltaLabel: _deltaLabel } = useMemo(() => {
+    const prevYear = derived.years[derived.years.indexOf(year) - 1] ?? (year - 1)
+    const prevY    = derived.byYear[prevYear]
+    if (!prevY) {
+      return { prevPk: null, deltaLabel: '' }
     }
+    const prevAvail  = getAvailMonths(rawRevenue, prevYear)
+    const prevActive = getActivePeriodMonths(fromMonth, toMonth, prevAvail)
+    const prevPk     = derivePeriodKPIs(prevY.monthly, prevActive) ?? prevY.kpis
+    const deltaLabel = `${prevYear}`
+    return { prevPk, deltaLabel }
+  }, [fromMonth, toMonth, derived, rawRevenue, year])
 
-    return { prevYear, prevPk, deltaLabel }
-  }, [periodMode, selectedQ, selectedPeriodMonth, derived, rawRevenue, year])
-
-  const prevYear = _prevYear
   const prevPk = _prevPk
   const deltaLabel = _deltaLabel
 
   const cards = [
     {
-      label: 'Total Revenue', value: pk.totalRevenue, unit: 'Cr',
-      delta: prevPk ? `${pk.totalRevenue >= prevPk.totalRevenue ? '▲' : '▼'} ₹${Math.abs(pk.totalRevenue - prevPk.totalRevenue).toFixed(1)} Cr vs ${deltaLabel}` : '-',
-      sub: `FC1: ₹${(pk.revFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.revFc2 ?? 0).toFixed(1)} Cr`,
-      up: prevPk ? pk.totalRevenue >= prevPk.totalRevenue : true,
+      label:   'Total Revenue',
+      value:   pk.totalRevenue,
+      unit:    'Cr',
+      accent:  'blue',
+      sub:     prevPk
+        ? `${pk.totalRevenue >= prevPk.totalRevenue ? '▲' : '▼'} ₹${Math.abs(pk.totalRevenue - prevPk.totalRevenue).toFixed(1)} Cr vs ${deltaLabel}`
+        : `FC1 ₹${(pk.revFc1 ?? 0).toFixed(1)} · FC2 ₹${(pk.revFc2 ?? 0).toFixed(1)} Cr`,
+      up:      prevPk ? pk.totalRevenue >= prevPk.totalRevenue : null,
     },
     {
-      label: 'Total Cost', value: pk.totalCost, unit: 'Cr',
-      delta: prevPk ? `${pk.totalCost > prevPk.totalCost ? '▲' : '▼'} ₹${Math.abs(pk.totalCost - prevPk.totalCost).toFixed(1)} Cr vs ${deltaLabel}` : '-',
-      sub: `FC1: ₹${(pk.costFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.costFc2 ?? 0).toFixed(1)} Cr`,
-      up: prevPk ? pk.totalCost <= prevPk.totalCost : false,
+      label:   'Total Cost',
+      value:   pk.totalCost,
+      unit:    'Cr',
+      accent:  'red',
+      sub:     prevPk
+        ? `${pk.totalCost > prevPk.totalCost ? '▲' : '▼'} ₹${Math.abs(pk.totalCost - prevPk.totalCost).toFixed(1)} Cr vs ${deltaLabel}`
+        : 'Cumulative cost-to-date',
+      up:      prevPk ? pk.totalCost <= prevPk.totalCost : null,
     },
     {
-      label: 'EBIT',
-      value: pk.ebit ?? Y.kpis.ebit ?? null,
-      unit: 'Cr',
-      delta: prevPk
+      label:   'Total Margin',
+      value:   pk.ebit ?? Y.kpis.ebit ?? null,
+      unit:    'Cr',
+      accent:  'yellow',
+      sub:     prevPk
         ? `${(pk.ebit ?? 0) >= (prevPk.ebit ?? 0) ? '▲' : '▼'} ₹${Math.abs((pk.ebit ?? 0) - (prevPk.ebit ?? 0)).toFixed(1)} Cr vs ${deltaLabel}`
-        : '-',
-      sub: `FC1: ₹${(pk.ebitFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.ebitFc2 ?? 0).toFixed(1)} Cr · ${(pk.ebitMargin ?? 0).toFixed(1)}% margin`,
-      up: prevPk ? (pk.ebit ?? 0) >= (prevPk.ebit ?? 0) : (pk.ebit ?? 0) >= 0,
+        : 'Revenue − Cost',
+      up:      prevPk ? (pk.ebit ?? 0) >= (prevPk.ebit ?? 0) : null,
     },
     {
-      label: 'Net Profit', value: pk.netProfit, unit: 'Cr',
-      delta: prevPk ? `${pk.netProfit >= prevPk.netProfit ? '▲' : '▼'} ₹${Math.abs(pk.netProfit - prevPk.netProfit).toFixed(1)} Cr vs ${deltaLabel}` : '-',
-      sub: `FC1: ₹${(pk.netProfitFc1 ?? 0).toFixed(1)} · FC2: ₹${(pk.netProfitFc2 ?? 0).toFixed(1)} Cr`,
-      up: prevPk ? pk.netProfit >= prevPk.netProfit : true,
-    },
-    {
-      label: 'Profit Margin', value: pk.margin, unit: '%',
-      delta: prevPk ? `${pk.margin >= prevPk.margin ? '▲' : '▼'} ${Math.abs(pk.margin - prevPk.margin).toFixed(1)} pts vs ${deltaLabel}` : '-',
-      sub: 'Cost vs revenue trajectory',
-      up: prevPk ? pk.margin >= prevPk.margin : true,
+      label:   'Margin %',
+      value:   pk.ebitMargin ?? null,
+      unit:    '%',
+      accent:  'green',
+      sub:     prevPk
+        ? `${(pk.ebitMargin ?? 0) >= (prevPk.ebitMargin ?? 0) ? '▲' : '▼'} ${Math.abs((pk.ebitMargin ?? 0) - (prevPk.ebitMargin ?? 0)).toFixed(1)} pts vs ${deltaLabel}`
+        : 'Portfolio average',
+      up:      prevPk ? (pk.ebitMargin ?? 0) >= (prevPk.ebitMargin ?? 0) : null,
     },
   ]
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3.5 mt-3 md:mt-4">
-      {cards.map((c, i) => (
-        <motion.div
-          key={c.label}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.05 * i }}
-          className="bg-[var(--card)] border border-[var(--line)] rounded-[12px] md:rounded-[14px] p-3 md:p-4 md:px-5"
-        >
-          <div className="text-[9px] md:text-[11px] tracking-[.14em] uppercase text-[var(--muted)] font-semibold">{c.label}</div>
-          <div className="font-display font-medium text-[24px] md:text-[30px] tracking-[-.5px] mt-1.5 md:mt-2">
-            {c.value != null ? c.value.toFixed(1) : '-'}
-            <span className="font-mono text-[10px] md:text-[13px] text-[var(--muted)] font-medium ml-1">{c.value != null ? c.unit : ''}</span>
-          </div>
-          <div className={`text-[10px] md:text-[12px] mt-1 md:mt-1.5 font-mono font-medium ${c.up == null ? 'text-[var(--muted)]' : c.up ? 'text-brand-green' : 'text-brand-red'}`}>
-            {c.delta}
-          </div>
-          <div className="text-[9px] md:text-[11.5px] text-[var(--muted)] mt-0.5 md:mt-1">{c.sub}</div>
-        </motion.div>
-      ))}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-3 md:mt-4">
+      {cards.map((c, i) => {
+        const accent = ACCENTS[c.accent]
+        return (
+          <motion.div
+            key={c.label}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.05 * i }}
+            className="relative overflow-hidden rounded-[16px] md:rounded-[18px] border border-[var(--line)] p-4 md:p-5 pt-5 md:pt-6"
+            style={{ background: accent.gradient }}
+          >
+            {/* Coloured top bar */}
+            <span
+              className="absolute top-0 left-0 right-0 h-1.5"
+              style={{ background: accent.bar }}
+            />
+
+            <div className="text-[10px] md:text-[11px] tracking-[.18em] uppercase text-[var(--muted)] font-semibold">
+              {c.label}
+            </div>
+
+            <div className="font-display font-semibold text-[28px] md:text-[36px] tracking-[-.5px] mt-1.5 md:mt-2 text-[var(--ink)]">
+              {c.value != null ? (c.unit === '%' ? `${c.value.toFixed(1)}%` : `₹${c.value.toFixed(1)}`) : '–'}
+              {c.value != null && c.unit !== '%' && (
+                <span className="font-mono text-[12px] md:text-[14px] text-[var(--muted)] font-medium ml-1.5">{c.unit}</span>
+              )}
+            </div>
+
+            <div
+              className={`text-[10.5px] md:text-[12px] mt-2 md:mt-2.5 font-mono font-medium ${
+                c.up == null ? 'text-[var(--muted)]' : c.up ? 'text-brand-green' : 'text-brand-red'
+              }`}
+            >
+              {c.sub}
+            </div>
+          </motion.div>
+        )
+      })}
     </div>
   )
 }

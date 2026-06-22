@@ -74,7 +74,7 @@ export default function DeptWaterfall() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="04" title={`Cost Waterfall · ${row.department} · FY ${year}`}>
+      <SectionHead num="04" title={`Cost Waterfall · ${row.department} · ${year}`}>
         FC1 → planning revision → FC2 → execution variance → Actual. Switch department to see drivers per service line.
       </SectionHead>
 

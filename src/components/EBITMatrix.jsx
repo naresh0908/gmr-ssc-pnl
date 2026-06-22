@@ -7,19 +7,19 @@ import { getSectionInsights } from '../utils/sectionInsights'
 import { getAvailMonths, getActivePeriodMonths, getPeriodLabel } from '../utils/periodUtils'
 
 export default function EBITMatrix({ type = 'department', num = '01' }) {
-  const { derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const { derived, year, fromMonth, toMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const Y = derived.byYear[year]
   const section = type === 'customer' ? 'ebit-customer' : 'ebit-dept'
-  const insights = useMemo(() => getSectionInsights(section, { derived, year, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, section, periodMode, selectedQ, selectedPeriodMonth])
+  const insights = useMemo(() => getSectionInsights(section, { derived, year, fromMonth, toMonth }), [derived, year, section, fromMonth, toMonth])
   if (!Y) return null
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
-    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
-    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+    () => getActivePeriodMonths(fromMonth, toMonth, availMonths),
+    [fromMonth, toMonth, availMonths]
   )
-  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+  const periodLabel = getPeriodLabel(fromMonth, toMonth, year)
 
   const fullMatrix = type === 'customer' ? (Y.ebitCustomerMatrix || []) : Y.ebitMatrix
   if (fullMatrix.length === 0) return null

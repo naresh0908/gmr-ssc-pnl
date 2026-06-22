@@ -4,22 +4,23 @@ import { useDashStore } from '../store/useDashStore'
 import { getAvailMonths, getActivePeriodMonths, getPeriodLabel, derivePeriodKPIs } from '../utils/periodUtils'
 
 export default function HeroSummary() {
-  const { derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const { derived, year, fromMonth, toMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const Y = derived.byYear[year]
   if (!Y) return null
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
-    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
-    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+    () => getActivePeriodMonths(fromMonth, toMonth, availMonths),
+    [fromMonth, toMonth, availMonths]
   )
   const pk          = useMemo(() => derivePeriodKPIs(Y.monthly, activeMonths) ?? Y.kpis, [Y.monthly, Y.kpis, activeMonths])
-  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+  const periodLabel = getPeriodLabel(fromMonth, toMonth, year)
 
   const revGap    = (pk.totalRevenue - (pk.revFc1  ?? 0)).toFixed(1)
   const revGapFc2 = (pk.totalRevenue - (pk.revFc2  ?? 0)).toFixed(1)
-  const yoy       = periodMode === 'year' ? Y.kpis.yoyGrowth : null  // YoY only meaningful in full-year mode
+  const isFullYear = activeMonths.length === availMonths.length
+  const yoy       = isFullYear ? Y.kpis.yoyGrowth : null  // YoY only meaningful in full-year mode
 
   return null
 }

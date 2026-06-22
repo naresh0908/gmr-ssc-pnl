@@ -149,21 +149,21 @@ function buildPL(revenue, cost, year, months) {
 export default function PLStatement() {
   const {
     rawRevenue, rawCost, derived, year,
-    periodMode, selectedQ, selectedPeriodMonth,
+    fromMonth, toMonth,
   } = useDashStore()
 
   const [viewMode, setViewMode] = useState('variance')   // 'variance' | 'monthly'
   const [expanded, setExpanded] = useState(() => new Set())
 
   const insights = useMemo(
-    () => getSectionInsights('pl', { derived, year, rawRevenue, rawCost, periodMode, selectedQ, selectedPeriodMonth }),
-    [derived, year, rawRevenue, rawCost, periodMode, selectedQ, selectedPeriodMonth]
+    () => getSectionInsights('pl', { derived, year, rawRevenue, rawCost, fromMonth, toMonth }),
+    [derived, year, rawRevenue, rawCost, fromMonth, toMonth]
   )
 
   const availMonths = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
-    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
-    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+    () => getActivePeriodMonths(fromMonth, toMonth, availMonths),
+    [fromMonth, toMonth, availMonths]
   )
 
   const pl = useMemo(
@@ -172,7 +172,7 @@ export default function PLStatement() {
   )
 
   if (!pl) return null
-  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+  const periodLabel = getPeriodLabel(fromMonth, toMonth, year)
 
   const toggleExpand = (id) => {
     setExpanded((prev) => {
@@ -210,7 +210,7 @@ export default function PLStatement() {
 
   return (
     <div className="mt-7">
-      <SectionHead num="01" title={`P&L Statement · FY ${year}`}>
+      <SectionHead num="01" title={`P&L Statement · ${year}`}>
         {periodLabel} · {viewMode === 'variance' ? 'Actual vs FC1/FC2 with variance' : 'Monthly actuals across the period'}. All figures ₹ Cr.
       </SectionHead>
 

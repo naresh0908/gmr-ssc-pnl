@@ -78,38 +78,23 @@ function biggestMonthlyOverrun(rawCost, year, costType, months) {
 }
 
 // ─── Public entry point ───────────────────────────────────────────────────────
-import { getActivePeriodMonths, derivePeriodKPIs, QUARTERS, derivePeriodCostByType, derivePeriodByDept, getPeriodLabel } from './periodUtils'
+import { getActivePeriodMonths, derivePeriodKPIs, derivePeriodCostByType, derivePeriodByDept, getPeriodLabel } from './periodUtils'
 
-export function getSectionInsights(section, { derived, serviceRevenue, year, rawRevenue, rawCost, periodMode = 'year', selectedQ = 'Q1', selectedPeriodMonth = 'Jan' }) {
+export function getSectionInsights(section, { derived, serviceRevenue, year, rawRevenue, rawCost, fromMonth, toMonth }) {
   const Y = derived?.byYear?.[year]
   if (!Y) return []
 
   const availMonths  = Y.monthly.map((m) => m.month)
-  const activeMonths = getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths)
+  const activeMonths = getActivePeriodMonths(fromMonth, toMonth, availMonths)
   const pk = derivePeriodKPIs(Y.monthly, activeMonths) ?? Y.kpis
 
-  function getPrevInfo() {
-    if (periodMode === 'year')    return { yearOffset: -1, months: null }
-    if (periodMode === 'quarter') {
-      const keys = Object.keys(QUARTERS)
-      const idx  = keys.indexOf(selectedQ)
-      const prevIdx    = idx <= 0 ? keys.length - 1 : idx - 1
-      const yearOffset = idx <= 0 ? -1 : 0
-      return { yearOffset, months: QUARTERS[keys[prevIdx]] }
-    }
-    const monthsOrder = availMonths.length ? availMonths : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-    const idx = monthsOrder.indexOf(selectedPeriodMonth)
-    const prevIdx    = idx <= 0 ? monthsOrder.length - 1 : idx - 1
-    const yearOffset = idx <= 0 ? -1 : 0
-    return { yearOffset, months: [monthsOrder[prevIdx]] }
-  }
-
-  const prevInfo = getPrevInfo()
-  const prevYear = year + prevInfo.yearOffset
+  // Prior period = same fromMonth..toMonth applied to prior year.
+  const prevYear = year - 1
   const prevY    = derived.byYear?.[prevYear]
   let prevPk = null
   if (prevY) {
-    const prevMonths = prevInfo.months === null ? prevY.monthly.map((m) => m.month) : prevInfo.months
+    const prevAvail  = prevY.monthly.map((m) => m.month)
+    const prevMonths = getActivePeriodMonths(fromMonth, toMonth, prevAvail)
     prevPk = derivePeriodKPIs(prevY.monthly, prevMonths) || null
   }
 
@@ -120,12 +105,11 @@ export function getSectionInsights(section, { derived, serviceRevenue, year, raw
     ? derivePeriodByDept(rawRevenue, rawCost, derived.departments, year, activeMonths)
     : (Y.byDept || [])
 
-  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
-  const prevLabel   = getPeriodLabel(periodMode, prevInfo.months ? Object.keys(QUARTERS).find((k) => QUARTERS[k] === prevInfo.months) || selectedQ : selectedQ,
-                                     prevInfo.months ? prevInfo.months[0] : selectedPeriodMonth, prevYear)
+  const periodLabel = getPeriodLabel(fromMonth, toMonth, year)
+  const prevLabel   = getPeriodLabel(fromMonth, toMonth, prevYear)
 
   const ctx = {
-    periodMode, selectedQ, selectedPeriodMonth,
+    fromMonth, toMonth,
     activeMonths, periodLabel, prevLabel,
     pk, prevPk, prevYear,
     periodCostByType, periodByDept,
@@ -255,7 +239,7 @@ function serviceRevenueInsights(SRY, year, ctx) {
   const topPct  = pctOf(topDept.total, total)
   out.push({
     severity: 'info',
-    tag: `Total Service Revenue · FY ${year}`,
+    tag: `Total Service Revenue · ${year}`,
     title: `${fmtCr(total)} total · ${cleanDept(topDept.dept)} contributes ${topPct}%`,
     reason: `Top department ${cleanDept(topDept.dept)}: ${fmtCr(topDept.total)} · ${byDept.length} departments in the portfolio`,
   })
@@ -345,7 +329,7 @@ function ebitDeptInsights(Y, year, ctx) {
       severity: 'good',
       tag: `Loss Cells · None`,
       title: `Every department was EBIT-positive in every month`,
-      reason: `${ebitMatrix.length} departments × ${ebitMatrix[0]?.cells?.length || 0} months · no loss-making cells in FY ${year}`,
+      reason: `${ebitMatrix.length} departments × ${ebitMatrix[0]?.cells?.length || 0} months · no loss-making cells in ${year}`,
     })
   }
 

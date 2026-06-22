@@ -10,18 +10,26 @@ export const QUARTERS = {
 const CR = 1e7
 const r2 = (n) => Math.round(n * 100) / 100
 
-// Returns which months are active given the current period selection
-export function getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths) {
-  if (periodMode === 'year') return availMonths
-  if (periodMode === 'quarter') return (QUARTERS[selectedQ] ?? []).filter((m) => availMonths.includes(m))
-  return availMonths.includes(selectedPeriodMonth) ? [selectedPeriodMonth] : []
+// Returns which months are active given the current date range.
+// fromMonth / toMonth are MONTHS values (e.g. 'Jan', 'Jun'); availMonths is
+// the set of months that have actual data for the selected year. Months
+// outside availMonths are filtered out so charts don't render empty bars.
+export function getActivePeriodMonths(fromMonth, toMonth, availMonths) {
+  if (!availMonths || availMonths.length === 0) return []
+  if (!fromMonth || !toMonth) return availMonths
+  const fi = MONTHS.indexOf(fromMonth)
+  const ti = MONTHS.indexOf(toMonth)
+  if (fi < 0 || ti < 0) return availMonths
+  const lo = Math.min(fi, ti)
+  const hi = Math.max(fi, ti)
+  return MONTHS.slice(lo, hi + 1).filter((m) => availMonths.includes(m))
 }
 
-// Returns a human-readable period label
-export function getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year) {
-  if (periodMode === 'year')    return `FY ${year}`
-  if (periodMode === 'quarter') return `${selectedQ} · FY ${year}`
-  return `${selectedPeriodMonth} · FY ${year}`
+// Returns a human-readable period label for the date range.
+export function getPeriodLabel(fromMonth, toMonth, year) {
+  if (!fromMonth || !toMonth) return `${year}`
+  if (fromMonth === toMonth) return `${fromMonth} ${year}`
+  return `${fromMonth}–${toMonth} ${year}`
 }
 
 // Derive KPI-level aggregates by filtering the pre-computed Y.monthly array.

@@ -217,18 +217,18 @@ function wrapLabel(text) {
    Main component
    ═══════════════════════════════════════════════════ */
 export default function DriverWaterfall() {
-  const { rawCost, derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const { rawCost, derived, year, fromMonth, toMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const [scenario, setScenario] = useState('fc1')
   const [dept, setDept] = useState('All')
-  const insights = useMemo(() => getSectionInsights('waterfall', { derived, year, rawCost, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, rawCost, periodMode, selectedQ, selectedPeriodMonth])
+  const insights = useMemo(() => getSectionInsights('waterfall', { derived, year, rawCost, fromMonth, toMonth }), [derived, year, rawCost, fromMonth, toMonth])
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
-    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
-    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+    () => getActivePeriodMonths(fromMonth, toMonth, availMonths),
+    [fromMonth, toMonth, availMonths]
   )
-  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+  const periodLabel = getPeriodLabel(fromMonth, toMonth, year)
 
   const departments = useMemo(
     () => ['All', ...new Set(rawCost.map(c => c.department))],

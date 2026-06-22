@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --bg: #F6F4EE;
+  --bg: #EEF3FA;
   --card: #FFFFFF;
   --ink: #0E1116;
   --ink-soft: #3B4252;
   --muted: #7A8290;
-  --line: #E6E2D6;
+  --line: #DCE3EE;
 }
 .dark {
   --bg: #0E1116;
@@ -48,3 +48,32 @@ body {
 /* Recharts overrides */
 .recharts-cartesian-axis-tick-value { font-family: 'DM Sans', system-ui, sans-serif; font-size: 11px; }
 .recharts-tooltip-wrapper { outline: none !important; }
+
+/* Dual range-slider thumb styling — make handles visible & clickable while
+   the underlying input track stays invisible (we draw our own track). */
+.range-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: #1F6FEB;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  cursor: grab;
+}
+.range-thumb::-webkit-slider-thumb:active { cursor: grabbing; }
+.range-thumb::-moz-range-thumb {
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: #1F6FEB;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  cursor: grab;
+}
+.range-thumb::-webkit-slider-runnable-track { background: transparent; }
+.range-thumb::-moz-range-track { background: transparent; }
+.range-thumb:focus { outline: none; }

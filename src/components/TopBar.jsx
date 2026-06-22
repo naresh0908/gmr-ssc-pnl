@@ -30,7 +30,7 @@ export default function TopBar() {
                 : 'bg-[var(--card)] text-[var(--ink-soft)] border-[var(--line)] hover:border-[var(--ink)]'
             }`}
           >
-            FY {y}
+            {y}
           </button>
         ))}
 

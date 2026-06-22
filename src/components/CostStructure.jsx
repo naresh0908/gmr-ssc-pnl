@@ -10,7 +10,7 @@ const colors = {
 }
 
 export default function CostStructure() {
-  const { derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const { derived, year, fromMonth, toMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const rawCost    = useDashStore((s) => s.rawCost)
   const Y = derived.byYear[year]
@@ -18,10 +18,10 @@ export default function CostStructure() {
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
-    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
-    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+    () => getActivePeriodMonths(fromMonth, toMonth, availMonths),
+    [fromMonth, toMonth, availMonths]
   )
-  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+  const periodLabel = getPeriodLabel(fromMonth, toMonth, year)
 
   const costByType = useMemo(
     () => derivePeriodCostByType(rawCost, year, activeMonths),

@@ -195,7 +195,7 @@ function YoYChart({ data, years }) {
           <Bar
             key={y}
             dataKey={`fy${y}`}
-            name={`FY ${y} Actual`}
+            name={`${y} Actual`}
             fill={yearColors[Math.min(i, yearColors.length - 1)]}
             radius={i === years.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]}
           />
@@ -230,7 +230,7 @@ function YoYTypeTable({ data, years }) {
         <span className="text-[11px] font-bold uppercase tracking-[.16em] text-[var(--ink-soft)]">
           Year-on-Year Cost Comparison
         </span>
-        <span className="text-[11px] font-mono text-[var(--muted)]">FY {prev} vs FY {latest} Actuals · ₹ Cr</span>
+        <span className="text-[11px] font-mono text-[var(--muted)]">{prev} vs {latest} Actuals · ₹ Cr</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-[12px]">
@@ -238,7 +238,7 @@ function YoYTypeTable({ data, years }) {
             <tr className="border-b border-[var(--line)] bg-[var(--card)] text-[10.5px] uppercase tracking-[.12em] font-semibold text-[var(--ink-soft)]">
               <th className="text-left px-5 py-2 min-w-[180px]">Cost Type</th>
               {years.map((y) => (
-                <th key={y} className="text-right px-4 py-2 min-w-[100px]">FY {y}</th>
+                <th key={y} className="text-right px-4 py-2 min-w-[100px]">{y}</th>
               ))}
               <th className="text-right px-4 py-2 min-w-[80px]">Change</th>
               <th className="text-right px-5 py-2 min-w-[80px]">YoY %</th>
@@ -289,11 +289,11 @@ function YoYTypeTable({ data, years }) {
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function CostAnalysisPanel() {
   const [view, setView] = useState('cost')   // 'cost' | 'revenue' | 'combined' | 'yoy'
-  const { rawCost, derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const { rawCost, derived, year, fromMonth, toMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
-  const insights = useMemo(() => getSectionInsights('cost-analysis', { derived, year, rawCost, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, rawCost, periodMode, selectedQ, selectedPeriodMonth])
+  const insights = useMemo(() => getSectionInsights('cost-analysis', { derived, year, rawCost, fromMonth, toMonth }), [derived, year, rawCost, fromMonth, toMonth])
   // Also fetch Cost & Profitability insights so PEX and CAPEX cards appear
-  const costProfInsights = useMemo(() => getSectionInsights('cost-prof', { derived, year, rawCost, rawRevenue, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, rawCost, rawRevenue, periodMode, selectedQ, selectedPeriodMonth])
+  const costProfInsights = useMemo(() => getSectionInsights('cost-prof', { derived, year, rawCost, rawRevenue, fromMonth, toMonth }), [derived, year, rawCost, rawRevenue, fromMonth, toMonth])
 
   // Merge and filter insights: remove OPEX and Department Margins cards per UX request
   const combinedInsights = useMemo(() => {
@@ -309,10 +309,10 @@ export default function CostAnalysisPanel() {
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
-    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
-    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+    () => getActivePeriodMonths(fromMonth, toMonth, availMonths),
+    [fromMonth, toMonth, availMonths]
   )
-  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+  const periodLabel = getPeriodLabel(fromMonth, toMonth, year)
 
   // MoM cost data
   const costMoMData = useMemo(() => {
@@ -413,7 +413,7 @@ export default function CostAnalysisPanel() {
       sub:    'Cost bars, revenue line, and net profit line.',
     },
     yoy: {
-      title:  `Cost Evolution · ${derived.years.map((y) => `FY ${y}`).join(' vs ')}`,
+      title:  `Cost Evolution · ${derived.years.map((y) => `${y}`).join(' vs ')}`,
       sub:    'Monthly actual cost by financial year.',
     },
   }
@@ -508,7 +508,7 @@ export default function CostAnalysisPanel() {
                 derived.years.map((y, i) => (
                   <span key={y} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-brand-blue-soft text-brand-blue">
                     <span className="w-2 h-2 rounded-sm" style={{ background: i === 0 ? '#A9C3F5' : i === 1 ? '#1F6FEB' : '#0E1116' }} />
-                    FY {y}
+                    {y}
                   </span>
                 ))
               )}

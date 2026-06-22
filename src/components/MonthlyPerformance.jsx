@@ -7,23 +7,23 @@ import { getSectionInsights } from '../utils/sectionInsights'
 import { getAvailMonths, getActivePeriodMonths, getPeriodLabel } from '../utils/periodUtils'
 
 export default function MonthlyPerformance() {
-  const { derived, year, periodMode, selectedQ, selectedPeriodMonth } = useDashStore()
+  const { derived, year, fromMonth, toMonth } = useDashStore()
   const rawRevenue = useDashStore((s) => s.rawRevenue)
   const Y = derived.byYear[year]
   const [targetView, setTargetView] = useState('fc1')
-  const insights = useMemo(() => getSectionInsights('monthly', { derived, year, periodMode, selectedQ, selectedPeriodMonth }), [derived, year, periodMode, selectedQ, selectedPeriodMonth])
+  const insights = useMemo(() => getSectionInsights('monthly', { derived, year, fromMonth, toMonth }), [derived, year, fromMonth, toMonth])
   if (!Y) return null
 
   const availMonths  = useMemo(() => getAvailMonths(rawRevenue, year), [rawRevenue, year])
   const activeMonths = useMemo(
-    () => getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths),
-    [periodMode, selectedQ, selectedPeriodMonth, availMonths]
+    () => getActivePeriodMonths(fromMonth, toMonth, availMonths),
+    [fromMonth, toMonth, availMonths]
   )
   const filteredMonthly = useMemo(
     () => Y.monthly.filter((d) => activeMonths.includes(d.month)),
     [Y.monthly, activeMonths]
   )
-  const periodLabel = getPeriodLabel(periodMode, selectedQ, selectedPeriodMonth, year)
+  const periodLabel = getPeriodLabel(fromMonth, toMonth, year)
 
   // Scale revenue axis to the data for this FY (no hardcoded 22 Cr ceiling)
   const REV_AXIS = Math.max(

@@ -4,10 +4,10 @@
  * Output shape: { kind, severity, tag, title, reason, chips }
  * Keep it numeric, comparative, and free of fabricated causes.
  */
-import { getActivePeriodMonths, derivePeriodKPIs, QUARTERS } from './periodUtils'
+import { getActivePeriodMonths, derivePeriodKPIs } from './periodUtils'
 
 export function generateInsights(derived, year, opts = {}) {
-  const { periodMode = 'year', selectedQ = 'Q1', selectedPeriodMonth = 'Jan' } = opts
+  const { fromMonth, toMonth } = opts
   const Y = derived.byYear?.[year]
   if (!Y) return []
 
@@ -18,34 +18,17 @@ export function generateInsights(derived, year, opts = {}) {
 
   // Compute current period KPIs and previous-period KPIs for comparisons
   const availMonths = monthly.map((m) => m.month)
-  const activeMonths = getActivePeriodMonths(periodMode, selectedQ, selectedPeriodMonth, availMonths)
+  const activeMonths = getActivePeriodMonths(fromMonth, toMonth, availMonths)
   const pk = derivePeriodKPIs(monthly, activeMonths) || {}
 
-  // helper to get previous period months and year offset
-  const getPrevPeriod = () => {
-    if (periodMode === 'year') return { yearOffset: -1, months: null }
-    if (periodMode === 'quarter') {
-      const keys = Object.keys(QUARTERS)
-      const idx = keys.indexOf(selectedQ)
-      const prevIdx = idx <= 0 ? keys.length - 1 : idx - 1
-      const yearOffset = idx <= 0 ? -1 : 0
-      return { yearOffset, months: QUARTERS[keys[prevIdx]] }
-    }
-    // month
-    const monthsOrder = availMonths.length ? availMonths : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-    const idx = monthsOrder.indexOf(selectedPeriodMonth)
-    const prevIdx = idx <= 0 ? monthsOrder.length - 1 : idx - 1
-    const yearOffset = idx <= 0 ? -1 : 0
-    return { yearOffset, months: [monthsOrder[prevIdx]] }
-  }
-
-  const prevInfo = getPrevPeriod()
-  const prevYear = year + prevInfo.yearOffset
+  // Previous period = same range in the prior year
+  const prevYear = year - 1
   const prevY = derived.byYear?.[prevYear]
   let prevPk = null
   if (prevY) {
-    const prevMonths = prevInfo.months === null ? prevY.monthly.map((m) => m.month) : prevInfo.months
-    prevPk = derivePeriodKPIs(prevY.monthly, prevMonths) || null
+    const prevAvail = prevY.monthly.map((m) => m.month)
+    const prevActive = getActivePeriodMonths(fromMonth, toMonth, prevAvail)
+    prevPk = derivePeriodKPIs(prevY.monthly, prevActive) || null
   }
 
   // Add a top-level period comparison card if we have previous period KPIs
