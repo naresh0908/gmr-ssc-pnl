@@ -7,7 +7,6 @@ import {
 import { getAvailMonths, getActivePeriodMonths } from '../utils/periodUtils'
 
 const CR = 1e7
-const MONTH_DAYS = { Jan: 31, Feb: 28, Mar: 31, Apr: 30, May: 31, Jun: 30, Jul: 31, Aug: 31, Sep: 30, Oct: 31, Nov: 30, Dec: 31 }
 
 const TITLE_COLOR = '#0F2747'
 const GRID        = '#E5EBF3'
@@ -59,7 +58,7 @@ export default function ProjectStatusChart() {
         return { name: c, value: +(total / CR).toFixed(2) }
       }).sort((a, b) => b.value - a.value)
 
-      const out = { month: m, label: `${MONTH_DAYS[m]} ${m} ${year}` }
+      const out = { month: m, label: `${m} ${year}` }
       ranked.forEach((r, idx) => { out[`rank${idx + 1}`] = r })
       return out
     })
@@ -84,13 +83,14 @@ export default function ProjectStatusChart() {
       for (const s of STATUS_ORDER) cumulative[s] += statusCounts[s]
       return {
         month: m,
-        label: `${MONTH_DAYS[m]} ${m} ${year}`,
+        label: `${m} ${year}`,
         ...cumulative,
       }
     })
   }, [activeMonths, rawRevenue, year])
 
   const N = Math.min(5, customers.length || 5)
+  const tickInterval = activeMonths.length > 6 ? 1 : 0
 
   return (
     <div className="mt-4 md:mt-5 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4">
@@ -103,7 +103,7 @@ export default function ProjectStatusChart() {
         <ResponsiveContainer width="100%" height={320}>
           <LineChart data={topCustomers} margin={{ top: 12, right: 24, left: 8, bottom: 10 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={GRID} vertical={false} />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: AXIS_TXT, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={8} />
+            <XAxis dataKey="label" tick={{ fontSize: 11, fill: AXIS_TXT, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={8} interval={tickInterval} />
             <YAxis tickFormatter={fmtAxis} tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} width={62} />
             <Tooltip content={<CustomerTooltip />} />
             {Array.from({ length: N }).map((_, idx) => (
@@ -144,7 +144,7 @@ export default function ProjectStatusChart() {
               ))}
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke={GRID} vertical={false} />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: AXIS_TXT, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={8} />
+            <XAxis dataKey="label" tick={{ fontSize: 11, fill: AXIS_TXT, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={8} interval={tickInterval} />
             <YAxis tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} width={48} />
             <Tooltip
               labelStyle={{ color: TITLE_COLOR, fontWeight: 600 }}
@@ -202,22 +202,38 @@ function Header({ title, subtitle }) {
 
 function CustomerTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null
+  const entries = payload
+    .map((p, i) => ({ ...(p.payload?.[`rank${i + 1}`] || {}), color: p.color, rank: i + 1 }))
+    .filter((e) => e && e.value != null)
+  if (!entries.length) return null
   return (
-    <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 10, padding: '8px 12px', fontSize: 12, boxShadow: '0 4px 16px rgba(15,39,71,0.08)' }}>
-      <div style={{ fontWeight: 700, color: TITLE_COLOR, marginBottom: 6 }}>{label}</div>
-      {payload.map((p, i) => {
-        const rankKey = `rank${i + 1}`
-        const entry = p.payload?.[rankKey]
-        if (!entry || entry.value == null) return null
-        return (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#3B4252', marginTop: 2 }}>
-            <span style={{ width: 8, height: 8, borderRadius: 8, background: p.color, display: 'inline-block' }} />
-            <span style={{ minWidth: 24, fontWeight: 600 }}>#{i + 1}</span>
-            <span style={{ flex: 1 }}>{entry.name}</span>
-            <span style={{ fontWeight: 600 }}>{fmtRupee(entry.value)}</span>
+    <div
+      style={{
+        background: '#fff',
+        border: '1px solid #E5E7EB',
+        borderRadius: 14,
+        padding: '14px 16px',
+        boxShadow: '0 12px 32px rgba(15,23,42,0.12)',
+        minWidth: 280,
+        maxWidth: 360,
+      }}
+    >
+      <div style={{ fontSize: 11.5, fontWeight: 700, color: '#94A3B8', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 10 }}>
+        {label}
+      </div>
+      {entries.map((e, i) => (
+        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: i === 0 ? 0 : 10 }}>
+          <span style={{ width: 9, height: 9, borderRadius: 9, background: e.color, display: 'inline-block', flexShrink: 0 }} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontWeight: 700, color: '#0F2747', fontSize: 13, lineHeight: 1.25, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {e.name ?? '–'}
+            </div>
           </div>
-        )
-      })}
+          <div style={{ fontWeight: 700, color: '#1F8A4C', fontSize: 13, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+            {fmtRupee(e.value)}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

@@ -7,7 +7,6 @@ import {
 import { getAvailMonths, getActivePeriodMonths } from '../utils/periodUtils'
 
 const CR = 1e7
-const MONTH_DAYS = { Jan: 31, Feb: 28, Mar: 31, Apr: 30, May: 31, Jun: 30, Jul: 31, Aug: 31, Sep: 30, Oct: 31, Nov: 30, Dec: 31 }
 
 const TITLE_COLOR = '#0F2747'
 const GRID        = '#E5EBF3'
@@ -59,17 +58,23 @@ export default function MarginRankCharts() {
         const cost = rawCost
           .filter((c) => c.year === year && c.month === m && c.customer === p.customer && c.department === p.department)
           .reduce((s, c) => s + (c.actual || 0), 0)
-        return { name: p.name, value: +((rev - cost) / CR).toFixed(2) }
+        return {
+          name: p.name,
+          primary: p.customer,
+          secondary: p.department,
+          value: +((rev - cost) / CR).toFixed(2),
+        }
       })
       return {
         month: m,
-        label: `${MONTH_DAYS[m]} ${m} ${year}`,
+        label: `${m} ${year}`,
         all: ranked,
       }
     })
   }, [activeMonths, projects, rawRevenue, rawCost, year])
 
   const N = 5
+  const tickInterval = activeMonths.length > 6 ? 1 : 0
 
   const topData = useMemo(() => marginByMonth.map((row) => ({
     ...packRanks([...row.all].sort((a, b) => b.value - a.value).slice(0, N)),
@@ -83,25 +88,28 @@ export default function MarginRankCharts() {
 
   return (
     <div className="mt-4 md:mt-5 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4">
-      {/* Top 5 Highest Margin */}
+      {/* Top 5 Highest Margin Projects */}
       <RankCard
         className="md:col-span-6"
-        title={`Top ${N} Highest Margin`}
-        subtitle={`Each month's own top ${N} highest-margin projects · per-month margin · hover for project ID · name`}
+        title={`Top ${N} Highest Margin Projects`}
+        subtitle={`Each month's top ${N} projects by margin · hover a point for the customer · department behind that rank`}
         data={topData}
         rankCount={N}
         explainer={[
-          { label: 'What this chart shows:', body: <>For each month, the {N} projects with the highest margin <em>in that month</em>. Hover names the project at each rank.</> },
+          { label: 'What this chart shows:', body: 'This chart shows the projects with the highest profit contribution over time.' },
+          { label: 'How it is calculated:',  body: `Projects are ranked based on total margin (₹) within each month, and the top ${N} are selected.` },
+          { label: 'Why it matters:',        body: 'This helps highlight the projects contributing most to profitability.' },
         ]}
-        footnote={`For each month, the ${N} projects with the highest margin in that month (ranks; #1 = highest). The project at each rank can change month to month — hover to see it.`}
+        footnote={`Lines are ranks (#1 = highest margin). The project at each rank can change month to month — hover a point to see it.`}
         rankLabel="highest"
+        tickInterval={tickInterval}
       />
 
-      {/* Top 5 Lowest Margin */}
+      {/* Top 5 Lowest Margin Projects */}
       <RankCard
         className="md:col-span-6"
-        title={`Top ${N} Lowest Margin`}
-        subtitle={`Each month's own bottom ${N} lowest-margin projects · per-month margin · hover for project ID · name`}
+        title={`Top ${N} Lowest Margin Projects`}
+        subtitle={`Each month's bottom ${N} projects by margin · hover a point for the customer · department behind that rank`}
         data={bottomData}
         rankCount={N}
         explainer={[
@@ -109,8 +117,9 @@ export default function MarginRankCharts() {
           { label: 'How it is calculated:',  body: `Projects are ranked based on total margin (₹) within each month, and the bottom ${N} are selected.` },
           { label: 'Why it matters:',        body: 'This helps identify projects that may be underperforming or causing margin risk.' },
         ]}
-        footnote={`For each month, the ${N} projects with the lowest margin in that month (ranks; #1 = lowest). The project at each rank can change month to month — hover to see it.`}
+        footnote={`Lines are ranks (#1 = lowest margin). The project at each rank can change month to month — hover a point to see it.`}
         rankLabel="lowest"
+        tickInterval={tickInterval}
       />
     </div>
   )
@@ -122,7 +131,7 @@ function packRanks(items) {
   return out
 }
 
-function RankCard({ title, subtitle, data, rankCount, explainer, footnote, className = '', rankLabel }) {
+function RankCard({ title, subtitle, data, rankCount, explainer, footnote, className = '', rankLabel, tickInterval = 0 }) {
   return (
     <div
       className={`relative rounded-[18px] border border-[var(--line)] p-4 md:p-5 shadow-[0_1px_2px_rgba(15,39,71,0.04)] flex flex-col ${className}`}
@@ -138,7 +147,7 @@ function RankCard({ title, subtitle, data, rankCount, explainer, footnote, class
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data} margin={{ top: 12, right: 24, left: 8, bottom: 10 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={GRID} vertical={false} />
-          <XAxis dataKey="label" tick={{ fontSize: 10.5, fill: AXIS_TXT, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={8} />
+          <XAxis dataKey="label" tick={{ fontSize: 10.5, fill: AXIS_TXT, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={8} interval={tickInterval} />
           <YAxis tickFormatter={fmtAxis} tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} width={62} />
           <ReferenceLine y={0} stroke={ZERO} strokeWidth={1} />
           <Tooltip content={<MarginTooltip rankLabel={rankLabel} />} />
@@ -172,22 +181,43 @@ function RankCard({ title, subtitle, data, rankCount, explainer, footnote, class
 
 function MarginTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null
+  const entries = payload
+    .map((p, i) => ({ ...(p.payload?.[`rank${i + 1}`] || {}), color: p.color, rank: i + 1 }))
+    .filter((e) => e && e.value != null)
+  if (!entries.length) return null
   return (
-    <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 10, padding: '8px 12px', fontSize: 12, boxShadow: '0 4px 16px rgba(15,39,71,0.08)', maxWidth: 320 }}>
-      <div style={{ fontWeight: 700, color: TITLE_COLOR, marginBottom: 6 }}>{label}</div>
-      {payload.map((p, i) => {
-        const rankKey = `rank${i + 1}`
-        const entry = p.payload?.[rankKey]
-        if (!entry || entry.value == null) return null
-        return (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#3B4252', marginTop: 2 }}>
-            <span style={{ width: 8, height: 8, borderRadius: 8, background: p.color, display: 'inline-block', flexShrink: 0 }} />
-            <span style={{ minWidth: 24, fontWeight: 600 }}>#{i + 1}</span>
-            <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{entry.name}</span>
-            <span style={{ fontWeight: 600, color: entry.value < 0 ? '#C0392B' : '#1F8A4C' }}>{fmtRupee(entry.value)}</span>
+    <div
+      style={{
+        background: '#fff',
+        border: '1px solid #E5E7EB',
+        borderRadius: 14,
+        padding: '14px 16px',
+        boxShadow: '0 12px 32px rgba(15,23,42,0.12)',
+        minWidth: 300,
+        maxWidth: 360,
+      }}
+    >
+      <div style={{ fontSize: 11.5, fontWeight: 700, color: '#94A3B8', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 10 }}>
+        {label}
+      </div>
+      {entries.map((e, i) => (
+        <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: i === 0 ? 0 : 10 }}>
+          <span style={{ width: 9, height: 9, borderRadius: 9, background: e.color, display: 'inline-block', flexShrink: 0, marginTop: 5 }} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontWeight: 700, color: '#0F2747', fontSize: 13, lineHeight: 1.25, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {e.primary ?? e.name ?? '–'}
+            </div>
+            {e.secondary && (
+              <div style={{ color: '#94A3B8', fontSize: 11.5, lineHeight: 1.35, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {e.secondary}
+              </div>
+            )}
           </div>
-        )
-      })}
+          <div style={{ fontWeight: 700, color: e.value < 0 ? '#C0392B' : '#1F8A4C', fontSize: 13, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+            {fmtRupee(e.value)}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

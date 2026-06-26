@@ -4,10 +4,6 @@ import { useDashStore } from '../store/useDashStore'
 import { getAvailMonths } from '../utils/periodUtils'
 import { MONTHS } from '../utils/computeDerived'
 
-const MONTH_DAYS = {
-  Jan: 31, Feb: 28, Mar: 31, Apr: 30, May: 31, Jun: 30,
-  Jul: 31, Aug: 31, Sep: 30, Oct: 31, Nov: 30, Dec: 31,
-}
 const ALL = 'All'
 
 export default function FilterBar() {
@@ -38,9 +34,8 @@ export default function FilterBar() {
     setRange(newFrom, newTo)
   }
 
-  const rangeText = `${labels[fromIdx]} ${year} → ${MONTH_DAYS[labels[toIdx]] ?? ''} ${labels[toIdx]} ${year}`.replace(/^\s+/, '')
   const fromLabel = `${labels[fromIdx]} ${year}`
-  const toLabel = `${MONTH_DAYS[labels[toIdx]]} ${labels[toIdx]} ${year}`
+  const toLabel = `${labels[toIdx]} ${year}`
 
   const statusOptions = [ALL, ...projectStatuses.filter((s) => s)]
   const customerOptions = [ALL, ...customers]
@@ -51,7 +46,7 @@ export default function FilterBar() {
       <div className="md:col-span-5">
         <div className="flex items-baseline justify-between gap-3 mb-2.5">
           <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[.18em] text-[var(--muted)]">
-            Snapshot Date Range
+            Snapshot Range
           </span>
           <span className="text-[11px] md:text-[12px] font-mono font-semibold text-brand-blue whitespace-nowrap">
             {fromLabel} → {toLabel}
@@ -72,7 +67,7 @@ export default function FilterBar() {
               key={m}
               className={`text-center ${i === fromIdx || i === toIdx ? 'text-[var(--ink)] font-semibold' : ''}`}
             >
-              {labels.length > 6 ? m : `${MONTH_DAYS[m]} ${m}`}
+              {m}
             </span>
           ))}
         </div>

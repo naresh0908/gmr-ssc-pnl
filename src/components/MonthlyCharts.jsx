@@ -1,15 +1,16 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { motion } from 'framer-motion'
 import { useDashStore } from '../store/useDashStore'
 import {
   ComposedChart, Bar, Line, Area, AreaChart, LineChart,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ReferenceLine,
 } from 'recharts'
 import { getAvailMonths, getActivePeriodMonths } from '../utils/periodUtils'
+import KpiDrillModal from './KpiDrillModal'
 
 const CR = 1e7
-const MONTH_DAYS = { Jan: 31, Feb: 28, Mar: 31, Apr: 30, May: 31, Jun: 30, Jul: 31, Aug: 31, Sep: 30, Oct: 31, Nov: 30, Dec: 31 }
 
-const fmtMonth = (m, year) => `${MONTH_DAYS[m]} ${m} ${year}`
+const fmtMonth = (m, year) => `${m} ${year}`
 const fmtRupee = (v) => v == null ? '–' : `₹${(+v).toFixed(2)} Cr`
 const fmtAxis = (v) => {
   const n = Number(v) || 0
@@ -60,18 +61,37 @@ export default function MonthlyCharts() {
     })
   }, [activeMonths, Y, year])
 
-  const customers = useMemo(() => [...new Set(rawRevenue.map((r) => r.customer).filter(Boolean))], [rawRevenue])
+  const projects = useMemo(() => {
+    const set = new Set()
+    for (const r of rawRevenue) {
+      if (r.customer && r.department) set.add(`${r.customer}||${r.department}`)
+    }
+    for (const c of rawCost) {
+      if (c.customer && c.department) set.add(`${c.customer}||${c.department}`)
+    }
+    return [...set].map((k) => {
+      const [customer, department] = k.split('||')
+      return { customer, department }
+    })
+  }, [rawRevenue, rawCost])
   const topCostRanks = useMemo(
-    () => buildRankSeries(activeMonths, customers, rawCost, year, 'actual'),
-    [activeMonths, customers, rawCost, year]
+    () => buildRankSeries(activeMonths, projects, rawCost, year, 'actual'),
+    [activeMonths, projects, rawCost, year]
   )
   const topRevRanks = useMemo(
-    () => buildRankSeries(activeMonths, customers, rawRevenue, year, '__rev'),
-    [activeMonths, customers, rawRevenue, year]
+    () => buildRankSeries(activeMonths, projects, rawRevenue, year, '__rev'),
+    [activeMonths, projects, rawRevenue, year]
   )
 
-  const N = Math.min(5, customers.length || 5)
+  const customerCount = useMemo(() => new Set(rawRevenue.map((r) => r.customer).filter(Boolean)).size, [rawRevenue])
+  const N = Math.min(5, customerCount || 5)
   const monthCountLabel = `${activeMonths.length} month${activeMonths.length === 1 ? '' : 's'} in ${year}`
+
+  // Avoid x-axis label overlap on narrower cards (e.g. Margin %, rank cards)
+  // when many months are visible. Skip every other tick once we exceed 6.
+  const tickInterval = activeMonths.length > 6 ? 1 : 0
+
+  const [drill, setDrill] = useState(null)
 
   return (
     <div className="mt-4 md:mt-5 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4">
@@ -80,7 +100,7 @@ export default function MonthlyCharts() {
         <ResponsiveContainer width="100%" height={360}>
           <ComposedChart data={monthlyData} margin={{ top: 16, right: 28, left: 8, bottom: 8 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={COLORS.grid} vertical={false} />
-            <XAxis dataKey="label" tick={{ fontSize: 11.5, fill: COLORS.axisTxt, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={10} />
+            <XAxis dataKey="label" tick={{ fontSize: 11.5, fill: COLORS.axisTxt, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={10} interval={0} />
             <YAxis tickFormatter={fmtAxis} tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} width={68} />
             <Tooltip
               formatter={(v, k) => [fmtRupee(v), k === 'cost' ? 'Cost' : k === 'revenue' ? 'Revenue' : 'Margin']}
@@ -118,7 +138,7 @@ export default function MonthlyCharts() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke={COLORS.grid} vertical={false} />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: COLORS.axisTxt, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={10} />
+            <XAxis dataKey="label" tick={{ fontSize: 11, fill: COLORS.axisTxt, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={10} interval={tickInterval} />
             <YAxis tickFormatter={(v) => `${(+v).toFixed(0)}%`} tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} width={52} />
             <Tooltip
               formatter={(v) => [`${(+v).toFixed(1)}%`, 'Margin %']}
@@ -139,31 +159,42 @@ export default function MonthlyCharts() {
         </ResponsiveContainer>
       </Card>
 
-      {/* Top N High-Cost Projects */}
+      {/* Top N Highest Cost Projects */}
       <RankCard
         className="md:col-span-6"
-        title={`Top ${N} High-Cost Projects`}
-        subtitle={`Each month's own top ${N} highest-cost projects · per-month cost · hover for project ID · name`}
+        title={`Top ${N} Highest Cost Projects`}
+        subtitle={`Each month's top ${N} projects by actual cost · hover a point for the customer · department behind that rank`}
         data={topCostRanks}
         rankCount={N}
         valueLabel="Cost"
-        whatHTML={<>For each month, the {N} projects with the highest cost incurred <em>in that month</em>. Hover names the project at each rank.</>}
-        howHTML={<>Per-month cost = cumulative cost this month − last month; projects are ranked within each month and the top {N} shown.</>}
-        footnote={`For each month, the ${N} projects with the highest cost in that month. Lines are ranks (#1 = highest); the project at each rank can change month to month — hover to see it.`}
+        explainer={[
+          { label: 'What this chart shows:', body: 'This chart shows the projects with the highest cost each month.' },
+          { label: 'How it is calculated:',  body: `Projects are ranked based on total actual cost (₹) within each month, and the top ${N} are selected.` },
+          { label: 'Why it matters:',        body: 'This helps spot where the biggest spend is happening month to month.' },
+        ]}
+        footnote={`Lines are ranks (#1 = highest cost). The project at each rank can change month to month — hover a point to see it.`}
+        tickInterval={tickInterval}
+        onOpenData={() => setDrill({ key: 'cost', label: `Top ${N} Highest Cost Projects` })}
       />
 
-      {/* Top N High Revenue Projects */}
+      {/* Top N Highest Revenue Projects */}
       <RankCard
         className="md:col-span-6"
-        title={`Top ${N} High Revenue Projects`}
-        subtitle={`Each month's own top ${N} highest-revenue projects · per-month revenue · hover for project ID · name`}
+        title={`Top ${N} Highest Revenue Projects`}
+        subtitle={`Each month's top ${N} projects by operating revenue · hover a point for the customer · department behind that rank`}
         data={topRevRanks}
         rankCount={N}
         valueLabel="Revenue"
-        whatHTML={<>For each month, the {N} projects with the highest revenue <em>in that month</em>. Hover names the project at each rank.</>}
-        howHTML={<>Per-month revenue = cumulative revenue this month − last month; projects are ranked within each month and the top {N} shown.</>}
-        footnote={`For each month, the ${N} projects with the highest revenue in that month. Lines are ranks (#1 = highest); the project at each rank can change month to month — hover to see it.`}
+        explainer={[
+          { label: 'What this chart shows:', body: 'This chart shows the projects with the highest revenue each month.' },
+          { label: 'How it is calculated:',  body: `Projects are ranked based on total revenue (₹) within each month, and the top ${N} are selected.` },
+          { label: 'Why it matters:',        body: 'This helps identify the strongest revenue drivers in the portfolio.' },
+        ]}
+        footnote={`Lines are ranks (#1 = highest revenue). The project at each rank can change month to month — hover a point to see it.`}
+        tickInterval={tickInterval}
+        onOpenData={() => setDrill({ key: 'revenue', label: `Top ${N} Highest Revenue Projects` })}
       />
+      {drill && <KpiDrillModal metric={drill} onClose={() => setDrill(null)} />}
     </div>
   )
 }
@@ -186,23 +217,44 @@ function Card({ title, subtitle, footer, children, className = '' }) {
   )
 }
 
-function RankCard({ title, subtitle, data, rankCount, valueLabel, whatHTML, howHTML, footnote, className = '' }) {
+function RankCard({ title, subtitle, data, rankCount, valueLabel, explainer = [], footnote, className = '', onOpenData, tickInterval = 0 }) {
   return (
-    <div
-      className={`relative rounded-[18px] border border-[var(--line)] p-4 md:p-5 shadow-[0_1px_2px_rgba(15,39,71,0.04)] flex flex-col ${className}`}
+    <motion.div
+      whileHover={onOpenData ? { y: -3, transition: { duration: 0.18 } } : undefined}
+      className={`relative rounded-[18px] border border-[var(--line)] p-4 md:p-5 shadow-[0_1px_2px_rgba(15,39,71,0.04)] flex flex-col transition-[box-shadow,border-color] ${onOpenData ? 'hover:shadow-[0_10px_28px_rgba(15,39,71,0.10)] hover:border-[var(--ink)]/15' : ''} ${className}`}
       style={{ background: 'var(--card)' }}
     >
-      <div className="mb-3">
-        <h3 className="font-display font-bold text-[16px] md:text-[18px] tracking-tight" style={{ color: COLORS.title }}>
-          {title}
-        </h3>
-        {subtitle && <p className="text-[11px] md:text-[12px] text-[var(--muted)] mt-0.5">{subtitle}</p>}
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="font-display font-bold text-[16px] md:text-[18px] tracking-tight" style={{ color: COLORS.title }}>
+            {title}
+          </h3>
+          {subtitle && <p className="text-[11px] md:text-[12px] text-[var(--muted)] mt-0.5">{subtitle}</p>}
+        </div>
+        {onOpenData && (
+          <button
+            type="button"
+            onClick={onOpenData}
+            className="shrink-0 inline-flex items-center gap-1.5 text-[10.5px] md:text-[11.5px] font-semibold text-[var(--muted)] hover:text-[var(--ink)] px-2.5 py-1.5 rounded-full border border-[var(--line)] hover:border-[var(--ink)]/30 hover:bg-[var(--bg)] transition"
+            aria-label="View data"
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <line x1="8" y1="6" x2="21" y2="6" />
+              <line x1="8" y1="12" x2="21" y2="12" />
+              <line x1="8" y1="18" x2="21" y2="18" />
+              <line x1="3" y1="6" x2="3.01" y2="6" />
+              <line x1="3" y1="12" x2="3.01" y2="12" />
+              <line x1="3" y1="18" x2="3.01" y2="18" />
+            </svg>
+            View data
+          </button>
+        )}
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data} margin={{ top: 12, right: 24, left: 8, bottom: 10 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={COLORS.grid} vertical={false} />
-          <XAxis dataKey="label" tick={{ fontSize: 10.5, fill: COLORS.axisTxt, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={8} />
+          <XAxis dataKey="label" tick={{ fontSize: 10.5, fill: COLORS.axisTxt, fontWeight: 600 }} axisLine={false} tickLine={false} tickMargin={8} interval={tickInterval} />
           <YAxis tickFormatter={fmtAxis} tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} width={60} />
           <Tooltip content={<RankTooltip valueLabel={valueLabel} />} />
           {Array.from({ length: rankCount }).map((_, idx) => (
@@ -222,51 +274,82 @@ function RankCard({ title, subtitle, data, rankCount, valueLabel, whatHTML, howH
       </ResponsiveContainer>
 
       <div className="mt-3 rounded-[10px] border border-[var(--line)] bg-white/60 p-3 text-[11px] md:text-[12px] leading-relaxed text-[var(--ink-soft)]">
-        <div><span className="font-semibold" style={{ color: COLORS.title }}>What this chart shows:</span> {whatHTML}</div>
-        <div className="mt-1"><span className="font-semibold" style={{ color: COLORS.title }}>How it is calculated:</span> {howHTML}</div>
+        {explainer.map((row, i) => (
+          <div key={i} className={i === 0 ? '' : 'mt-1'}>
+            <span className="font-semibold" style={{ color: COLORS.title }}>{row.label}</span> {row.body}
+          </div>
+        ))}
       </div>
       {footnote && <p className="text-[10.5px] md:text-[11px] text-[var(--muted)] mt-2.5">{footnote}</p>}
-    </div>
+    </motion.div>
   )
 }
 
-function RankTooltip({ active, payload, label }) {
+function RankTooltip({ active, payload, label, valueLabel }) {
   if (!active || !payload || !payload.length) return null
+  const entries = payload
+    .map((p, i) => ({ ...(p.payload?.[`rank${i + 1}`] || {}), color: p.color, rank: i + 1 }))
+    .filter((e) => e && e.value != null)
+  if (!entries.length) return null
+  const valueColor = valueLabel === 'Cost' ? '#C0392B' : '#1F8A4C'
   return (
-    <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 10, padding: '8px 12px', fontSize: 12, boxShadow: '0 4px 16px rgba(15,39,71,0.08)' }}>
-      <div style={{ fontWeight: 700, color: COLORS.title, marginBottom: 6 }}>{label}</div>
-      {payload.map((p, i) => {
-        const rankKey = `rank${i + 1}`
-        const name = p.payload?.[rankKey]?.name
-        const value = p.payload?.[rankKey]?.value
-        if (value == null) return null
-        return (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#3B4252', marginTop: 2 }}>
-            <span style={{ width: 8, height: 8, borderRadius: 8, background: p.color, display: 'inline-block' }} />
-            <span style={{ minWidth: 24, fontWeight: 600 }}>#{i + 1}</span>
-            <span style={{ flex: 1 }}>{name ?? '–'}</span>
-            <span style={{ fontWeight: 600 }}>{fmtRupee(value)}</span>
+    <div
+      style={{
+        background: '#fff',
+        border: '1px solid #E5E7EB',
+        borderRadius: 14,
+        padding: '14px 16px',
+        boxShadow: '0 12px 32px rgba(15,23,42,0.12)',
+        minWidth: 280,
+        maxWidth: 360,
+      }}
+    >
+      <div style={{ fontSize: 11.5, fontWeight: 700, color: '#94A3B8', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 10 }}>
+        {label}
+      </div>
+      {entries.map((e, i) => (
+        <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: i === 0 ? 0 : 10 }}>
+          <span style={{ width: 9, height: 9, borderRadius: 9, background: e.color, display: 'inline-block', flexShrink: 0, marginTop: 5 }} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontWeight: 700, color: '#0F2747', fontSize: 13, lineHeight: 1.25, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {e.primary ?? e.name ?? '–'}
+            </div>
+            {e.secondary && (
+              <div style={{ color: '#94A3B8', fontSize: 11.5, lineHeight: 1.35, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {e.secondary}
+              </div>
+            )}
           </div>
-        )
-      })}
+          <div style={{ fontWeight: 700, color: valueColor, fontSize: 13, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+            {fmtRupee(e.value)}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
 
-function buildRankSeries(months, customers, rows, year, field) {
+function buildRankSeries(months, projects, rows, year, field) {
   return months.map((m) => {
-    const ranked = customers.map((c) => {
-      const filtered = rows.filter((r) => r.year === year && r.month === m && r.customer === c)
+    const ranked = projects.map((p) => {
+      const filtered = rows.filter(
+        (r) => r.year === year && r.month === m && r.customer === p.customer && r.department === p.department
+      )
       let total = 0
       if (field === '__rev') {
         total = filtered.reduce((s, r) => s + (r.actServiceFees || 0) + (r.actOtherIncome || 0), 0)
       } else {
         total = filtered.reduce((s, r) => s + (r[field] || 0), 0)
       }
-      return { name: c, value: +(total / CR).toFixed(2) }
+      return {
+        name: p.customer,
+        primary: p.customer,
+        secondary: p.department,
+        value: +(total / CR).toFixed(2),
+      }
     }).sort((a, b) => b.value - a.value)
 
-    const out = { month: m, label: `${MONTH_DAYS[m]} ${m} ${year}` }
+    const out = { month: m, label: `${m} ${year}` }
     ranked.forEach((r, idx) => { out[`rank${idx + 1}`] = r })
     return out
   })
